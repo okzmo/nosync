@@ -15,11 +15,11 @@ export default class SpaceController {
 
     const created_space = await Space.create(space)
 
-    const default_branch = {
+    const branch = {
       space_id: created_space.id,
       name: "root",
     }
-    await Branch.create(default_branch)
+    await Branch.create(branch)
 
     return response.accepted(true)
   }
