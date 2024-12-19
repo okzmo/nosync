@@ -1,29 +1,57 @@
-import { goto } from '$app/navigation';
 import { tuyau } from '$lib/api';
 import type { SpaceForm } from '$lib/schemas/space';
+import type { TBranch, TSpace } from '$lib/types/space';
+import { redirect } from '@sveltejs/kit';
 import { auth } from './auth.svelte';
 
 class Space {
+	currentSpace = $state<TSpace | undefined>();
+	currentBranch = $state<TBranch | undefined>();
 
-  async create(space: SpaceForm) {
-    const response = await tuyau.v1.space.create.$post(space);
-    if (response.status > 300) {
-      return { status: 'error.space.create', message: response.error.value.message };
-    }
+	async create(space: SpaceForm) {
+		const response = await tuyau.v1.space.create.$post(space);
+		if (response.status > 300) {
+			return { status: 'error.space.create', message: response.error.value.message };
+		}
 
-    return { status: "success" }
-  }
+		return { status: 'success' };
+	}
 
+	goto_first_space() {
+		const first_space = auth.user?.spaces[0];
+		const first_branch = first_space?.branches[0];
+		this.currentSpace = first_space;
+		this.currentBranch = first_branch;
+		throw redirect(
+			303,
+			`/s/${first_space!.name.toLowerCase()}/${first_branch?.name.toLowerCase()}`
+		);
+	}
 
-  goto_first_space() {
-    const first_space = auth.user?.spaces[0].name.toLowerCase()
-    goto(`/s/${first_space}`)
-  }
+	goto(space: TSpace, branch?: TBranch) {
+		if (!branch) {
+			const first_branch = space.branches[0];
+			this.currentBranch = first_branch;
+			throw redirect(303, `/s/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
+		}
+		throw redirect(303, `/s/${space.name.toLowerCase()}/${branch!.name.toLowerCase()}`);
+	}
 
-  has(spaceName: string) {
-    const f = auth.user?.spaces.find(space => space.name.toLowerCase() === spaceName)
-    return f;
-  }
+	has(spaceName: string, branchName?: string) {
+		const space = auth.user?.spaces.find(
+			(space) => space.name.toLowerCase() === spaceName.toLowerCase()
+		);
+		this.currentSpace = space;
+		if (!branchName) {
+			return space;
+		}
+
+		const branch = space?.branches.find(
+			(branch) => branch.name.toLowerCase() === branchName.toLowerCase()
+		);
+		this.currentBranch = branch;
+		return { space, branch };
+	}
 }
 
 export const space = new Space();

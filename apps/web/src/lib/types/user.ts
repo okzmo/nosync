@@ -1,7 +1,7 @@
-import type { TSpace } from "./space";
+import type { TSpace } from './space';
 
 export type TUser = {
-  email: string;
-  first_time: boolean;
-  spaces: TSpace[];
+	email: string;
+	firstTime: boolean;
+	spaces: TSpace[];
 };

@@ -26,6 +26,14 @@ type V1SpaceCreatePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/validators/space.ts')['createSpace']>>
   response: MakeTuyauResponse<import('../app/controllers/spaces_controller.ts').default['create'], true>
 }
+type V1SpaceUploadPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/space.ts')['uploadToSpace']>>
+  response: MakeTuyauResponse<import('../app/controllers/spaces_controller.ts').default['upload'], true>
+}
+type V1BranchIdGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['index'], false>
+}
 export interface ApiDefinition {
   'v1': {
     'auth': {
@@ -56,6 +64,19 @@ export interface ApiDefinition {
         '$url': {
         };
         '$post': V1SpaceCreatePost;
+      };
+      'upload': {
+        '$url': {
+        };
+        '$post': V1SpaceUploadPost;
+      };
+    };
+    'branch': {
+      ':branchId': {
+        '$url': {
+        };
+        '$get': V1BranchIdGetHead;
+        '$head': V1BranchIdGetHead;
       };
     };
   };
@@ -95,6 +116,20 @@ const routes = [
     path: '/v1/space/create',
     method: ["POST"],
     types: {} as V1SpaceCreatePost,
+  },
+  {
+    params: [],
+    name: 'space.upload',
+    path: '/v1/space/upload',
+    method: ["POST"],
+    types: {} as V1SpaceUploadPost,
+  },
+  {
+    params: ["branchId"],
+    name: 'branch.index',
+    path: '/v1/branch/:branchId',
+    method: ["GET","HEAD"],
+    types: {} as V1BranchIdGetHead,
   },
 ] as const;
 export const api = {

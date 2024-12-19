@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasOne } from '@adonisjs/lucid/orm'
+import type { HasOne } from '@adonisjs/lucid/types/relations'
+import Media from './media.js'
 
 export default class Cell extends BaseModel {
   @column({ isPrimary: true })
@@ -9,13 +11,19 @@ export default class Cell extends BaseModel {
   declare branch_id: number
 
   @column()
+  declare title: string
+
+  @column()
   declare type: string
 
   @column()
-  declare url: string
+  declare content: string
 
   @column()
-  declare content: string
+  declare tags: string[]
+
+  @hasOne(() => Media, { foreignKey: 'cell_id' })
+  declare media: HasOne<typeof Media>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

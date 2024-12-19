@@ -9,6 +9,9 @@ export default class Media extends BaseModel {
   declare cell_id: number
 
   @column()
+  declare url: string
+
+  @column()
   declare width: number
 
   @column()
@@ -16,9 +19,6 @@ export default class Media extends BaseModel {
 
   @column()
   declare mime: string
-
-  @column()
-  declare tags: string[]
 
   @column()
   declare duration: number

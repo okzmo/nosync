@@ -11,7 +11,6 @@
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
 	import { goto } from '$app/navigation';
 
-	let no_account = $state(true);
 	let globalError = $state('');
 	let email_input = $state<HTMLInputElement>();
 	let password_input = $state<HTMLInputElement>();
@@ -24,25 +23,14 @@
 		resetForm: false,
 		validationMethod: 'onsubmit',
 		async onUpdate({ form }) {
-			form;
 			if (form.valid) {
-				let response;
-				if (no_account) {
-					response = await auth.register(form.data);
-				} else {
-					response = await auth.login(form.data);
-				}
+				const response = await auth.register(form.data);
 
 				switch (response.status) {
 					case 'error.register.email':
 						globalError = response.message;
 						form.data.email = '';
 						setTimeout(() => email_input?.focus(), 5);
-						break;
-					case 'error.login.invalid':
-						globalError = response.message;
-						form.data.password = '';
-						setTimeout(() => password_input?.focus(), 5);
 						break;
 					default:
 						goto('/s');
@@ -52,13 +40,6 @@
 	});
 
 	const { form: formData, enhance, errors } = form;
-
-	function changeState() {
-		no_account = !no_account;
-		$formData.email = '';
-		$formData.password = '';
-		globalError = '';
-	}
 </script>
 
 {#if globalError}
@@ -111,17 +92,17 @@
 			<Button.Root
 				class="mt-6 rounded-2xl bg-zinc-50 py-3 font-medium text-zinc-950 transition-all hover:bg-zinc-50/90 active:scale-[0.99]"
 			>
-				{no_account ? 'Create an account' : 'Sign in'}
+				Create an account
 			</Button.Root>
 		</div>
 	</form>
 
-	<Button.Root
+	<a
+		href="/signin"
 		class="mt-5 w-fit text-sm text-zinc-50/20 transition-colors hover:text-zinc-50/40 hover:underline"
-		onclick={changeState}
 	>
-		{no_account ? 'I already have an account' : "I don't have an account"}
-	</Button.Root>
+		I already have an account
+	</a>
 </div>
 
 <div class="absolute left-5 top-4 flex flex-col font-code">
@@ -129,5 +110,5 @@
 	<p class="uppercase">
 		Version <span class="bg-version bg-clip-text text-transparent">[ocean wave]</span>
 	</p>
-	<p class="uppercase">State: [{no_account ? 'Create account' : 'Log in'}]</p>
+	<p class="uppercase">State: [sign up]</p>
 </div>

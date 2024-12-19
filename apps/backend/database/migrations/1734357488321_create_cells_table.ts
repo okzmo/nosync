@@ -7,9 +7,10 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('branch_id').unsigned().references('branches.id').onDelete('CASCADE')
+      table.string('title')
       table.string('type').notNullable()
-      table.string('url')
       table.string('content')
+      table.jsonb('tags').defaultTo('[]')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

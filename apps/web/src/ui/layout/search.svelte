@@ -21,19 +21,16 @@
 			transition:fade={{ duration: 125 }}
 		/>
 	{/if}
-	<div
-		class="progressive-blur down pointer-events-none translate-y-full"
-		class:active={menu.open}
-	></div>
+	<div class="progressive-blur down pointer-events-none opacity-0" class:active={menu.open}></div>
 </div>
 
 <style lang="postcss">
 	.active {
-		transform: translateY(0);
+		opacity: 100%;
 	}
 
 	.progressive-blur.down {
-		transition: transform 200ms cubic-bezier(0, 0.55, 0.45, 1);
+		transition: opacity 200ms cubic-bezier(0, 0.55, 0.45, 1);
 		position: absolute;
 		bottom: 0;
 		left: 0;
@@ -47,3 +44,4 @@
 		);
 	}
 </style>
+

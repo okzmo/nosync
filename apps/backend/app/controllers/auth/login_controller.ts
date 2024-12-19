@@ -9,14 +9,12 @@ export default class LoginController {
 
     await auth.use('web').login(user, true)
 
-    return response.status(200)
+    return response.status(202)
   }
 
   async check({ response, auth }: HttpContext) {
     const user = await auth.use('web').authenticate()
-    const spaces = await user.related("spaces").query().preload("branches", (branchQuery) => {
-      branchQuery.preload("cells")
-    })
+    const spaces = await user.related('spaces').query().preload('branches')
 
     return response.accepted({ user, spaces })
   }

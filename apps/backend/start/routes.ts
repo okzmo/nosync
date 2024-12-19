@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+const CellsController = () => import('#controllers/cells_controller')
 const RegisterController = () => import('#controllers/auth/register_controller')
 const LoginController = () => import('#controllers/auth/login_controller')
 const LogoutController = () => import('#controllers/auth/logout_controller')
@@ -31,8 +32,16 @@ router
     router
       .group(() => {
         router.post('/create', [SpaceController, 'create']).as('space.create')
+        router.post('/upload', [SpaceController, 'upload']).as('space.upload')
       })
       .prefix('/space')
+      .use(middleware.auth())
+
+    router
+      .group(() => {
+        router.get('/:branchId', [CellsController, 'index']).as('branch.index')
+      })
+      .prefix('/branch')
       .use(middleware.auth())
   })
   .prefix('/v1')

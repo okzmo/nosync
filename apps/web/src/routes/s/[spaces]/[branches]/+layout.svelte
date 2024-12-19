@@ -1,13 +1,15 @@
 <script lang="ts">
-	import Navigation from '../../../ui/layout/navigation.svelte';
-	import Search from '../../../ui/layout/search.svelte';
+	import Navigation from '../../../../ui/layout/navigation.svelte';
+	import Search from '../../../../ui/layout/search.svelte';
 	import { onMount } from 'svelte';
 	import { backdrop } from '$lib/stores/backdrop.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
+	import { global } from '$lib/stores/global.svelte';
 
 	let { children } = $props();
 
 	onMount(() => {
+		global.init();
 		menu.init();
 	});
 </script>
