@@ -8,6 +8,8 @@ export function calculatePhotoSize(photo) {
 	const picHeight = colWidth / aspectRatio;
 
 	const p: TPhoto = {
+		type: 'media',
+		blurHash: '',
 		url: photo.url,
 		width: Math.floor(colWidth),
 		height: Math.floor(picHeight),

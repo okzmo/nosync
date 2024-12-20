@@ -1,3 +1,5 @@
+export type CellType = 'media' | 'note';
+
 export type TSpace = {
 	id: number;
 	ownerId: number;
@@ -12,7 +14,19 @@ export type TBranch = {
 };
 
 export type TPhoto = {
+	type: 'media';
+	blurHash: string;
 	url: string;
+	width: number;
+	height: number;
+	x: number;
+	y: number;
+};
+
+export type TNote = {
+	type: 'note';
+	title: string;
+	content: string;
 	width: number;
 	height: number;
 	x: number;

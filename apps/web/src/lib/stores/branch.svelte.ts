@@ -1,12 +1,13 @@
 import { tuyau } from '$lib/api';
-import type { TPhoto } from '$lib/types/space';
+import type { TNote, TPhoto } from '$lib/types/space';
 import { calculatePhotoPosition, calculatePhotoSize } from '$lib/utils/gallery';
 import { space } from './space.svelte';
 
 class Branch {
 	cells = $state<TPhoto[]>([]);
-	shownCells = $state<TPhoto[]>([]);
-	activeCell = $state(-1);
+	shownCells = $state<Array<TPhoto | TNote>>([]);
+	activeCellIdx = $state(-1);
+	activeCell = $state<TPhoto | undefined>();
 
 	async getCells() {
 		const { data } = await tuyau.v1.branch({ branchId: '' + space.currentBranch?.id }).$get();
@@ -15,6 +16,7 @@ class Branch {
 	}
 
 	processCells(cells) {
+		if (!cells) return;
 		this.shownCells = [];
 		for (const cell of cells) {
 			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {
@@ -27,6 +29,7 @@ class Branch {
 	}
 
 	addCells(cells) {
+		if (!cells) return;
 		this.cells.push(...cells);
 		for (const cell of cells) {
 			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {

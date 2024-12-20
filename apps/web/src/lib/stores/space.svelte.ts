@@ -29,6 +29,7 @@ class Space {
 	}
 
 	goto(space: TSpace, branch?: TBranch) {
+		console.log(space, branch);
 		if (!branch) {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;
@@ -43,14 +44,14 @@ class Space {
 		);
 		this.currentSpace = space;
 		if (!branchName) {
-			return space;
+			return { space };
 		}
 
 		const branch = space?.branches.find(
 			(branch) => branch.name.toLowerCase() === branchName.toLowerCase()
 		);
 		this.currentBranch = branch;
-		return { space, branch };
+		return { s: space, b: branch };
 	}
 }
 

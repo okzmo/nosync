@@ -7,18 +7,15 @@
 	import SolarSun2BoldDuotone from '~icons/solar/sun-2-bold-duotone';
 </script>
 
-<header class="fixed top-0 z-[999] w-full">
+<header class="fixed top-0 z-[999] flex w-full items-center justify-between px-8 pt-5">
 	{#if menu.open}
-		<ul
-			class="absolute left-8 top-5 z-[1] flex gap-x-3 font-serif text-lg italic"
-			transition:fade={{ duration: 75 }}
-		>
+		<ul class="z-[1] flex gap-x-3 font-serif text-lg italic" transition:fade={{ duration: 75 }}>
 			<li class="text-zinc-50/50">{space.currentSpace?.name}</li>
 			<span class="text-zinc-50/50">/</span>
 			<li>{space.currentBranch?.name}</li>
 		</ul>
 
-		<nav class="relative z-[1] flex justify-center pt-5" transition:fade={{ duration: 75 }}>
+		<nav class="relative z-[1] flex justify-center" transition:fade={{ duration: 75 }}>
 			<ul class="flex gap-x-6 font-serif text-lg italic text-zinc-50/50">
 				<li><a href="/" class="text-zinc-50">home</a></li>
 				<li><a href="/mail" class="transition-colors hover:text-zinc-50/65">mail</a></li>
@@ -28,22 +25,22 @@
 		</nav>
 
 		<ul
-			class="absolute right-8 top-5 z-[1] flex gap-x-3 font-serif text-lg italic"
+			class="z-[1] flex items-center gap-x-4 font-serif text-lg italic"
 			transition:fade={{ duration: 75 }}
 		>
-			<li>
+			<li class="flex items-center justify-center">
 				<a href="/settings" class="text-zinc-50/50 transition-colors hover:text-zinc-50">
-					<SolarSettingsBoldDuotone height={22} width={22} />
+					<SolarSettingsBoldDuotone height={18} width={18} />
 				</a>
 			</li>
-			<li>
+			<li class="flex items-center justify-center">
 				<button class="text-zinc-50/50 transition-colors hover:text-zinc-50">
-					<SolarBellBoldDuotone height={22} width={22} />
+					<SolarBellBoldDuotone height={18} width={18} />
 				</button>
 			</li>
-			<li>
+			<li class="flex items-center justify-center">
 				<button class="text-zinc-50/50 transition-colors hover:text-zinc-50">
-					<SolarSun2BoldDuotone height={22} width={22} />
+					<SolarSun2BoldDuotone height={18} width={18} />
 				</button>
 			</li>
 		</ul>
