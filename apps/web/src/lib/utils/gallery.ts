@@ -1,20 +1,25 @@
 import type { TPhoto } from '$lib/types/space';
 import { global, GUTTER } from '$lib/stores/global.svelte';
-import { branch } from '$lib/stores/branch.svelte';
 
-export function calculatePhotoSize(photo) {
+export const columnHeights = Array(global.nbColumns).fill(0);
+
+export function calculatePhotoSize(cell) {
+	const photo = cell.media;
 	const colWidth = global.colWidth;
 	const aspectRatio = photo.width / photo.height;
 	const picHeight = colWidth / aspectRatio;
 
 	const p: TPhoto = {
 		type: 'media',
+		title: cell.title,
+		content: cell.content,
 		blurHash: '',
 		url: photo.url,
 		width: Math.floor(colWidth),
 		height: Math.floor(picHeight),
 		x: 0,
-		y: 0
+		y: 0,
+		aspectRatio: aspectRatio
 	};
 
 	return p;
@@ -22,21 +27,19 @@ export function calculatePhotoSize(photo) {
 
 export function calculatePhotoPosition(photo: TPhoto) {
 	const columns = global.nbColumns;
-	const column_size = global.colWidth;
+	const columnWidth = global.colWidth;
 
-	const idx = branch.shownCells.length;
-	const prevPhoto = branch.shownCells[idx - columns];
-
-	const column = idx % columns;
-	photo.x = column_size * column + GUTTER * column;
-
-	if (idx >= columns) {
-		const row = Math.floor(idx / columns);
-		const prev_photo_height = prevPhoto.height;
-		const prev_photo_y = prevPhoto.y === 0 ? 0 : prevPhoto.y - 14 * (row - 1);
-
-		photo.y = Math.floor(prev_photo_y + prev_photo_height + GUTTER * row);
+	let minHeightColumn = 0;
+	for (let i = 1; i < columns; i++) {
+		if (columnHeights[i] < columnHeights[minHeightColumn]) {
+			minHeightColumn = i;
+		}
 	}
+
+	photo.x = columnWidth * minHeightColumn + GUTTER * minHeightColumn;
+	photo.y = columnHeights[minHeightColumn];
+
+	columnHeights[minHeightColumn] += photo.height + GUTTER;
 
 	return photo;
 }

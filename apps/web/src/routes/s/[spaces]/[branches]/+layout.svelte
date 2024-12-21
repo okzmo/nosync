@@ -20,5 +20,5 @@
 {@render children()}
 <Search />
 
-<Panel bind:isOpen={panel.isOpen} />
+<Panel />
 <Backdrop />

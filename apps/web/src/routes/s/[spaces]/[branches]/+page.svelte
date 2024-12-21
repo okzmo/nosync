@@ -16,15 +16,22 @@
 
 	$effect(() => {
 		if (!backdrop.blur) {
-			branch.activeCellIdx = -1;
 			panel.close();
+			branch.activeCell = undefined;
+
+			setTimeout(() => {
+				branch.activeCellIdx = -1;
+			}, 150);
 		}
 	});
 </script>
 
 <Dropzone />
 
-<div class="relative h-[calc(100vh-1rem)] w-screen overflow-auto p-4">
+<div
+	class="relative h-[calc(100vh-1rem)] w-screen overflow-auto p-4"
+	bind:this={branch.cellWrapper}
+>
 	{#if branch.shownCells.length > 0}
 		{#each branch.shownCells as cell, i}
 			{#if cell.type === 'media'}

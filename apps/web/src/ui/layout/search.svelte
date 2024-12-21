@@ -11,7 +11,7 @@
 	});
 </script>
 
-<div class="fixed bottom-0 w-full">
+<div class="fixed bottom-0 z-[999] w-full">
 	{#if menu.open}
 		<input
 			bind:this={input}
@@ -44,4 +44,3 @@
 		);
 	}
 </style>
-

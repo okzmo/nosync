@@ -1,15 +1,13 @@
 <script lang="ts">
 	import { Control, Field } from 'formsnap';
 	import { superForm } from 'sveltekit-superforms';
-	import { zod } from 'sveltekit-superforms/adapters';
 	import { register } from '$lib/schemas/auth';
 	import { Button } from 'bits-ui';
 	import Input from '../../ui/shared/input.svelte';
 	import SolarLetterBoldDuotone from '~icons/solar/letter-bold-duotone';
 	import SolarLockPasswordBoldDuotone from '~icons/solar/lock-password-bold-duotone';
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
-	import { auth } from '$lib/stores/auth.svelte';
-	import { goto } from '$app/navigation';
+	import { zodClient } from 'sveltekit-superforms/adapters';
 
 	let globalError = $state('');
 	let email_input = $state<HTMLInputElement>();
@@ -18,24 +16,13 @@
 	let { data } = $props();
 
 	const form = superForm(data.form, {
-		SPA: true,
-		validators: zod(register),
-		resetForm: false,
+		validators: zodClient(register),
+		resetForm: true,
 		validationMethod: 'onsubmit',
-		async onUpdate({ form }) {
-			if (form.valid) {
-				const response = await auth.login(form.data);
-
-				switch (response.status) {
-					case 'error.login.invalid':
-						globalError = response.message!;
-						form.data.email = '';
-						setTimeout(() => email_input?.focus(), 5);
-						break;
-					default:
-						goto('/s');
-				}
-			}
+		onError({ result }) {
+			globalError = result.error.message;
+			form.reset();
+			email_input!.focus();
 		}
 	});
 

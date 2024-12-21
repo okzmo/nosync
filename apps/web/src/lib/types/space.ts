@@ -15,12 +15,15 @@ export type TBranch = {
 
 export type TPhoto = {
 	type: 'media';
+	title: string;
+	content: string;
 	blurHash: string;
 	url: string;
 	width: number;
 	height: number;
 	x: number;
 	y: number;
+	aspectRatio: number;
 };
 
 export type TNote = {
