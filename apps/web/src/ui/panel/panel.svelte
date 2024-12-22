@@ -60,34 +60,32 @@
 				</div>
 			</div>
 
-			{#if branch.activeCell}
-				<div class="mx-auto mt-20 w-full px-8 md:mt-20 md:px-14 lg:w-[45rem] xl:w-[50rem]">
-					<figure
-						class={twJoin(
-							'relative',
-							branch.activeCell.aspectRatio > 1 ? 'h-[10rem] w-[15rem]' : 'h-[15rem] w-[10rem]'
-						)}
-					>
-						<img
-							src={branch.activeCell.url}
-							alt=""
-							class="h-full w-full rounded-2xl object-cover object-bottom"
-						/>
-						<img
-							src={branch.activeCell.url}
-							alt=""
-							class="absolute left-1/2 top-1/2 z-[-1] h-full w-full -translate-x-1/2 -translate-y-1/2 object-cover blur-lg"
-							role="presentation"
-						/>
-					</figure>
-					<input
-						type="text"
-						class="mt-5 w-full border-b-0 border-l-0 border-r-0 border-t-0 border-zinc-50/30 bg-transparent text-5xl font-bold transition-colors placeholder:text-zinc-50/15 focus:border-zinc-50/50 focus:outline-none focus:ring-0"
-						placeholder="Title"
-						bind:value={title}
+			<div class="mx-auto mt-20 w-full px-8 md:mt-20 md:px-14 lg:w-[45rem] xl:w-[50rem]">
+				<figure
+					class={twJoin(
+						'relative',
+						branch.activeCell?.aspectRatio > 1 ? 'h-[10rem] w-[15rem]' : 'h-[15rem] w-[10rem]'
+					)}
+				>
+					<img
+						src={branch.activeCell?.url}
+						alt=""
+						class="h-full w-full rounded-2xl object-cover object-bottom"
 					/>
-				</div>
-			{/if}
+					<img
+						src={branch.activeCell?.url}
+						alt=""
+						class="absolute left-1/2 top-1/2 z-[-1] h-full w-full -translate-x-1/2 -translate-y-1/2 object-cover blur-lg"
+						role="presentation"
+					/>
+				</figure>
+				<input
+					type="text"
+					class="mt-5 w-full border-b-0 border-l-0 border-r-0 border-t-0 border-zinc-50/30 bg-transparent text-5xl font-bold transition-colors placeholder:text-zinc-50/15 focus:border-zinc-50/50 focus:outline-none focus:ring-0"
+					placeholder="Title"
+					bind:value={title}
+				/>
+			</div>
 		</Drawer.Content>
 	</Drawer.Portal>
 </Drawer.Root>

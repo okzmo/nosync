@@ -6,7 +6,6 @@
 	import { global } from '$lib/stores/global.svelte';
 	import Panel from '../../../../ui/panel/panel.svelte';
 	import Backdrop from '../../../../ui/layout/backdrop.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
 
 	let { children } = $props();
 

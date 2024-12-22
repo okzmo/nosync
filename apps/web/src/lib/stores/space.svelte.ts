@@ -29,7 +29,6 @@ class Space {
 	}
 
 	goto(space: TSpace, branch?: TBranch) {
-		console.log(space, branch);
 		if (!branch) {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;

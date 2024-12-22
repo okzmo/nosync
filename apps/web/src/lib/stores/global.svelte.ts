@@ -10,6 +10,7 @@ const MEDIA_COLUMNS: Record<number, number> = {
 class Global {
 	nbColumns = $state(MEDIA_COLUMNS[1512]);
 	colWidth = $state(0);
+	ready = $derived(this.colWidth > 0);
 	#screenSizes = Object.keys(MEDIA_COLUMNS);
 
 	init() {

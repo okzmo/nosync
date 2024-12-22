@@ -1,16 +1,9 @@
-import { auth } from '$lib/stores/auth.svelte';
-import { redirect } from '@sveltejs/kit';
-import type { PageLoad } from './$types';
-import { browser } from '$app/environment';
 import { space } from '$lib/stores/space.svelte';
+import type { PageLoad } from './$types';
+import { auth } from '$lib/stores/auth.svelte';
 
 export const load: PageLoad = async ({ url }) => {
-	if (!browser) return;
-	const response = await auth.check();
-
-	if (response?.status === 'error.auth_invalid') {
-		redirect(303, '/signin');
-	}
+	await auth.check();
 
 	const [, , spaceName, branchName] = url.pathname.split('/');
 	if (!spaceName) {

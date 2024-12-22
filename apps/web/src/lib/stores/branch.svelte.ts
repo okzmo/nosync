@@ -5,7 +5,6 @@ import { space } from './space.svelte';
 
 class Branch {
 	cells = $state<TPhoto[]>([]);
-	shownCells = $state<Array<TPhoto | TNote>>([]);
 	activeCellIdx = $state(-1);
 	activeCell = $state<TPhoto | undefined>();
 	cellWrapper = $state<HTMLDivElement | null>();
@@ -16,31 +15,25 @@ class Branch {
 		return data;
 	}
 
-	processCells(cells) {
-		if (!cells) return;
+	processCells(cells): TPhoto[] {
+		if (!cells) return [];
 		columnHeights.fill(0);
-		this.shownCells = [];
+		const processedCells = [];
 
 		for (const cell of cells) {
 			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {
 				const photo_size = calculatePhotoSize(cell);
 				const photo_pos = calculatePhotoPosition(photo_size);
-				this.shownCells.push(photo_pos);
+				processedCells.push(photo_pos);
 			}
 		}
+
+		return processedCells;
 	}
 
 	addCells(cells) {
-		if (!cells) return;
+		if (!cells) return [];
 		this.cells.push(...cells);
-
-		for (const cell of cells) {
-			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {
-				const photo_size = calculatePhotoSize(cell);
-				const photo_pos = calculatePhotoPosition(photo_size);
-				this.shownCells.push(photo_pos);
-			}
-		}
 	}
 }
 

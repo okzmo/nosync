@@ -7,7 +7,10 @@
 	import SolarLetterBoldDuotone from '~icons/solar/letter-bold-duotone';
 	import SolarLockPasswordBoldDuotone from '~icons/solar/lock-password-bold-duotone';
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod } from 'sveltekit-superforms/adapters';
+	import { tuyau } from '$lib/api';
+	import { redirect } from '@sveltejs/kit';
+	import { goto } from '$app/navigation';
 
 	let globalError = $state('');
 	let email_input = $state<HTMLInputElement>();
@@ -16,13 +19,21 @@
 	let { data } = $props();
 
 	const form = superForm(data.form, {
-		validators: zodClient(register),
+		SPA: true,
+		validators: zod(register),
 		resetForm: true,
 		validationMethod: 'onsubmit',
-		onError({ result }) {
-			globalError = result.error.message;
-			form.reset();
-			email_input!.focus();
+		async onUpdate({ form }) {
+			if (form.valid) {
+				const { error } = await tuyau.v1.auth.login.$post(form.data);
+				if (error) {
+					globalError = error.value.errors[0].message;
+					setTimeout(() => email_input?.focus(), 5);
+					return;
+				}
+
+				return goto('/s');
+			}
 		}
 	});
 

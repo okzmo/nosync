@@ -6,6 +6,7 @@ export default class LoginController {
   async store_web({ response, request, auth }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
     const user = await User.verifyCredentials(email, password)
+    console.log(user)
 
     await auth.use('web').login(user, true)
 

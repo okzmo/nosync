@@ -31,6 +31,7 @@ export default class SpaceController {
 
   async upload({ bouncer, request, response }: HttpContext) {
     const upload = await request.validateUsing(uploadToSpace)
+    console.log(upload)
 
     const metadatas = upload.filesMetadata.map((metadata) =>
       fileMetadata.validate(JSON.parse(metadata))

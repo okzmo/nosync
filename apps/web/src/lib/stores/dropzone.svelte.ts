@@ -1,7 +1,5 @@
-import { tuyau } from '$lib/api';
 import { getMediaMetadata, type FileMetadata } from '$lib/utils/media';
 import { branch } from './branch.svelte';
-import { space } from './space.svelte';
 
 class DropZone {
 	isOpen = $state(false);
@@ -19,6 +17,7 @@ class DropZone {
 		e.preventDefault();
 		const files = [];
 		let filesMetadata = [];
+		const formData = new FormData();
 
 		if (e.dataTransfer?.items) {
 			const processedFiles: Promise<FileMetadata>[] = [];
@@ -39,18 +38,26 @@ class DropZone {
 			files.push(...e.dataTransfer?.files);
 		}
 
-		const formData = new FormData();
 		files.forEach((file) => {
 			formData.append(`files[]`, file);
 		});
 		filesMetadata.forEach((metadata) => {
 			formData.append(`filesMetadata[]`, JSON.stringify(metadata));
 		});
-		formData.append('branchId', '' + space.currentBranch!.id);
 
-		const { data } = await tuyau.v1.space.upload.$post(formData);
-		console.log(data);
-		branch.addCells(data);
+		try {
+			const response = await fetch('/api/upload', {
+				method: 'POST',
+				body: formData
+			});
+			const data = await response.json();
+
+			if (!response.ok) throw new Error('Upload failed');
+
+			branch.addCells(data);
+		} catch (error) {
+			console.error(error);
+		}
 
 		this.isOpen = false;
 	};
