@@ -15,6 +15,12 @@
 	onclick={() => {
 		backdrop.open();
 		panel.open();
+	}}
+	onmouseover={() => {
+		branch.activeCellIdx = i;
+		branch.activeCell = photo;
+	}}
+	onfocus={() => {
 		branch.activeCellIdx = i;
 		branch.activeCell = photo;
 	}}

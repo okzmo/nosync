@@ -111,8 +111,8 @@
 <style>
 	:global(.widthTransition) {
 		transition:
-			transform 0.25s cubic-bezier(0.32, 0.72, 0, 1),
-			width 0.25s cubic-bezier(0.32, 0.72, 0, 1) !important;
-		animation-duration: 0.25s !important;
+			transform 0.15s cubic-bezier(0.32, 0.72, 0, 1),
+			width 0.15s cubic-bezier(0.32, 0.72, 0, 1) !important;
+		animation-duration: 0.15s !important;
 	}
 </style>
