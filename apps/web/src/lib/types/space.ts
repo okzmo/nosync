@@ -1,3 +1,5 @@
+import type { JSONContent } from '@tiptap/core';
+
 export type CellType = 'media' | 'note';
 
 export type TSpace = {
@@ -14,9 +16,10 @@ export type TBranch = {
 };
 
 export type TPhoto = {
+	id: number;
 	type: 'media';
 	title: string;
-	content: string;
+	content: JSONContent | undefined;
 	blurHash: string;
 	url: string;
 	width: number;
@@ -27,9 +30,10 @@ export type TPhoto = {
 };
 
 export type TNote = {
+	id: number;
 	type: 'note';
 	title: string;
-	content: string;
+	content: JSONContent | undefined;
 	width: number;
 	height: number;
 	x: number;

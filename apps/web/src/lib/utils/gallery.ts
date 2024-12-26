@@ -10,6 +10,7 @@ export function calculatePhotoSize(cell) {
 	const picHeight = colWidth / aspectRatio;
 
 	const p: TPhoto = {
+		id: cell.id,
 		type: 'media',
 		title: cell.title,
 		content: cell.content,

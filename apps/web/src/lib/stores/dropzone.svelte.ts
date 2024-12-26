@@ -1,6 +1,7 @@
 import { tuyau } from '$lib/api';
 import { getMediaMetadata, type FileMetadata } from '$lib/utils/media';
 import { branch } from './branch.svelte';
+import { panel } from './panel.svelte';
 import { space } from './space.svelte';
 
 class DropZone {
@@ -8,12 +9,14 @@ class DropZone {
 	dragCounter = $state(0);
 
 	handleDragEnter = (e: DragEvent) => {
+		if (panel.isOpen) return;
 		e.preventDefault();
 		this.dragCounter++;
 		this.isOpen = true;
 	};
 
 	handleDragOver = (e: DragEvent) => {
+		if (panel.isOpen) return;
 		e.preventDefault();
 	};
 

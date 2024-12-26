@@ -8,12 +8,23 @@
 	import { panel } from '$lib/stores/panel.svelte';
 	import { backdrop } from '$lib/stores/backdrop.svelte';
 	import { branch } from '$lib/stores/branch.svelte';
+	import Editor from '../editor/editor.svelte';
+	import type { Content } from '@tiptap/core';
 
 	let title = $state('');
+	let content = $state<Content | undefined>();
+	let cellIdx = $state(-1);
+
+	function onBlur() {
+		if (!branch.activeCell) return;
+		branch.cells[cellIdx].title = title;
+	}
 
 	$effect(() => {
 		if (branch.activeCell) {
+			cellIdx = branch.cells.findIndex((cell) => cell.id === branch.activeCell?.id);
 			title = branch.activeCell.title;
+			content = branch.activeCell.content;
 		}
 	});
 </script>
@@ -81,10 +92,12 @@
 				</figure>
 				<input
 					type="text"
-					class="mt-5 w-full border-b-0 border-l-0 border-r-0 border-t-0 border-zinc-50/30 bg-transparent text-5xl font-bold transition-colors placeholder:text-zinc-50/15 focus:border-zinc-50/50 focus:outline-none focus:ring-0"
+					class="mt-8 w-full border-b-0 border-l-0 border-r-0 border-t-0 border-zinc-50/30 bg-transparent p-0 text-5xl font-bold transition-colors placeholder:text-zinc-50/15 focus:border-zinc-50/50 focus:outline-none focus:ring-0"
 					placeholder="Title"
 					bind:value={title}
+					onblur={onBlur}
 				/>
+				<Editor {content} {cellIdx} />
 			</div>
 		</Drawer.Content>
 	</Drawer.Portal>

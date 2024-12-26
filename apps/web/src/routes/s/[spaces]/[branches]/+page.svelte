@@ -43,10 +43,7 @@
 
 <Dropzone />
 
-<div
-	class="relative h-[calc(100vh-1rem)] w-screen overflow-auto p-4"
-	bind:this={branch.cellWrapper}
->
+<div class="relative h-screen w-screen overflow-auto p-4" bind:this={branch.cellWrapper}>
 	{#if shownCells.length > 0}
 		{#each shownCells as cell, i}
 			{#if cell.type === 'media'}
