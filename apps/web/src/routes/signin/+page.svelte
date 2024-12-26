@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Control, Field } from 'formsnap';
 	import { superForm } from 'sveltekit-superforms';
-	import { register } from '$lib/schemas/auth';
+	import { login } from '$lib/schemas/auth';
 	import { Button } from 'bits-ui';
 	import Input from '../../ui/shared/input.svelte';
 	import SolarLetterBoldDuotone from '~icons/solar/letter-bold-duotone';
@@ -9,7 +9,6 @@
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import { tuyau } from '$lib/api';
-	import { redirect } from '@sveltejs/kit';
 	import { goto } from '$app/navigation';
 
 	let globalError = $state('');
@@ -20,7 +19,7 @@
 
 	const form = superForm(data.form, {
 		SPA: true,
-		validators: zod(register),
+		validators: zod(login),
 		resetForm: true,
 		validationMethod: 'onsubmit',
 		async onUpdate({ form }) {

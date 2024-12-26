@@ -8,6 +8,8 @@
 	import SolarLetterBoldDuotone from '~icons/solar/letter-bold-duotone';
 	import SolarLockPasswordBoldDuotone from '~icons/solar/lock-password-bold-duotone';
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
+	import { tuyau } from '$lib/api';
+	import { goto } from '$app/navigation';
 
 	let globalError = $state('');
 	let email_input = $state<HTMLInputElement>();
@@ -16,13 +18,21 @@
 	let { data } = $props();
 
 	const form = superForm(data.form, {
+		SPA: true,
 		validators: zod(register),
 		resetForm: false,
 		validationMethod: 'onsubmit',
-		onError({ result }) {
-			globalError = result.error.message;
-			form.reset({ newState: { email: '', password: password_input?.value } });
-			email_input!.focus();
+		async onUpdate({ form }) {
+			if (form.valid) {
+				const { error } = await tuyau.v1.auth.register.$post(form.data);
+				if (error) {
+					globalError = error.value.errors[0].message;
+					setTimeout(() => email_input?.focus(), 5);
+					return;
+				}
+
+				return goto('/s');
+			}
 		}
 	});
 

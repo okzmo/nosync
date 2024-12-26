@@ -1,20 +1,34 @@
+import { tuyau } from '$lib/api';
 import { getMediaMetadata, type FileMetadata } from '$lib/utils/media';
 import { branch } from './branch.svelte';
+import { space } from './space.svelte';
 
 class DropZone {
 	isOpen = $state(false);
+	dragCounter = $state(0);
 
-	handleDragOver = (e: DragEvent) => {
+	handleDragEnter = (e: DragEvent) => {
 		e.preventDefault();
+		this.dragCounter++;
 		this.isOpen = true;
 	};
 
-	handleDragLeave = () => {
-		this.isOpen = false;
+	handleDragOver = (e: DragEvent) => {
+		e.preventDefault();
+	};
+
+	handleDragLeave = (e: DragEvent) => {
+		e.preventDefault();
+		this.dragCounter--;
+		if (this.dragCounter === 0) {
+			this.isOpen = false;
+		}
 	};
 
 	handleDrop = async (e: DragEvent) => {
 		e.preventDefault();
+		this.dragCounter = 0;
+		this.isOpen = false;
 		const files = [];
 		let filesMetadata = [];
 		const formData = new FormData();
@@ -38,6 +52,7 @@ class DropZone {
 			files.push(...e.dataTransfer?.files);
 		}
 
+		formData.append('branchId', '' + space.currentBranch!.id);
 		files.forEach((file) => {
 			formData.append(`files[]`, file);
 		});
@@ -45,21 +60,13 @@ class DropZone {
 			formData.append(`filesMetadata[]`, JSON.stringify(metadata));
 		});
 
-		try {
-			const response = await fetch('/api/upload', {
-				method: 'POST',
-				body: formData
-			});
-			const data = await response.json();
+		const { data, error } = await tuyau.v1.space.upload.$post(formData);
 
-			if (!response.ok) throw new Error('Upload failed');
-
-			branch.addCells(data);
-		} catch (error) {
+		if (error) {
 			console.error(error);
 		}
 
-		this.isOpen = false;
+		branch.addCells(data);
 	};
 }
 

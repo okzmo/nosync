@@ -45,6 +45,7 @@
 		"@fontsource/vollkorn": "^5.1.1",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",
+		"@tauri-apps/api": "^2.1.1",
 		"@tauri-apps/plugin-http": "^2.2.0",
 		"@tuyau/client": "^0.2.2",
 		"backend": "workspace:*",
