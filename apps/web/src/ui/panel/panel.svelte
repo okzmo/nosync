@@ -10,6 +10,7 @@
 	import { branch } from '$lib/stores/branch.svelte';
 	import Editor from '../editor/editor.svelte';
 	import type { Content } from '@tiptap/core';
+	import { AspectRatio } from 'bits-ui';
 
 	let title = $state('');
 	let content = $state<Content | undefined>();
@@ -74,25 +75,27 @@
 			</div>
 
 			<div class="mx-auto mt-20 w-full px-8 md:mt-20 md:px-14 lg:w-[45rem] xl:w-[50rem]">
-				<figure
-					class={twJoin(
-						'relative',
-						branch.activeCell?.aspectRatio > 1 ? 'h-[10rem] w-[15rem]' : 'h-[15rem] w-[10rem]'
-					)}
-				>
-					<img
-						src={branch.activeCell?.url}
-						alt=""
-						class="h-full w-full rounded-2xl object-cover object-bottom"
-					/>
-					<img
-						src={branch.activeCell?.url}
-						alt=""
-						class="absolute left-1/2 top-1/2 z-[-1] h-full w-full -translate-x-1/2 -translate-y-1/2 object-cover blur-lg transition-opacity"
-						class:opacity-0={typing && panel.isFullscreen}
-						role="presentation"
-					/>
-				</figure>
+				{#if branch.activeCell?.aspectRatio}
+					<figure
+						class={twJoin(
+							'relative',
+							branch.activeCell?.aspectRatio > 1 ? 'h-[10rem] w-[15rem]' : 'h-[15rem] w-[10rem]'
+						)}
+					>
+						<img
+							src={branch.activeCell?.url}
+							alt=""
+							class="h-full w-full rounded-2xl object-cover object-bottom"
+						/>
+						<img
+							src={branch.activeCell?.url}
+							alt=""
+							class="absolute left-1/2 top-1/2 z-[-1] h-full w-full -translate-x-1/2 -translate-y-1/2 object-cover blur-lg transition-opacity"
+							class:opacity-0={typing && panel.isFullscreen}
+							role="presentation"
+						/>
+					</figure>
+				{/if}
 				<input
 					type="text"
 					class="mt-8 w-full border-b-0 border-l-0 border-r-0 border-t-0 border-zinc-50/30 bg-transparent p-0 text-5xl font-bold transition-colors placeholder:text-zinc-50/15 focus:border-zinc-50/50 focus:outline-none focus:ring-0"
