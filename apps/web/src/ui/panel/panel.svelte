@@ -10,7 +10,6 @@
 	import { branch } from '$lib/stores/branch.svelte';
 	import Editor from '../editor/editor.svelte';
 	import type { Content } from '@tiptap/core';
-	import { AspectRatio } from 'bits-ui';
 
 	let title = $state('');
 	let content = $state<Content | undefined>();

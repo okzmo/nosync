@@ -1,4 +1,5 @@
 import { backdrop } from './backdrop.svelte';
+import { panel } from './panel.svelte';
 
 class Menu {
 	open = $state(false);
@@ -15,6 +16,7 @@ class Menu {
 				case 'Escape':
 					e.preventDefault();
 					this.closeMenu();
+					panel.shrink();
 					break;
 			}
 		});
