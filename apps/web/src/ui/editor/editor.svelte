@@ -13,18 +13,25 @@
 	type Props = {
 		content?: Content;
 		cellIdx: number;
+		typing: boolean;
 	};
 
-	let { content, cellIdx }: Props = $props();
+	let { content, cellIdx, typing = $bindable() }: Props = $props();
 
 	function onBlur() {
 		branch.cells[cellIdx].content = editor?.getJSON();
+		typing = false;
+	}
+
+	function onUpdate({ editor }) {
+		typing = !editor.isEmpty;
 	}
 
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			onBlur: onBlur,
+			onUpdate: onUpdate,
 			content: content,
 			extensions: [
 				StarterKit.configure({

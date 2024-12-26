@@ -14,6 +14,7 @@
 	let title = $state('');
 	let content = $state<Content | undefined>();
 	let cellIdx = $state(-1);
+	let typing = $state(false);
 
 	function onBlur() {
 		if (!branch.activeCell) return;
@@ -39,7 +40,8 @@
 			)}
 		>
 			<div
-				class="mx-auto flex w-full items-center justify-between px-5 pt-6 text-zinc-50/30 lg:w-[45rem] xl:w-[50rem]"
+				class="mx-auto flex w-full items-center justify-between px-5 pt-6 text-zinc-50/30 transition-opacity hover:opacity-100 lg:w-[45rem] xl:w-[50rem]"
+				class:opacity-0={typing && panel.isFullscreen}
 			>
 				<button
 					class="flex h-6 w-6 items-center justify-center rounded-lg transition-colors hover:bg-red-500/15 hover:text-red-500"
@@ -86,7 +88,8 @@
 					<img
 						src={branch.activeCell?.url}
 						alt=""
-						class="absolute left-1/2 top-1/2 z-[-1] h-full w-full -translate-x-1/2 -translate-y-1/2 object-cover blur-lg"
+						class="absolute left-1/2 top-1/2 z-[-1] h-full w-full -translate-x-1/2 -translate-y-1/2 object-cover blur-lg transition-opacity"
+						class:opacity-0={typing && panel.isFullscreen}
 						role="presentation"
 					/>
 				</figure>
@@ -97,7 +100,7 @@
 					bind:value={title}
 					onblur={onBlur}
 				/>
-				<Editor {content} {cellIdx} />
+				<Editor {content} {cellIdx} bind:typing />
 			</div>
 		</Drawer.Content>
 	</Drawer.Portal>
