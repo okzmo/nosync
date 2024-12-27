@@ -3,7 +3,6 @@
 	import { menu } from '$lib/stores/menu.svelte';
 	import { space } from '$lib/stores/space.svelte';
 	import SolarSettingsBoldDuotone from '~icons/solar/settings-bold-duotone';
-	import SolarBellBoldDuotone from '~icons/solar/bell-bold-duotone';
 	import SolarSun2BoldDuotone from '~icons/solar/sun-2-bold-duotone';
 </script>
 
@@ -18,9 +17,9 @@
 		<nav class="relative z-[1] flex justify-center" transition:fade={{ duration: 75 }}>
 			<ul class="flex gap-x-6 font-serif text-lg italic text-zinc-50/50">
 				<li><a href="/" class="text-zinc-50">home</a></li>
-				<li><a href="/mail" class="transition-colors hover:text-zinc-50/65">mail</a></li>
-				<li><a href="/calendar" class="transition-colors hover:text-zinc-50/65">calendar</a></li>
-				<li><a href="/profile" class="transition-colors hover:text-zinc-50/65">profile</a></li>
+				<li><span class="transition-colors hover:cursor-not-allowed">mail</span></li>
+				<li><span class="transition-colors hover:cursor-not-allowed">calendar</span></li>
+				<li><span class="transition-colors hover:cursor-not-allowed">profile</span></li>
 			</ul>
 		</nav>
 
@@ -33,11 +32,11 @@
 					<SolarSettingsBoldDuotone height={18} width={18} />
 				</a>
 			</li>
-			<li class="flex items-center justify-center">
-				<button class="text-zinc-50/50 transition-colors hover:text-zinc-50">
-					<SolarBellBoldDuotone height={18} width={18} />
-				</button>
-			</li>
+			<!-- <li class="flex items-center justify-center"> -->
+			<!-- 	<button class="text-zinc-50/50 transition-colors hover:text-zinc-50"> -->
+			<!-- 		<SolarBellBoldDuotone height={18} width={18} /> -->
+			<!-- 	</button> -->
+			<!-- </li> -->
 			<li class="flex items-center justify-center">
 				<button class="text-zinc-50/50 transition-colors hover:text-zinc-50">
 					<SolarSun2BoldDuotone height={18} width={18} />
