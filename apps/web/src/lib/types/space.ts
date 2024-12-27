@@ -1,6 +1,6 @@
 import type { JSONContent } from '@tiptap/core';
 
-export type CellType = 'media' | 'note';
+export type CellType = 'media' | 'note' | 'default';
 
 export type TSpace = {
 	id: number;
@@ -13,6 +13,15 @@ export type TBranch = {
 	id: number;
 	spaceId: number;
 	name: string;
+};
+
+export type TDefault = {
+	id: number;
+	type: 'default';
+	width: number;
+	height: number;
+	x: number;
+	y: number;
 };
 
 export type TPhoto = {

@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.integer('branch_id').unsigned().references('branches.id').onDelete('CASCADE')
       table.string('title')
       table.string('type').notNullable()
-      table.string('content')
+      table.jsonb('content')
       table.jsonb('tags').defaultTo('[]')
 
       table.timestamp('created_at')

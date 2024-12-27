@@ -32,7 +32,15 @@ type V1SpaceUploadPost = {
 }
 type V1BranchIdGetHead = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['index'], false>
+  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['allCells'], false>
+}
+type V1CellSavetitlePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['saveTitle']>>
+  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['saveTitle'], true>
+}
+type V1CellSavecontentPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['saveContent']>>
+  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['saveContent'], true>
 }
 export interface ApiDefinition {
   'v1': {
@@ -77,6 +85,18 @@ export interface ApiDefinition {
         };
         '$get': V1BranchIdGetHead;
         '$head': V1BranchIdGetHead;
+      };
+    };
+    'cell': {
+      'save_title': {
+        '$url': {
+        };
+        '$post': V1CellSavetitlePost;
+      };
+      'save_content': {
+        '$url': {
+        };
+        '$post': V1CellSavecontentPost;
       };
     };
   };
@@ -126,10 +146,24 @@ const routes = [
   },
   {
     params: ["branchId"],
-    name: 'branch.index',
+    name: 'branch.allCells',
     path: '/v1/branch/:branchId',
     method: ["GET","HEAD"],
     types: {} as V1BranchIdGetHead,
+  },
+  {
+    params: [],
+    name: 'branch.save.title',
+    path: '/v1/cell/save_title',
+    method: ["POST"],
+    types: {} as V1CellSavetitlePost,
+  },
+  {
+    params: [],
+    name: 'branch.save.content',
+    path: '/v1/cell/save_content',
+    method: ["POST"],
+    types: {} as V1CellSavecontentPost,
   },
 ] as const;
 export const api = {

@@ -39,9 +39,17 @@ router
 
     router
       .group(() => {
-        router.get('/:branchId', [CellsController, 'index']).as('branch.index')
+        router.get('/:branchId', [CellsController, 'allCells']).as('branch.allCells')
       })
       .prefix('/branch')
+      .use(middleware.auth())
+
+    router
+      .group(() => {
+        router.post('/save_title', [CellsController, 'saveTitle']).as('branch.save.title')
+        router.post('/save_content', [CellsController, 'saveContent']).as('branch.save.content')
+      })
+      .prefix('/cell')
       .use(middleware.auth())
   })
   .prefix('/v1')

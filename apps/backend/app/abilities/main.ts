@@ -21,7 +21,6 @@ import { Bouncer } from '@adonisjs/bouncer'
  * Delete the following ability to start from
  * scratch
  */
-export const uploadFile = Bouncer.ability(async (user: User, branch: Branch) => {
-  const space = await Space.findByOrFail('id', branch.space_id)
-  return space.owner_id === user.id
+export const ownSpace = Bouncer.ability(async (user: User, branch: Branch) => {
+  return await Space.query().where('id', branch.space_id).where('owner_id', user.id).then(Boolean)
 })

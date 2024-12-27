@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { branch } from '$lib/stores/branch.svelte';
+	import { cell } from '$lib/stores/cell.svelte';
 	import { Editor, type Content } from '@tiptap/core';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import TaskItem from '@tiptap/extension-task-item';
@@ -12,14 +12,14 @@
 
 	type Props = {
 		content?: Content;
-		cellIdx: number;
 		typing: boolean;
 	};
 
-	let { content, cellIdx, typing = $bindable() }: Props = $props();
+	let { content, typing = $bindable() }: Props = $props();
 
 	function onBlur() {
-		branch.cells[cellIdx].content = editor?.getJSON();
+		if (!editor) return;
+		cell.saveContent(editor.getJSON());
 		typing = false;
 	}
 
@@ -66,6 +66,10 @@
 	:global(.tiptap) {
 		@apply mt-4;
 
+		:global(& > *) {
+			margin-top: 0.5rem;
+		}
+
 		:global(h1) {
 			@apply text-4xl font-bold;
 		}
@@ -92,10 +96,6 @@
 			height: 0;
 			pointer-events: none;
 			@apply text-zinc-50/30;
-		}
-
-		:global(p) {
-			margin-top: 0.5rem;
 		}
 
 		:global(p.is-empty::before) {

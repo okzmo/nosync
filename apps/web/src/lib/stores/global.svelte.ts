@@ -4,11 +4,12 @@ const MEDIA_COLUMNS: Record<number, number> = {
 	768: 2,
 	1024: 3,
 	1280: 4,
-	1512: 5
+	1512: 5,
+	1513: 6
 };
 
 class Global {
-	nbColumns = $state(MEDIA_COLUMNS[1512]);
+	nbColumns = $state(MEDIA_COLUMNS[1513]);
 	colWidth = $state(0);
 	ready = $derived(this.colWidth > 0);
 	#screenSizes = Object.keys(MEDIA_COLUMNS);
@@ -27,8 +28,8 @@ class Global {
 			if (window.innerWidth <= s) {
 				this.nbColumns = MEDIA_COLUMNS[s];
 				break;
-			} else if (window.innerWidth > 1512) {
-				this.nbColumns = MEDIA_COLUMNS[1512];
+			} else if (window.innerWidth > 1513) {
+				this.nbColumns = MEDIA_COLUMNS[1513];
 			}
 		}
 	}

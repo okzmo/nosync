@@ -1,7 +1,14 @@
 import { tuyau } from '$lib/api';
-import type { TNote, TPhoto } from '$lib/types/space';
-import { calculatePhotoPosition, calculatePhotoSize, columnHeights } from '$lib/utils/gallery';
+import type { TDefault, TNote, TPhoto } from '$lib/types/space';
+import {
+	calculateCellPosition,
+	calculateNoteSize,
+	calculatePhotoPosition,
+	calculatePhotoSize,
+	columnHeights
+} from '$lib/utils/gallery';
 import { space } from './space.svelte';
+import { global, GUTTER } from './global.svelte';
 
 class Branch {
 	cells = $state<TPhoto[]>([]);
@@ -15,23 +22,38 @@ class Branch {
 		return data;
 	}
 
-	processCells(cells): TPhoto[] {
+	processCells(cells: any): Array<TPhoto | TNote | TDefault> {
 		if (!cells) return [];
 		columnHeights.fill(0);
 		const processedCells = [];
+
+		const mainCell: TDefault = {
+			id: -1,
+			type: 'default',
+			width: Math.floor(global.colWidth),
+			height: Math.floor(global.colWidth),
+			x: 0,
+			y: 0
+		};
+		processedCells.push(mainCell);
+		columnHeights[0] += mainCell.height + GUTTER;
 
 		for (const cell of cells) {
 			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {
 				const photo_size = calculatePhotoSize(cell);
 				const photo_pos = calculatePhotoPosition(photo_size);
 				processedCells.push(photo_pos);
+			} else if (cell.type.startsWith('note')) {
+				const note_size = calculateNoteSize(cell);
+				const note_pos = calculateCellPosition(note_size);
+				processedCells.push(note_pos);
 			}
 		}
 
 		return processedCells;
 	}
 
-	addCells(cells) {
+	addCells(cells: any) {
 		if (!cells) return [];
 		this.cells.push(...cells);
 	}

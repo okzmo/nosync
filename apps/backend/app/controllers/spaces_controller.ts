@@ -1,4 +1,4 @@
-import { uploadFile } from '#abilities/main'
+import { ownSpace } from '#abilities/main'
 import Branch from '#models/branch'
 import Cell from '#models/cell'
 import Media from '#models/media'
@@ -26,12 +26,11 @@ export default class SpaceController {
     }
     await Branch.create(branch)
 
-    return response.accepted(true)
+    return response.ok(true)
   }
 
   async upload({ bouncer, request, response }: HttpContext) {
     const upload = await request.validateUsing(uploadToSpace)
-    console.log(upload)
 
     const metadatas = upload.filesMetadata.map((metadata) =>
       fileMetadata.validate(JSON.parse(metadata))
@@ -40,7 +39,8 @@ export default class SpaceController {
     const medias = []
 
     const branch = await Branch.findByOrFail('id', upload.branchId)
-    if (!(await bouncer.allows(uploadFile, branch))) {
+    const isOwner = await bouncer.allows(ownSpace, branch)
+    if (!isOwner) {
       return response.forbidden('You cannot upload a file to this branch')
     }
 
@@ -70,6 +70,6 @@ export default class SpaceController {
       medias.push({ ...jCell, media: media.toJSON() })
     }
 
-    return response.accepted(medias)
+    return response.ok(medias)
   }
 }

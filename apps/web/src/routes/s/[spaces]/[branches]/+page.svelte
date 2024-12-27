@@ -9,6 +9,8 @@
 	import { global } from '$lib/stores/global.svelte';
 	import { tuyau } from '$lib/api';
 	import { space } from '$lib/stores/space.svelte';
+	import { cell } from '$lib/stores/cell.svelte';
+	import SolarAddCircleBoldDuotone from '~icons/solar/add-circle-bold-duotone';
 
 	const shownCells = $derived.by(() => {
 		if (!global.ready) return [];
@@ -34,8 +36,8 @@
 			panel.close();
 
 			setTimeout(() => {
-				branch.activeCell = undefined;
-				branch.activeCellIdx = -1;
+				cell.active = undefined;
+				cell.activeIdx = -1;
 			}, 150);
 		}
 	});
@@ -47,9 +49,21 @@
 	{#if shownCells.length > 0}
 		{#each shownCells as cell, i}
 			{#if cell.type === 'media'}
-				<Media photo={cell} {i} />
+				<Media photo={cell} i={i - 1} />
 			{:else if cell.type === 'note'}
-				<Note />
+				<Note note={cell} i={i - 1} />
+			{:else if cell.type === 'default'}
+				<button
+					aria-label="Create a cell"
+					class="group absolute flex items-center justify-center rounded-2xl border border-zinc-50/10 bg-zinc-900 transition-colors hover:border-zinc-50/30 active:border-zinc-50/20"
+					style="height: {cell.height}px; width: {cell.width}px; transform: translate({cell.x}px, {cell.y}px);"
+				>
+					<SolarAddCircleBoldDuotone
+						height={96}
+						width={96}
+						class="text-zinc-50/20 transition-colors group-hover:text-zinc-50/40 group-active:text-zinc-50/30"
+					/>
+				</button>
 			{/if}
 		{/each}
 	{:else}
