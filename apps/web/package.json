@@ -55,7 +55,7 @@
 		"@tiptap/starter-kit": "^2.10.4",
 		"@tuyau/client": "^0.2.2",
 		"backend": "workspace:*",
-		"bits-ui": "^0.21.16",
+		"bits-ui": "1.0.0-next.74",
 		"formsnap": "^2.0.0",
 		"set-cookie-parser": "^2.7.1",
 		"svelte-bricks": "^0.2.1",

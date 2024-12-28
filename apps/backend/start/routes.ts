@@ -49,6 +49,7 @@ router
         router.post('/save_title', [CellsController, 'saveTitle']).as('branch.save.title')
         router.post('/save_content', [CellsController, 'saveContent']).as('branch.save.content')
         router.post('/create_note', [CellsController, 'createNote']).as('branch.create.note')
+        router.delete('/delete_cell', [CellsController, 'deleteCell']).as('branch.delete.cell')
       })
       .prefix('/cell')
       .use(middleware.auth())

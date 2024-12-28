@@ -1,5 +1,5 @@
 import { tuyau } from '$lib/api';
-import type { TNote, TPhoto } from '$lib/types/space';
+import type { TCell, TNote, TPhoto } from '$lib/types/space';
 import { space } from './space.svelte';
 import { branch } from './branch.svelte';
 import type { JSONContent } from '@tiptap/core';
@@ -41,20 +41,42 @@ class Cell {
 	}
 
 	async createNote() {
+		cell.active = { type: 'note' };
+		cell.activeIdx = branch.cells.length;
+		backdrop.open();
+		panel.open();
+
 		const { data, error } = await tuyau.v1.cell.create_note.$post({
 			branchId: space.currentBranch?.id
 		});
+		console.log(data);
 
 		if (error) {
 			console.error(error);
+			branch.cells.pop();
+			backdrop.close();
+			panel.close();
 			return;
 		}
 
-		cell.active = data;
-		cell.activeIdx = branch.cells.length;
 		branch.cells.push(data);
-		backdrop.open();
-		panel.open();
+		cell.active = data;
+	}
+
+	async delete(cellId: number, idx: number) {
+		const removed = branch.cells.splice(idx, 1);
+
+		const { error } = await tuyau.v1.cell.delete_cell.$delete({
+			id: cellId,
+			branchId: space.currentBranch?.id
+		});
+
+		// TODO: Add toast error if deletion impossible
+		if (error) {
+			branch.cells.splice(idx, 0, removed[0]);
+			console.error(error);
+			return;
+		}
 	}
 }
 

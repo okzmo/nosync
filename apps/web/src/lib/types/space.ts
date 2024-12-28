@@ -15,6 +15,8 @@ export type TBranch = {
 	name: string;
 };
 
+export type TCell = TPhoto | TNote;
+
 export type TDefault = {
 	id: number;
 	type: 'default';

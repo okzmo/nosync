@@ -3,7 +3,10 @@
 	import { cell } from '$lib/stores/cell.svelte';
 	import { panel } from '$lib/stores/panel.svelte';
 	import type { TPhoto } from '$lib/types/space';
+	import { ContextMenu } from 'bits-ui';
 	import SolarPenNewSquareBoldDuotone from '~icons/solar/pen-new-square-bold-duotone';
+	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
+	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 
 	type Props = {
 		photo: TPhoto;
@@ -12,36 +15,59 @@
 	let { photo, i }: Props = $props();
 </script>
 
-<button
-	onclick={() => {
-		backdrop.open();
-		panel.open();
-	}}
-	onmouseover={() => {
-		cell.activeIdx = i;
-		cell.active = photo;
-	}}
-	onfocus={() => {
-		cell.activeIdx = i;
-		cell.active = photo;
-	}}
-	class="group absolute transform-gpu overflow-hidden rounded-2xl before:absolute before:inset-0 before:content-normal before:rounded-2xl before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
-	style="height: {photo.height}px; width: {photo.width}px; transform: translate({photo.x}px, {photo.y}px);"
->
-	<img src={photo.url} alt="" class="h-full w-full object-cover" />
-	{#if photo.title}
-		<h3
-			class="absolute bottom-3 left-5 font-serif text-xl italic opacity-0 transition-opacity group-hover:opacity-100"
+<ContextMenu.Root>
+	<ContextMenu.Trigger>
+		<button
+			onclick={() => {
+				backdrop.open();
+				panel.open();
+			}}
+			onmouseover={() => {
+				cell.activeIdx = i;
+				cell.active = photo;
+			}}
+			onfocus={() => {
+				cell.activeIdx = i;
+				cell.active = photo;
+			}}
+			class="group absolute transform-gpu overflow-hidden rounded-2xl before:absolute before:inset-0 before:content-normal before:rounded-2xl before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
+			style="height: {photo.height}px; width: {photo.width}px; transform: translate({photo.x}px, {photo.y}px);"
 		>
-			{photo.title}
-		</h3>
-	{/if}
+			<img src={photo.url} alt="" class="h-full w-full object-cover" />
+			{#if photo.title}
+				<h3
+					class="absolute bottom-3 left-5 font-serif text-xl italic opacity-0 transition-opacity group-hover:opacity-100"
+				>
+					{photo.title}
+				</h3>
+			{/if}
 
-	{#if photo.content}
-		<SolarPenNewSquareBoldDuotone
-			class="absolute right-3 top-3 text-zinc-50/40 transition-colors group-hover:text-zinc-50"
-			height={20}
-			width={20}
-		/>
-	{/if}
-</button>
+			{#if photo.content}
+				<SolarPenNewSquareBoldDuotone
+					class="absolute right-3 top-3 text-zinc-50/40 transition-colors group-hover:text-zinc-50"
+					height={20}
+					width={20}
+				/>
+			{/if}
+		</button>
+	</ContextMenu.Trigger>
+	<ContextMenu.Portal>
+		<ContextMenu.Content
+			class="z-50 w-full min-w-[150px] rounded-xl border border-zinc-50/10 bg-zinc-800/70 p-1 outline-none backdrop-blur-xl"
+		>
+			<ContextMenu.Item
+				class="flex h-10 max-h-[35px] select-none items-center gap-x-2 rounded-lg pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
+			>
+				<SolarShareBoldDuotone height={16} width={16} />
+				<div class="flex items-center">Share</div>
+			</ContextMenu.Item>
+			<ContextMenu.Item
+				class="flex h-10 max-h-[35px] select-none items-center gap-x-2 rounded-lg pl-2 pr-3 font-medium text-red-500 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-red-500"
+				onclick={() => cell.delete(photo.id, i)}
+			>
+				<SolarTrashBinMinimalistic2BoldDuotone height={16} width={16} />
+				<div class="flex items-center">Delete</div>
+			</ContextMenu.Item>
+		</ContextMenu.Content>
+	</ContextMenu.Portal>
+</ContextMenu.Root>

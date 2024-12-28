@@ -1,7 +1,13 @@
 import { ownSpace } from '#abilities/main'
 import Branch from '#models/branch'
 import Cell from '#models/cell'
-import { createNote, retrieveCellsFromBranch, saveContent, saveTitle } from '#validators/cell'
+import {
+  createNote,
+  deleteCell,
+  retrieveCellsFromBranch,
+  saveContent,
+  saveTitle,
+} from '#validators/cell'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CellsController {
@@ -76,5 +82,17 @@ export default class CellsController {
     const cell = Cell.create(c)
 
     return cell
+  }
+
+  async deleteCell({ request, response, bouncer }: HttpContext) {
+    const data = await request.validateUsing(deleteCell)
+
+    const branch = await Branch.findOrFail(data.branchId)
+    const isOwner = await bouncer.allows(ownSpace, branch)
+    if (!isOwner) {
+      return response.forbidden("You're not the owner of this branch")
+    }
+
+    await Cell.query().where('id', data.id).del()
   }
 }

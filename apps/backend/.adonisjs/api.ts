@@ -46,6 +46,10 @@ type V1CellCreatenotePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['createNote']>>
   response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['createNote'], true>
 }
+type V1CellDeletecellDelete = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['deleteCell']>>
+  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['deleteCell'], true>
+}
 export interface ApiDefinition {
   'v1': {
     'auth': {
@@ -106,6 +110,11 @@ export interface ApiDefinition {
         '$url': {
         };
         '$post': V1CellCreatenotePost;
+      };
+      'delete_cell': {
+        '$url': {
+        };
+        '$delete': V1CellDeletecellDelete;
       };
     };
   };
@@ -180,6 +189,13 @@ const routes = [
     path: '/v1/cell/create_note',
     method: ["POST"],
     types: {} as V1CellCreatenotePost,
+  },
+  {
+    params: [],
+    name: 'branch.delete.cell',
+    path: '/v1/cell/delete_cell',
+    method: ["DELETE"],
+    types: {} as V1CellDeletecellDelete,
   },
 ] as const;
 export const api = {

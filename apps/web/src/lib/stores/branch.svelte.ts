@@ -1,5 +1,5 @@
 import { tuyau } from '$lib/api';
-import type { TDefault, TNote, TPhoto } from '$lib/types/space';
+import type { TCell, TDefault, TNote, TPhoto } from '$lib/types/space';
 import {
 	calculateCellPosition,
 	calculateNoteSize,
@@ -11,7 +11,7 @@ import { space } from './space.svelte';
 import { global, GUTTER } from './global.svelte';
 
 class Branch {
-	cells = $state<TPhoto[]>([]);
+	cells = $state<TCell[]>([]);
 	activeCellIdx = $state(-1);
 	activeCell = $state<TPhoto | undefined>();
 	cellWrapper = $state<HTMLDivElement | null>();

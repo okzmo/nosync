@@ -27,3 +27,10 @@ export const createNote = vine.compile(
     branchId: vine.number(),
   })
 )
+
+export const deleteCell = vine.compile(
+  vine.object({
+    id: vine.number(),
+    branchId: vine.number(),
+  })
+)
