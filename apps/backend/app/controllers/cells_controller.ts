@@ -23,7 +23,10 @@ export default class CellsController {
     const data = await request.validateUsing(saveTitle)
 
     const branch = await Branch.findOrFail(data.branchId)
-    await bouncer.authorize(ownSpace, branch)
+    const isOwner = await bouncer.allows(ownSpace, branch)
+    if (!isOwner) {
+      return response.forbidden("You're not the owner of this branch")
+    }
 
     const cell = await Cell.query().where('id', data.id).where('branch_id', data.branchId).first()
     if (!cell) {
@@ -40,7 +43,10 @@ export default class CellsController {
     const data = await request.validateUsing(saveContent)
 
     const branch = await Branch.findOrFail(data.branchId)
-    await bouncer.authorize(ownSpace, branch)
+    const isOwner = await bouncer.allows(ownSpace, branch)
+    if (!isOwner) {
+      return response.forbidden("You're not the owner of this branch")
+    }
 
     const cell = await Cell.query().where('id', data.id).where('branch_id', data.branchId).first()
     if (!cell) {
@@ -53,11 +59,14 @@ export default class CellsController {
     return response.ok(true)
   }
 
-  async createNote({ request, bouncer }: HttpContext) {
+  async createNote({ request, response, bouncer }: HttpContext) {
     const data = await request.validateUsing(createNote)
 
     const branch = await Branch.findOrFail(data.branchId)
-    await bouncer.authorize(ownSpace, branch)
+    const isOwner = await bouncer.allows(ownSpace, branch)
+    if (!isOwner) {
+      return response.forbidden("You're not the owner of this branch")
+    }
 
     const c = {
       branch_id: data.branchId,
