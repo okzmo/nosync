@@ -21,3 +21,9 @@ export const saveContent = vine.compile(
     content: vine.any(),
   })
 )
+
+export const createNote = vine.compile(
+  vine.object({
+    branchId: vine.number(),
+  })
+)

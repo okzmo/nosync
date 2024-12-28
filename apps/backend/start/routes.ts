@@ -48,6 +48,7 @@ router
       .group(() => {
         router.post('/save_title', [CellsController, 'saveTitle']).as('branch.save.title')
         router.post('/save_content', [CellsController, 'saveContent']).as('branch.save.content')
+        router.post('/create_note', [CellsController, 'createNote']).as('branch.create.note')
       })
       .prefix('/cell')
       .use(middleware.auth())

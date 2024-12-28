@@ -1,7 +1,7 @@
 import { ownSpace } from '#abilities/main'
 import Branch from '#models/branch'
 import Cell from '#models/cell'
-import { retrieveCellsFromBranch, saveContent, saveTitle } from '#validators/cell'
+import { createNote, retrieveCellsFromBranch, saveContent, saveTitle } from '#validators/cell'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CellsController {
@@ -22,11 +22,8 @@ export default class CellsController {
   async saveTitle({ request, response, bouncer }: HttpContext) {
     const data = await request.validateUsing(saveTitle)
 
-    const branch = await Branch.findByOrFail('id', data.branchId)
-    const isOwner = await bouncer.allows(ownSpace, branch)
-    if (!isOwner) {
-      return response.forbidden('You cannot edit this cell')
-    }
+    const branch = await Branch.findOrFail(data.branchId)
+    await bouncer.authorize(ownSpace, branch)
 
     const cell = await Cell.query().where('id', data.id).where('branch_id', data.branchId).first()
     if (!cell) {
@@ -39,10 +36,13 @@ export default class CellsController {
     return response.ok(true)
   }
 
-  async saveContent({ request, response }: HttpContext) {
+  async saveContent({ request, response, bouncer }: HttpContext) {
     const data = await request.validateUsing(saveContent)
-    const cell = await Cell.findBy('id', data.id)
 
+    const branch = await Branch.findOrFail(data.branchId)
+    await bouncer.authorize(ownSpace, branch)
+
+    const cell = await Cell.query().where('id', data.id).where('branch_id', data.branchId).first()
     if (!cell) {
       return response.forbidden('The given id is not a valid cell')
     }
@@ -51,5 +51,21 @@ export default class CellsController {
     cell.save()
 
     return response.ok(true)
+  }
+
+  async createNote({ request, bouncer }: HttpContext) {
+    const data = await request.validateUsing(createNote)
+
+    const branch = await Branch.findOrFail(data.branchId)
+    await bouncer.authorize(ownSpace, branch)
+
+    const c = {
+      branch_id: data.branchId,
+      type: 'note',
+    }
+
+    const cell = Cell.create(c)
+
+    return cell
   }
 }
