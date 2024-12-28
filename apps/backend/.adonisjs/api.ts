@@ -42,6 +42,10 @@ type V1CellSavecontentPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['saveContent']>>
   response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['saveContent'], true>
 }
+type V1CellCreatenotePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['createNote']>>
+  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['createNote'], true>
+}
 export interface ApiDefinition {
   'v1': {
     'auth': {
@@ -97,6 +101,11 @@ export interface ApiDefinition {
         '$url': {
         };
         '$post': V1CellSavecontentPost;
+      };
+      'create_note': {
+        '$url': {
+        };
+        '$post': V1CellCreatenotePost;
       };
     };
   };
@@ -164,6 +173,13 @@ const routes = [
     path: '/v1/cell/save_content',
     method: ["POST"],
     types: {} as V1CellSavecontentPost,
+  },
+  {
+    params: [],
+    name: 'branch.create.note',
+    path: '/v1/cell/create_note',
+    method: ["POST"],
+    types: {} as V1CellCreatenotePost,
   },
 ] as const;
 export const api = {

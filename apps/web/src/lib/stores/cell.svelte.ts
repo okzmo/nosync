@@ -3,6 +3,8 @@ import type { TNote, TPhoto } from '$lib/types/space';
 import { space } from './space.svelte';
 import { branch } from './branch.svelte';
 import type { JSONContent } from '@tiptap/core';
+import { panel } from './panel.svelte';
+import { backdrop } from './backdrop.svelte';
 
 class Cell {
 	active = $state<TPhoto | TNote | undefined>();
@@ -36,6 +38,23 @@ class Cell {
 		};
 
 		await tuyau.v1.cell.save_content.$post(body);
+	}
+
+	async createNote() {
+		const { data, error } = await tuyau.v1.cell.create_note.$post({
+			branchId: space.currentBranch?.id
+		});
+
+		if (error) {
+			console.error(error);
+			return;
+		}
+
+		cell.active = data;
+		cell.activeIdx = branch.cells.length;
+		branch.cells.push(data);
+		backdrop.open();
+		panel.open();
 	}
 }
 
