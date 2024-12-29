@@ -11,12 +11,19 @@ import {
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class CellsController {
-  async allCells({ request, response }: HttpContext) {
+  async allCells({ request, response, bouncer }: HttpContext) {
     const branchId = request.param('branchId')
     const validBranchId = await retrieveCellsFromBranch.validate({ branchId: branchId })
     if (!validBranchId) {
-      return response.forbidden('You cannot get the cells of this branch')
+      return response.forbidden('The given id is not a valid branch')
     }
+
+    const branch = await Branch.findOrFail(validBranchId.branchId)
+    const isOwner = await bouncer.allows(ownSpace, branch)
+    if (!isOwner) {
+      return response.forbidden("You're not the owner of this branch")
+    }
+
     const cells = await Cell.query()
       .where('branch_id', Number.parseInt(branchId))
       .orderBy('created_at', 'asc')

@@ -11,20 +11,17 @@ import drive from '@adonisjs/drive/services/main'
 export default class SpaceController {
   async create({ request, response, auth }: HttpContext) {
     const data = await request.validateUsing(createSpace)
-    const user = auth.user
+    const user = await auth.authenticate()
 
-    const space = {
-      owner_id: user?.id,
-      name: data.name,
-    }
+    const space = new Space()
+    space.owner_id = user.id
+    space.name = data.name
+    const createdSpace = await space.save()
 
-    const createdSpace = await Space.create(space)
-
-    const branch = {
-      space_id: createdSpace.id,
-      name: 'root',
-    }
-    await Branch.create(branch)
+    const branch = new Branch()
+    branch.space_id = createdSpace.id
+    branch.name = 'root'
+    await branch.save()
 
     return response.ok(true)
   }
