@@ -1,7 +1,6 @@
 services:
   backend-db:
     image: ${BACKEND_DB_IMAGE}
-    hostname: ${BACKEND_DB_HOST}
     env_file: .env
     environment:
       - POSTGRES_DB=${BACKEND_DB_NAME}
