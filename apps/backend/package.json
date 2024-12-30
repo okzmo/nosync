@@ -67,7 +67,6 @@
     "@aws-sdk/s3-request-presigner": "^3.714.0",
     "@tuyau/core": "^0.2.3",
     "@vinejs/vine": "^3.0.0",
-    "@xenova/transformers": "github:xenova/transformers.js#v3",
     "better-sqlite3": "^11.7.0",
     "luxon": "^3.5.0",
     "pg": "^8.13.1",
