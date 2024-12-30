@@ -63,7 +63,7 @@ class DropZone {
 			formData.append(`filesMetadata[]`, JSON.stringify(metadata));
 		});
 
-		const { data, error } = await tuyau.v1.space.upload.$post(formData);
+		const { data, error } = await tuyau.v1.branch.upload.$post(formData);
 
 		if (error) {
 			console.error(error);

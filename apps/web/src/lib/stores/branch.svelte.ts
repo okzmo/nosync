@@ -40,6 +40,7 @@ class Branch {
 
 		for (const cell of cells) {
 			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {
+				$inspect(cell);
 				const photo_size = calculatePhotoSize(cell);
 				const photo_pos = calculatePhotoPosition(photo_size);
 				processedCells.push(photo_pos);

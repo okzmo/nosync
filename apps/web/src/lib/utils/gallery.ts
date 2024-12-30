@@ -41,6 +41,7 @@ export function calculateCellPosition(cell: TPhoto | TNote) {
 
 export function calculatePhotoSize(cell) {
 	const photo = cell.media;
+	console.log(photo);
 	const colWidth = global.colWidth;
 	const aspectRatio = photo.width / photo.height;
 	const picHeight = colWidth / aspectRatio;

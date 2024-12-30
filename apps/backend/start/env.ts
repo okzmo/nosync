@@ -23,6 +23,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring database connection
   |----------------------------------------------------------
   */
+  DB_CONNECTION: Env.schema.enum(['sqlite', 'postgres'] as const),
   DB_HOST: Env.schema.string({ format: 'host' }),
   DB_PORT: Env.schema.number(),
   DB_USER: Env.schema.string(),
@@ -45,5 +46,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   AWS_ACCESS_KEY_ID: Env.schema.string(),
   AWS_SECRET_ACCESS_KEY: Env.schema.string(),
   AWS_REGION: Env.schema.string(),
-  S3_BUCKET: Env.schema.string()
+  S3_BUCKET: Env.schema.string(),
+
+  HUGGINGFACE_API_KEY: Env.schema.string()
 })

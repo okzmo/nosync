@@ -7,48 +7,48 @@ import type { MakeTuyauRequest, MakeTuyauResponse } from '@tuyau/utils/types'
 import type { InferInput } from '@vinejs/vine/types'
 
 type V1AuthRegisterPost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/auth.ts')['registerValidator']>>
-  response: MakeTuyauResponse<import('../app/controllers/auth/register_controller.ts').default['store_web'], true>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/Register/validator.ts')['registerValidator']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/Register/controller.ts').default['handle'], true>
 }
 type V1AuthLoginPost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/auth.ts')['loginValidator']>>
-  response: MakeTuyauResponse<import('../app/controllers/auth/login_controller.ts').default['store_web'], true>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/Login/validator.ts')['loginValidator']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/Login/controller.ts').default['handle'], true>
 }
 type V1AuthValidGetHead = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/auth/login_controller.ts').default['check'], false>
+  response: MakeTuyauResponse<import('../app/user/usecases/CheckUser/controller.ts').default['handle'], false>
 }
 type V1AuthLogoutPost = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/auth/logout_controller.ts').default['handle'], false>
+  response: MakeTuyauResponse<import('../app/user/usecases/Logout/controller.ts').default['handle'], false>
 }
-type V1SpaceCreatePost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/space.ts')['createSpace']>>
-  response: MakeTuyauResponse<import('../app/controllers/spaces_controller.ts').default['create'], true>
+type V1CellSavetitlePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/SaveTitle/validator.ts')['saveTitleValidator']>>
+  response: MakeTuyauResponse<import('../app/cell/usecases/SaveTitle/controller.ts').default['handle'], true>
 }
-type V1SpaceUploadPost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/space.ts')['uploadToSpace']>>
-  response: MakeTuyauResponse<import('../app/controllers/spaces_controller.ts').default['upload'], true>
+type V1CellSavecontentPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/SaveContent/validator.ts')['saveContentValidator']>>
+  response: MakeTuyauResponse<import('../app/cell/usecases/SaveContent/controller.ts').default['handle'], true>
+}
+type V1CellCreatenotePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/CreateNote/validator.ts')['createNoteValidator']>>
+  response: MakeTuyauResponse<import('../app/cell/usecases/CreateNote/controller.ts').default['handle'], true>
+}
+type V1CellDeletecellDelete = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/DeleteCell/validator.ts')['deleteCellValidator']>>
+  response: MakeTuyauResponse<import('../app/cell/usecases/DeleteCell/controller.ts').default['handle'], true>
 }
 type V1BranchIdGetHead = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['allCells'], false>
+  response: MakeTuyauResponse<import('../app/branch/usecases/GetCells/controller.ts').default['handle'], false>
 }
-type V1CellSavetitlePost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['saveTitle']>>
-  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['saveTitle'], true>
+type V1BranchUploadPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/UploadMedia/validators.ts')['uploadMediaValidator']>>
+  response: MakeTuyauResponse<import('../app/branch/usecases/UploadMedia/controller.ts').default['handle'], true>
 }
-type V1CellSavecontentPost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['saveContent']>>
-  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['saveContent'], true>
-}
-type V1CellCreatenotePost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['createNote']>>
-  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['createNote'], true>
-}
-type V1CellDeletecellDelete = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/cell.ts')['deleteCell']>>
-  response: MakeTuyauResponse<import('../app/controllers/cells_controller.ts').default['deleteCell'], true>
+type V1SpaceCreatePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/CreateSpace/validator.ts')['createSpaceValidator']>>
+  response: MakeTuyauResponse<import('../app/space/usecases/CreateSpace/controller.ts').default['handle'], true>
 }
 export interface ApiDefinition {
   'v1': {
@@ -75,26 +75,6 @@ export interface ApiDefinition {
         '$post': V1AuthLogoutPost;
       };
     };
-    'space': {
-      'create': {
-        '$url': {
-        };
-        '$post': V1SpaceCreatePost;
-      };
-      'upload': {
-        '$url': {
-        };
-        '$post': V1SpaceUploadPost;
-      };
-    };
-    'branch': {
-      ':branchId': {
-        '$url': {
-        };
-        '$get': V1BranchIdGetHead;
-        '$head': V1BranchIdGetHead;
-      };
-    };
     'cell': {
       'save_title': {
         '$url': {
@@ -117,57 +97,56 @@ export interface ApiDefinition {
         '$delete': V1CellDeletecellDelete;
       };
     };
+    'branch': {
+      ':branchId': {
+        '$url': {
+        };
+        '$get': V1BranchIdGetHead;
+        '$head': V1BranchIdGetHead;
+      };
+      'upload': {
+        '$url': {
+        };
+        '$post': V1BranchUploadPost;
+      };
+    };
+    'space': {
+      'create': {
+        '$url': {
+        };
+        '$post': V1SpaceCreatePost;
+      };
+    };
   };
 }
 const routes = [
   {
     params: [],
-    name: 'register.store.web',
+    name: 'register',
     path: '/v1/auth/register',
     method: ["POST"],
     types: {} as V1AuthRegisterPost,
   },
   {
     params: [],
-    name: 'login.store.web',
+    name: 'login',
     path: '/v1/auth/login',
     method: ["POST"],
     types: {} as V1AuthLoginPost,
   },
   {
     params: [],
-    name: 'login.check.web',
+    name: 'check.user',
     path: '/v1/auth/valid',
     method: ["GET","HEAD"],
     types: {} as V1AuthValidGetHead,
   },
   {
     params: [],
-    name: 'logout.store.web',
+    name: 'logout',
     path: '/v1/auth/logout',
     method: ["POST"],
     types: {} as V1AuthLogoutPost,
-  },
-  {
-    params: [],
-    name: 'space.create',
-    path: '/v1/space/create',
-    method: ["POST"],
-    types: {} as V1SpaceCreatePost,
-  },
-  {
-    params: [],
-    name: 'space.upload',
-    path: '/v1/space/upload',
-    method: ["POST"],
-    types: {} as V1SpaceUploadPost,
-  },
-  {
-    params: ["branchId"],
-    name: 'branch.allCells',
-    path: '/v1/branch/:branchId',
-    method: ["GET","HEAD"],
-    types: {} as V1BranchIdGetHead,
   },
   {
     params: [],
@@ -196,6 +175,27 @@ const routes = [
     path: '/v1/cell/delete_cell',
     method: ["DELETE"],
     types: {} as V1CellDeletecellDelete,
+  },
+  {
+    params: ["branchId"],
+    name: 'branch.getCells',
+    path: '/v1/branch/:branchId',
+    method: ["GET","HEAD"],
+    types: {} as V1BranchIdGetHead,
+  },
+  {
+    params: [],
+    name: 'branch.uploadMedia',
+    path: '/v1/branch/upload',
+    method: ["POST"],
+    types: {} as V1BranchUploadPost,
+  },
+  {
+    params: [],
+    name: 'space.create',
+    path: '/v1/space/create',
+    method: ["POST"],
+    types: {} as V1SpaceCreatePost,
   },
 ] as const;
 export const api = {

@@ -9,7 +9,7 @@ const authConfig = defineConfig({
       useRememberMeTokens: true,
       rememberMeTokensAge: '30 days',
       provider: sessionUserProvider({
-        model: () => import('#models/user'),
+        model: () => import('#user/models/user'),
       }),
     }),
   },
