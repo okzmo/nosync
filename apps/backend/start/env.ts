@@ -48,5 +48,16 @@ export default await Env.create(new URL('../', import.meta.url), {
   AWS_REGION: Env.schema.string(),
   S3_BUCKET: Env.schema.string(),
 
-  HUGGINGFACE_API_KEY: Env.schema.string()
+  HUGGINGFACE_API_KEY: Env.schema.string(),
+
+  OPENAI_API_KEY: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for @rlanz/bull-queue
+  |----------------------------------------------------------
+  */
+  QUEUE_REDIS_HOST: Env.schema.string({ format: 'host' }),
+  QUEUE_REDIS_PORT: Env.schema.number(),
+  QUEUE_REDIS_PASSWORD: Env.schema.string.optional()
 })

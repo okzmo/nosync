@@ -20,7 +20,7 @@ export default class Cell extends BaseModel {
   declare content: string
 
   @column()
-  declare tags: string[]
+  declare tags: string
 
   @hasOne(() => Media, { foreignKey: 'cell_id' })
   declare media: HasOne<typeof Media>

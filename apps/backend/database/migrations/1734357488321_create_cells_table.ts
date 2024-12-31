@@ -10,7 +10,7 @@ export default class extends BaseSchema {
       table.string('title')
       table.string('type').notNullable()
       table.jsonb('content')
-      table.jsonb('tags').defaultTo('[]')
+      table.text('tags')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

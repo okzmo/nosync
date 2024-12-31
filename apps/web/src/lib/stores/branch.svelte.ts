@@ -9,17 +9,44 @@ import {
 } from '$lib/utils/gallery';
 import { space } from './space.svelte';
 import { global, GUTTER } from './global.svelte';
+import { Subscription } from '@adonisjs/transmit-client';
+import { transmit } from '$lib/api/transmit';
 
 class Branch {
 	cells = $state<TCell[]>([]);
 	activeCellIdx = $state(-1);
 	activeCell = $state<TPhoto | undefined>();
 	cellWrapper = $state<HTMLDivElement | null>();
+	branchChannel = $state<Subscription | undefined>();
+
+	async initializeTransmit() {
+		branch.branchChannel = transmit.subscription(`branch/${space.currentBranch?.id}`);
+		await branch.branchChannel.create();
+
+		branch.branchChannel.onMessage((data) => {
+			switch (data.type) {
+				case 'branch:updateUploadedImage':
+					this.updateImageCell(data);
+					break;
+			}
+		});
+	}
 
 	async getCells() {
 		const { data } = await tuyau.v1.branch({ branchId: '' + space.currentBranch?.id }).$get();
 
 		return data;
+	}
+
+	addCells(cells: any) {
+		if (!cells) return [];
+		this.cells.push(...cells);
+	}
+
+	updateImageCell(data: any) {
+		const idx = this.cells.findIndex((c) => c.id === data.cellId);
+		this.cells[idx].tags = data.tags;
+		this.cells[idx].media.url = data.imageUrl;
 	}
 
 	processCells(cells: any): Array<TPhoto | TNote | TDefault> {
@@ -40,7 +67,6 @@ class Branch {
 
 		for (const cell of cells) {
 			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {
-				$inspect(cell);
 				const photo_size = calculatePhotoSize(cell);
 				const photo_pos = calculatePhotoPosition(photo_size);
 				processedCells.push(photo_pos);
@@ -52,11 +78,6 @@ class Branch {
 		}
 
 		return processedCells;
-	}
-
-	addCells(cells: any) {
-		if (!cells) return [];
-		this.cells.push(...cells);
 	}
 }
 

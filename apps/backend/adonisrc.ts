@@ -15,6 +15,7 @@ export default defineConfig({
     () => import('@adonisjs/lucid/commands'),
     () => import('@tuyau/core/commands'),
     () => import('@adonisjs/bouncer/commands'),
+    () => import('@rlanz/bull-queue/commands')
   ],
 
   /*
@@ -41,6 +42,8 @@ export default defineConfig({
     () => import('@tuyau/core/tuyau_provider'),
     () => import('@adonisjs/bouncer/bouncer_provider'),
     () => import('@adonisjs/drive/drive_provider'),
+    () => import('@rlanz/bull-queue/queue_provider'),
+    () => import('@adonisjs/transmit/transmit_provider')
   ],
 
   /*

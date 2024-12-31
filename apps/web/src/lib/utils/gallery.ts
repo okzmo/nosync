@@ -1,5 +1,6 @@
 import type { TNote, TPhoto } from '$lib/types/space';
 import { global, GUTTER } from '$lib/stores/global.svelte';
+import { blurhashToDataURL } from './media';
 
 export const columnHeights = Array(global.nbColumns).fill(0);
 
@@ -41,10 +42,10 @@ export function calculateCellPosition(cell: TPhoto | TNote) {
 
 export function calculatePhotoSize(cell) {
 	const photo = cell.media;
-	console.log(photo);
 	const colWidth = global.colWidth;
 	const aspectRatio = photo.width / photo.height;
 	const picHeight = colWidth / aspectRatio;
+	const blurHash = blurhashToDataURL(photo.blurHash);
 
 	const p: TPhoto = {
 		id: cell.id,
@@ -52,7 +53,8 @@ export function calculatePhotoSize(cell) {
 		title: cell.title,
 		content: cell.content,
 		blurHash: '',
-		url: photo.url,
+		tags: '',
+		url: photo.url === '' ? blurHash : photo.url,
 		width: Math.floor(colWidth),
 		height: Math.floor(picHeight),
 		x: 0,

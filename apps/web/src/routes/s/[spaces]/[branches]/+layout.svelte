@@ -6,12 +6,14 @@
 	import { global } from '$lib/stores/global.svelte';
 	import Panel from '../../../../ui/panel/panel.svelte';
 	import Backdrop from '../../../../ui/layout/backdrop.svelte';
+	import { branch } from '$lib/stores/branch.svelte';
 
 	let { children } = $props();
 
-	onMount(() => {
+	onMount(async () => {
 		global.init();
 		menu.init();
+		branch.initializeTransmit();
 	});
 </script>
 

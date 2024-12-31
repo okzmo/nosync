@@ -35,6 +35,7 @@ export type TPhoto = {
 	url: string;
 	width: number;
 	height: number;
+	tags: string;
 	x: number;
 	y: number;
 	aspectRatio: number;
@@ -46,6 +47,7 @@ export type TNote = {
 	title: string;
 	content: JSONContent | undefined;
 	width: number;
+	tags: string;
 	height: number;
 	x: number;
 	y: number;

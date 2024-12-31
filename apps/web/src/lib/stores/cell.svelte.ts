@@ -1,5 +1,5 @@
 import { tuyau } from '$lib/api';
-import type { TCell, TNote, TPhoto } from '$lib/types/space';
+import type { TNote, TPhoto } from '$lib/types/space';
 import { space } from './space.svelte';
 import { branch } from './branch.svelte';
 import type { JSONContent } from '@tiptap/core';
@@ -49,7 +49,6 @@ class Cell {
 		const { data, error } = await tuyau.v1.cell.create_note.$post({
 			branchId: space.currentBranch?.id
 		});
-		console.log(data);
 
 		if (error) {
 			console.error(error);

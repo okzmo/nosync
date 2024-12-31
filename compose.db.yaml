@@ -11,5 +11,17 @@ services:
     volumes:
       - backend-db-data:/var/lib/postgresql/data
 
+  bull-queue:
+    image: redis:7.4.1-alpine
+    restart: always
+    env_file: .env
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${QUEUE_PASSWORD}
+    volumes:
+      - queue-data:/queue-data
+
 volumes:
   backend-db-data:
+  queue-data:
+    driver: local
