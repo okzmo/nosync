@@ -7,6 +7,7 @@
 	import SolarPenNewSquareBoldDuotone from '~icons/solar/pen-new-square-bold-duotone';
 	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
 	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
+	import SolarMaximizeBold from '~icons/solar/maximize-bold';
 
 	type Props = {
 		photo: TPhoto;
@@ -17,10 +18,18 @@
 
 <ContextMenu.Root>
 	<ContextMenu.Trigger>
-		<button
+		<div
+			role="button"
+			tabindex="0"
 			onclick={() => {
 				backdrop.open();
 				panel.open();
+			}}
+			onkeydown={(e) => {
+				if (e.key === 'Enter') {
+					backdrop.open();
+					panel.open();
+				}
 			}}
 			onmouseover={() => {
 				cell.activeIdx = i;
@@ -49,7 +58,19 @@
 					width={20}
 				/>
 			{/if}
-		</button>
+
+			<button
+				aria-label="Maximize the picture"
+				onclick={(e) => {
+					e.stopPropagation();
+					cell.maximized = photo;
+					backdrop.open();
+				}}
+				class="absolute left-2 top-2 rounded-xl bg-zinc-700/40 p-2 opacity-0 backdrop-blur-sm transition-all hover:bg-zinc-700/70 active:bg-zinc-700/50 group-hover:opacity-100"
+			>
+				<SolarMaximizeBold height={16} width={16} />
+			</button>
+		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
 		<ContextMenu.Content

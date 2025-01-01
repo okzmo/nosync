@@ -1,5 +1,3 @@
-import { backdrop } from './backdrop.svelte';
-
 class Panel {
 	isOpen = $state(false);
 	isFullscreen = $state(false);

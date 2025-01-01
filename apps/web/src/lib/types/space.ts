@@ -35,6 +35,8 @@ export type TPhoto = {
 	url: string;
 	width: number;
 	height: number;
+	originalWidth: number;
+	originalHeight: number;
 	tags: string;
 	x: number;
 	y: number;

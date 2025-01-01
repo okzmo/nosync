@@ -1,12 +1,12 @@
 <script lang="ts">
+	import { branch } from '$lib/stores/branch.svelte';
+	import { global } from '$lib/stores/global.svelte';
+	import { menu } from '$lib/stores/menu.svelte';
+	import { onMount } from 'svelte';
+	import Backdrop from '../../../../ui/layout/backdrop.svelte';
 	import Navigation from '../../../../ui/layout/navigation.svelte';
 	import Search from '../../../../ui/layout/search.svelte';
-	import { onMount } from 'svelte';
-	import { menu } from '$lib/stores/menu.svelte';
-	import { global } from '$lib/stores/global.svelte';
 	import Panel from '../../../../ui/panel/panel.svelte';
-	import Backdrop from '../../../../ui/layout/backdrop.svelte';
-	import { branch } from '$lib/stores/branch.svelte';
 
 	let { children } = $props();
 

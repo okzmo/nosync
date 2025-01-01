@@ -1,4 +1,5 @@
 import { tuyau } from '$lib/api';
+import { transmit } from '$lib/api/transmit';
 import type { TCell, TDefault, TNote, TPhoto } from '$lib/types/space';
 import {
 	calculateCellPosition,
@@ -7,15 +8,12 @@ import {
 	calculatePhotoSize,
 	columnHeights
 } from '$lib/utils/gallery';
-import { space } from './space.svelte';
-import { global, GUTTER } from './global.svelte';
 import { Subscription } from '@adonisjs/transmit-client';
-import { transmit } from '$lib/api/transmit';
+import { global, GUTTER } from './global.svelte';
+import { space } from './space.svelte';
 
 class Branch {
 	cells = $state<TCell[]>([]);
-	activeCellIdx = $state(-1);
-	activeCell = $state<TPhoto | undefined>();
 	cellWrapper = $state<HTMLDivElement | null>();
 	branchChannel = $state<Subscription | undefined>();
 

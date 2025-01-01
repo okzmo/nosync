@@ -1,16 +1,17 @@
 <script lang="ts">
+	import { tuyau } from '$lib/api';
 	import { backdrop } from '$lib/stores/backdrop.svelte';
 	import { branch } from '$lib/stores/branch.svelte';
-	import Dropzone from '../../../../ui/space/dropzone.svelte';
-	import { onMount } from 'svelte';
+	import { cell } from '$lib/stores/cell.svelte';
+	import { global } from '$lib/stores/global.svelte';
 	import { panel } from '$lib/stores/panel.svelte';
+	import { space } from '$lib/stores/space.svelte';
+	import { onMount } from 'svelte';
+	import Dropzone from '../../../../ui/branch/dropzone.svelte';
+	import MaximizeZone from '../../../../ui/branch/maximize-zone.svelte';
+	import MainButton from '../../../../ui/cells/main-button.svelte';
 	import Media from '../../../../ui/cells/media.svelte';
 	import Note from '../../../../ui/cells/note.svelte';
-	import { global } from '$lib/stores/global.svelte';
-	import { tuyau } from '$lib/api';
-	import { space } from '$lib/stores/space.svelte';
-	import { cell } from '$lib/stores/cell.svelte';
-	import MainButton from '../../../../ui/cells/main-button.svelte';
 
 	const shownCells = $derived.by(() => {
 		if (!global.ready) return [];
@@ -44,6 +45,7 @@
 </script>
 
 <Dropzone />
+<MaximizeZone />
 
 <div class="relative h-screen w-screen overflow-auto p-4" bind:this={branch.cellWrapper}>
 	{#if shownCells.length > 0}

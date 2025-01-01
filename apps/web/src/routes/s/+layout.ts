@@ -1,6 +1,6 @@
+import { auth } from '$lib/stores/auth.svelte';
 import { space } from '$lib/stores/space.svelte';
 import type { PageLoad } from './$types';
-import { auth } from '$lib/stores/auth.svelte';
 
 export const load: PageLoad = async ({ url }) => {
 	await auth.check();

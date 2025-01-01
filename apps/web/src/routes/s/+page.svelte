@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { tuyau } from '$lib/api/index.js';
+	import { spaceCreation } from '$lib/schemas/space';
 	import { Control, Field, FieldErrors } from 'formsnap';
+	import { fly } from 'svelte/transition';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { spaceCreation } from '$lib/schemas/space';
-	import { fly } from 'svelte/transition';
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
-	import { tuyau } from '$lib/api/index.js';
 
 	let { data } = $props();
 

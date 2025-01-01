@@ -1,6 +1,6 @@
-import type { TNote, TPhoto } from '$lib/types/space';
 import { global, GUTTER } from '$lib/stores/global.svelte';
-import { blurhashToDataURL } from './media';
+import type { TNote, TPhoto } from '$lib/types/space';
+import { blurhashToDataURL, generateMaximizedSize } from './media';
 
 export const columnHeights = Array(global.nbColumns).fill(0);
 
@@ -46,6 +46,7 @@ export function calculatePhotoSize(cell) {
 	const aspectRatio = photo.width / photo.height;
 	const picHeight = colWidth / aspectRatio;
 	const blurHash = blurhashToDataURL(photo.blurHash);
+	const maximizedSize = generateMaximizedSize(photo.height, photo.width);
 
 	const p: TPhoto = {
 		id: cell.id,
@@ -55,6 +56,8 @@ export function calculatePhotoSize(cell) {
 		blurHash: '',
 		tags: '',
 		url: photo.url === '' ? blurHash : photo.url,
+		originalHeight: maximizedSize.height,
+		originalWidth: maximizedSize.width,
 		width: Math.floor(colWidth),
 		height: Math.floor(picHeight),
 		x: 0,

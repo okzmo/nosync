@@ -58,3 +58,25 @@ export function blurhashToDataURL(blurhash: string, width = 32, height = 32) {
 	ctx!.putImageData(imageData, 0, 0);
 	return canvas.toDataURL();
 }
+
+export function generateMaximizedSize(originalHeight: number, originalWidth: number) {
+	const vHeight = window.innerHeight * 0.8;
+	const vWidth = window.innerWidth * 0.8;
+
+	const aspectRatio = originalWidth / originalHeight;
+
+	let newWidth = originalWidth;
+	let newHeight = originalHeight;
+
+	if (originalWidth > vWidth || originalHeight > vHeight) {
+		if (vWidth / vHeight > aspectRatio) {
+			newHeight = vHeight;
+			newWidth = vHeight * aspectRatio;
+		} else {
+			newWidth = vWidth;
+			newHeight = vWidth / aspectRatio;
+		}
+	}
+
+	return { height: newHeight, width: newWidth };
+}

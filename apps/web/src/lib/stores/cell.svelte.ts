@@ -1,14 +1,15 @@
 import { tuyau } from '$lib/api';
 import type { TNote, TPhoto } from '$lib/types/space';
-import { space } from './space.svelte';
-import { branch } from './branch.svelte';
 import type { JSONContent } from '@tiptap/core';
-import { panel } from './panel.svelte';
 import { backdrop } from './backdrop.svelte';
+import { branch } from './branch.svelte';
+import { panel } from './panel.svelte';
+import { space } from './space.svelte';
 
 class Cell {
 	active = $state<TPhoto | TNote | undefined>();
 	activeIdx = $state(-1);
+	maximized = $state<TPhoto | undefined>();
 
 	async saveTitle(title: string) {
 		if (!this.active) return;

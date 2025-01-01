@@ -1,3 +1,5 @@
+import { cell } from './cell.svelte';
+
 class Backdrop {
 	active = $state(false);
 	blur = $state(false);
@@ -18,6 +20,7 @@ class Backdrop {
 	close() {
 		this.active = false;
 		this.blur = false;
+		cell.maximized = undefined;
 	}
 }
 

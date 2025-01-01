@@ -1,15 +1,15 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { tuyau } from '$lib/api';
+	import { register } from '$lib/schemas/auth';
+	import { Button } from 'bits-ui';
 	import { Control, Field } from 'formsnap';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
-	import { register } from '$lib/schemas/auth';
-	import { Button } from 'bits-ui';
-	import Input from '../../ui/shared/input.svelte';
 	import SolarLetterBoldDuotone from '~icons/solar/letter-bold-duotone';
 	import SolarLockPasswordBoldDuotone from '~icons/solar/lock-password-bold-duotone';
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
-	import { tuyau } from '$lib/api';
-	import { goto } from '$app/navigation';
+	import Input from '../../ui/shared/input.svelte';
 
 	let globalError = $state('');
 	let email_input = $state<HTMLInputElement>();
