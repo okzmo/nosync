@@ -19,11 +19,12 @@ export default {
 				}
 			},
 			backgroundImage: {
-				"version": "linear-gradient(90.48deg, #1D3E68 40.81%, #3674C3 71.67%, #9BBBE3 99.59%)"
+				version: 'linear-gradient(90.48deg, #1D3E68 40.81%, #3674C3 71.67%, #9BBBE3 99.59%)'
 			},
 			boxShadow: {
 				'accent-in-highlight':
-					'inset 0px 0px 0px 1px rgba(250,250,250, 0.65), inset 0px 0px 16px rgba(250,250,250, 0.5)'
+					'inset 0px 0px 0px 1px rgba(250,250,250, 0.65), inset 0px 0px 16px rgba(250,250,250, 0.5)',
+				'2xl-no-y': '0px 0px 50px 0px rgba(0, 0, 0, 0.35)'
 			}
 		}
 	},

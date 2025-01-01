@@ -15,6 +15,14 @@
 	let content = $state<Content | undefined>();
 	let typing = $state(false);
 
+	function deleteActiveCell() {
+		cell.delete(cell.active?.id, cell.activeIdx);
+		backdrop.close();
+		panel.close();
+		cell.active = undefined;
+		cell.activeIdx = -1;
+	}
+
 	$effect(() => {
 		if (cell.active) {
 			title = cell.active.title;
@@ -37,6 +45,7 @@
 				class:opacity-0={typing && panel.isFullscreen}
 			>
 				<button
+					onclick={deleteActiveCell}
 					class="flex h-6 w-6 items-center justify-center rounded-lg transition-colors hover:bg-red-500/15 hover:text-red-500"
 				>
 					<SolarTrashBin2BoldDuotone height={18} width={18} />
