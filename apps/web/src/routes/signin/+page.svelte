@@ -9,7 +9,7 @@
 	import SolarLetterBoldDuotone from '~icons/solar/letter-bold-duotone';
 	import SolarLockPasswordBoldDuotone from '~icons/solar/lock-password-bold-duotone';
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
-	import Input from '../../ui/shared/input.svelte';
+	import Input from 'ui/shared/input.svelte';
 
 	let globalError = $state('');
 	let email_input = $state<HTMLInputElement>();

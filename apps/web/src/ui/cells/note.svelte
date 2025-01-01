@@ -41,7 +41,7 @@
 				cell.activeIdx = i;
 				cell.active = note;
 			}}
-			class="group absolute flex flex-col items-start justify-start overflow-hidden rounded-2xl border border-zinc-50/10 bg-zinc-900 px-6 py-4 transition-colors after:absolute after:left-0 after:top-0 after:h-full after:w-full after:content-normal after:bg-gradient-to-t after:from-zinc-900 after:to-transparent hover:border-zinc-50/30 active:border-zinc-50/20"
+			class="group absolute flex flex-col items-start justify-start overflow-hidden rounded-2xl border border-zinc-50/10 bg-zinc-900 px-6 py-4 shadow-2xl transition-colors after:absolute after:left-0 after:top-0 after:h-full after:w-full after:content-normal after:bg-gradient-to-t after:from-zinc-900 after:to-transparent hover:border-zinc-50/30 active:border-zinc-50/20"
 			style="height: {note.height}px; width: {note.width}px; transform: translate({note.x}px, {note.y}px);"
 		>
 			<h3 class="text-2xl font-semibold">{note.title}</h3>

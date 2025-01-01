@@ -3,10 +3,10 @@
 	import { global } from '$lib/stores/global.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
 	import { onMount } from 'svelte';
-	import Backdrop from '../../../../ui/layout/backdrop.svelte';
-	import Navigation from '../../../../ui/layout/navigation.svelte';
-	import Search from '../../../../ui/layout/search.svelte';
-	import Panel from '../../../../ui/panel/panel.svelte';
+	import Backdrop from 'ui/layout/backdrop.svelte';
+	import Navigation from 'ui/layout/navigation.svelte';
+	import Search from 'ui/layout/search.svelte';
+	import Panel from 'ui/panel/panel.svelte';
 
 	let { children } = $props();
 

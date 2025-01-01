@@ -50,6 +50,7 @@ class Cell {
 		const { data, error } = await tuyau.v1.cell.create_note.$post({
 			branchId: space.currentBranch?.id
 		});
+		console.log(data);
 
 		if (error) {
 			console.error(error);

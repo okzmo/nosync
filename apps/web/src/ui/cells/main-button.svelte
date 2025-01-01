@@ -7,7 +7,7 @@
 
 <button
 	aria-label="Create a cell"
-	class="group absolute flex items-center justify-center rounded-2xl border border-zinc-50/10 bg-zinc-900 transition-colors hover:border-zinc-50/30 active:border-zinc-50/20"
+	class="group absolute flex items-center justify-center rounded-2xl border border-zinc-50/10 bg-zinc-900 shadow-2xl transition-colors hover:border-zinc-50/30 active:border-zinc-50/20"
 	style="height: {main.height}px; width: {main.width}px; transform: translate({main.x}px, {main.y}px);"
 	onclick={() => cell.createNote()}
 >

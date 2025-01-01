@@ -5,8 +5,8 @@ export class CreateNoteService {
     const cell = new Cell()
     cell.branch_id = branchId
     cell.type = 'note'
-    cell.save()
+    const newNote = cell.save()
 
-    return cell
+    return newNote
   }
 }

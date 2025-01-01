@@ -17,8 +17,8 @@ export default class CreateNoteController {
       return response.forbidden("You're not the owner of this branch")
     }
 
-    const cell = await this.createNote.execute(data.branchId)
+    const newNote = await this.createNote.execute(data.branchId)
 
-    return cell
+    return newNote
   }
 }
