@@ -6,46 +6,45 @@
 	import Breadcrumbs from './navigation/breadcrumbs.svelte';
 </script>
 
-<header
-	class="fixed top-0 z-[999] flex w-full items-center justify-between px-8 pt-5 opacity-0"
-	class:active={menu.open}
->
-	<Breadcrumbs />
+<header class="fixed top-0 z-[999] flex w-full items-center justify-between px-8 pt-5">
+	{#if menu.open}
+		<Breadcrumbs />
 
-	<nav
-		class="fixed left-1/2 z-[1] flex -translate-x-1/2 justify-center"
-		transition:fade={{ duration: 75 }}
-	>
-		<ul class="flex gap-x-6 font-serif text-lg italic text-zinc-50/50">
-			<li><a href="/" class="text-zinc-50">home</a></li>
-			<li><span class="transition-colors hover:cursor-not-allowed">mail</span></li>
-			<li><span class="transition-colors hover:cursor-not-allowed">calendar</span></li>
-			<li><span class="transition-colors hover:cursor-not-allowed">profile</span></li>
+		<nav
+			class="fixed left-1/2 z-[1] flex -translate-x-1/2 justify-center"
+			transition:fade={{ duration: 75 }}
+		>
+			<ul class="flex gap-x-6 font-serif text-lg italic text-zinc-50/50">
+				<li><a href="/" class="text-zinc-50">home</a></li>
+				<li><span class="transition-colors hover:cursor-not-allowed">mail</span></li>
+				<li><span class="transition-colors hover:cursor-not-allowed">calendar</span></li>
+				<li><span class="transition-colors hover:cursor-not-allowed">profile</span></li>
+			</ul>
+		</nav>
+
+		<ul
+			class="z-[1] flex items-center gap-x-4 font-serif text-lg italic"
+			transition:fade={{ duration: 75 }}
+		>
+			<li class="flex items-center justify-center">
+				<a href="/settings" class="text-zinc-50/50 transition-colors hover:text-zinc-50">
+					<SolarSettingsBoldDuotone height={18} width={18} />
+				</a>
+			</li>
+			<!-- <li class="flex items-center justify-center"> -->
+			<!-- 	<button class="text-zinc-50/50 transition-colors hover:text-zinc-50"> -->
+			<!-- 		<SolarBellBoldDuotone height={18} width={18} /> -->
+			<!-- 	</button> -->
+			<!-- </li> -->
+			<li class="flex items-center justify-center">
+				<button class="text-zinc-50/50 transition-colors hover:text-zinc-50">
+					<SolarSun2BoldDuotone height={18} width={18} />
+				</button>
+			</li>
 		</ul>
-	</nav>
+	{/if}
 
-	<ul
-		class="z-[1] flex items-center gap-x-4 font-serif text-lg italic"
-		transition:fade={{ duration: 75 }}
-	>
-		<li class="flex items-center justify-center">
-			<a href="/settings" class="text-zinc-50/50 transition-colors hover:text-zinc-50">
-				<SolarSettingsBoldDuotone height={18} width={18} />
-			</a>
-		</li>
-		<!-- <li class="flex items-center justify-center"> -->
-		<!-- 	<button class="text-zinc-50/50 transition-colors hover:text-zinc-50"> -->
-		<!-- 		<SolarBellBoldDuotone height={18} width={18} /> -->
-		<!-- 	</button> -->
-		<!-- </li> -->
-		<li class="flex items-center justify-center">
-			<button class="text-zinc-50/50 transition-colors hover:text-zinc-50">
-				<SolarSun2BoldDuotone height={18} width={18} />
-			</button>
-		</li>
-	</ul>
-
-	<div class="progressive-blur up pointer-events-none"></div>
+	<div class="progressive-blur up pointer-events-none opacity-0" class:active={menu.open}></div>
 </header>
 
 <style lang="postcss">

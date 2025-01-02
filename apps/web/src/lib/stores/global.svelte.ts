@@ -54,12 +54,13 @@ class Global {
 		this.transmit = transmitConn;
 	}
 
-	async subscribeTo(branchId: number) {
+	async subscribeTo(spaceId: number, branchId: number) {
 		if (!this.transmit) return;
-		console.log('sub to ' + branchId);
-		await branch.branchChannel?.delete();
+		if (branch.branchChannel) {
+			await branch.branchChannel.delete();
+		}
 
-		branch.branchChannel = this.transmit.subscription(`branch/${branchId}`);
+		branch.branchChannel = this.transmit.subscription(`space:${spaceId}:branch:${branchId}`);
 		await branch.branchChannel?.create();
 
 		branch.branchChannel.onMessage((data: TransmitUpdateImage) => {

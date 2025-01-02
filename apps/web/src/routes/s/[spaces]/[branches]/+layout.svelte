@@ -14,7 +14,7 @@
 		global.init();
 		menu.init();
 		global.initializeTransmit();
-		global.subscribeTo(space.currentBranch!.id);
+		global.subscribeTo(space.currentSpace!.id, space.currentBranch!.id);
 	});
 </script>
 

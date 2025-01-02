@@ -37,7 +37,7 @@ class Space {
 		const first_branch = first_space?.branches[0];
 		this.currentSpace = first_space;
 		this.currentBranch = first_branch;
-		await global.subscribeTo(first_branch.id);
+		await global.subscribeTo(first_space.id, first_branch.id);
 		throw redirect(
 			303,
 			`/s/${first_space!.name.toLowerCase()}/${first_branch?.name.toLowerCase()}`
@@ -48,10 +48,10 @@ class Space {
 		if (!branch) {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;
-			await global.subscribeTo(first_branch.id);
+			await global.subscribeTo(space.id, first_branch.id);
 			await goto(`/s/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
 		} else {
-			await global.subscribeTo(branch.id);
+			await global.subscribeTo(space.id, branch.id);
 			await goto(`/s/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
 		}
 	}

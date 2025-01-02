@@ -18,7 +18,7 @@
 			type="text"
 			placeholder="Search"
 			class="relative z-[1] w-full border-none bg-transparent px-14 pb-8 font-serif text-5xl italic leading-none text-zinc-50 placeholder:text-zinc-50/30 focus:outline-none focus:ring-0"
-			transition:fade={{ duration: 125 }}
+			transition:fade={{ duration: 75 }}
 		/>
 	{/if}
 	<div class="progressive-blur down pointer-events-none opacity-0" class:active={menu.open}></div>
