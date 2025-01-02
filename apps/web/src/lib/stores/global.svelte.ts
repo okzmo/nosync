@@ -1,3 +1,9 @@
+import { Transmit } from '@adonisjs/transmit-client';
+import { branch } from './branch.svelte';
+import type { TransmitUpdateImage } from '$lib/types/api';
+import { space } from './space.svelte';
+import { auth } from './auth.svelte';
+
 export const PADDING = 16;
 export const GUTTER = 14;
 const MEDIA_COLUMNS: Record<number, number> = {
@@ -12,6 +18,7 @@ class Global {
 	nbColumns = $state(MEDIA_COLUMNS[1513]);
 	colWidth = $state(0);
 	ready = $derived(this.colWidth > 0);
+	transmit = $state<Transmit>();
 	#screenSizes = Object.keys(MEDIA_COLUMNS);
 
 	init() {
@@ -37,6 +44,36 @@ class Global {
 	getColWidth() {
 		this.colWidth =
 			(window.innerWidth - PADDING * 2 - GUTTER * (this.nbColumns - 1)) / this.nbColumns;
+	}
+
+	async initializeTransmit() {
+		if (!auth.user?.spaces) return;
+		const transmitConn = new Transmit({
+			baseUrl: 'http://localhost:3333'
+		});
+		this.transmit = transmitConn;
+		//
+		// 	branch.branchChannel = transmitConn.subscription(`branch/${space.currentBranch?.id}`);
+		// 	await branch.branchChannel.create();
+		//
+	}
+
+	async subscribeTo(branchId: number) {
+		if (!this.transmit) return;
+		console.log('sub to ' + branchId);
+		await branch.branchChannel?.delete();
+
+		branch.branchChannel = this.transmit.subscription(`branch/${branchId}`);
+		await branch.branchChannel?.create();
+
+		branch.branchChannel.onMessage((data: TransmitUpdateImage) => {
+			console.log(data);
+			switch (data.type) {
+				case 'branch:updateUploadedImage':
+					branch.updateImageCell(data);
+					break;
+			}
+		});
 	}
 }
 

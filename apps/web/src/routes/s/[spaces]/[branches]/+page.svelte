@@ -6,6 +6,7 @@
 	import { global } from '$lib/stores/global.svelte';
 	import { panel } from '$lib/stores/panel.svelte';
 	import { space } from '$lib/stores/space.svelte';
+	import type { ApiCell } from '$lib/types/api';
 	import { onDestroy, onMount } from 'svelte';
 	import Dropzone from 'ui/branch/dropzone.svelte';
 	import MaximizeZone from 'ui/branch/maximize-zone.svelte';
@@ -21,12 +22,11 @@
 				.cells({ branchId: '' + space.currentBranch?.id })
 				.$get();
 
-			if (error?.status === 403) {
+			if (error) {
 				console.error(error);
-				return;
 			}
 
-			branch.cells = data;
+			branch.cells = data as ApiCell[];
 		}
 
 		return branch.processCells(branch.cells);

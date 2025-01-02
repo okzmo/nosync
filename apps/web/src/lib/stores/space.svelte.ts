@@ -4,6 +4,7 @@ import { redirect } from '@sveltejs/kit';
 import { auth } from './auth.svelte';
 import { goto } from '$app/navigation';
 import { branch } from './branch.svelte';
+import { global } from './global.svelte';
 
 class Space {
 	changingSpace = $state(false);
@@ -31,11 +32,12 @@ class Space {
 		auth.user?.spaces.push(data);
 	}
 
-	goto_first_space() {
+	async goto_first_space() {
 		const first_space = auth.user?.spaces[0];
 		const first_branch = first_space?.branches[0];
 		this.currentSpace = first_space;
 		this.currentBranch = first_branch;
+		await global.subscribeTo(first_branch.id);
 		throw redirect(
 			303,
 			`/s/${first_space!.name.toLowerCase()}/${first_branch?.name.toLowerCase()}`
@@ -46,8 +48,10 @@ class Space {
 		if (!branch) {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;
+			await global.subscribeTo(first_branch.id);
 			await goto(`/s/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
 		} else {
+			await global.subscribeTo(branch.id);
 			await goto(`/s/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
 		}
 	}

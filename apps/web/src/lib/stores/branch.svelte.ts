@@ -1,6 +1,5 @@
 import { tuyau } from '$lib/api';
-import { transmit } from '$lib/api/transmit';
-import type { TCell, TDefault, TNote, TPhoto } from '$lib/types/space';
+import type { TDefault, TNote, TPhoto } from '$lib/types/space';
 import {
 	calculateCellPosition,
 	calculateNoteSize,
@@ -20,19 +19,6 @@ class Branch {
 	branchChannel = $state<Subscription | undefined>();
 	changingBranch = $state(false);
 
-	async initializeTransmit() {
-		branch.branchChannel = transmit.subscription(`branch/${space.currentBranch?.id}`);
-		await branch.branchChannel.create();
-
-		branch.branchChannel.onMessage((data: TransmitUpdateImage) => {
-			switch (data.type) {
-				case 'branch:updateUploadedImage':
-					this.updateImageCell(data);
-					break;
-			}
-		});
-	}
-
 	addCells(cells: ApiCell[]) {
 		if (!this.cells) return;
 		if (!cells) return [];
@@ -46,7 +32,7 @@ class Branch {
 		this.cells[idx].media.url = data.imageUrl;
 	}
 
-	processCells(cells: ApiCell[]): Array<TPhoto | TNote | TDefault> {
+	processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TDefault> {
 		if (!cells) return [];
 		columnHeights.fill(0);
 		const processedCells = [];
