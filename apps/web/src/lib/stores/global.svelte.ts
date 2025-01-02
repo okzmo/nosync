@@ -52,10 +52,6 @@ class Global {
 			baseUrl: 'http://localhost:3333'
 		});
 		this.transmit = transmitConn;
-		//
-		// 	branch.branchChannel = transmitConn.subscription(`branch/${space.currentBranch?.id}`);
-		// 	await branch.branchChannel.create();
-		//
 	}
 
 	async subscribeTo(branchId: number) {
