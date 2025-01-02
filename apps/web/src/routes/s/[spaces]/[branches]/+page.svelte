@@ -21,8 +21,9 @@
 				.cells({ branchId: '' + space.currentBranch?.id })
 				.$get();
 
-			if (error) {
+			if (error?.status === 403) {
 				console.error(error);
+				return;
 			}
 
 			branch.cells = data;

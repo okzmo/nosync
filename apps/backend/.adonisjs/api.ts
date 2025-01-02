@@ -47,8 +47,8 @@ type V1BranchUploadPost = {
   response: MakeTuyauResponse<import('../app/branch/usecases/UploadMedia/controller.ts').default['handle'], true>
 }
 type V1BranchCreatePost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/CreateSpace/validator.ts')['createSpaceValidator']>>
-  response: MakeTuyauResponse<import('../app/space/usecases/CreateSpace/controller.ts').default['handle'], true>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/CreateBranch/validator.ts')['createBranchValidator']>>
+  response: MakeTuyauResponse<import('../app/branch/usecases/CreateBranch/controller.ts').default['handle'], true>
 }
 type V1SpaceCreatePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/CreateSpace/validator.ts')['createSpaceValidator']>>

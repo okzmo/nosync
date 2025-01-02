@@ -2,8 +2,6 @@
 	import { space } from '$lib/stores/space.svelte';
 	import { branch } from '$lib/stores/branch.svelte';
 	import { fade } from 'svelte/transition';
-	import { tuyau } from '$lib/api';
-	import { auth } from '$lib/stores/auth.svelte';
 
 	let spaceInput = $state<HTMLInputElement | undefined>();
 	let branchInput = $state<HTMLInputElement | undefined>();
@@ -33,57 +31,14 @@
 		if (!spaceInput) return;
 		e.preventDefault();
 
-		const existingSpace = auth.user?.spaces.find((space) => space.name === spaceInput!.value);
-		if (existingSpace) {
-			await space.goto(existingSpace);
-			space.changingSpace = false;
-			branch.cells = undefined;
-
-			return;
-		}
-
-		const { data, error } = await tuyau.v1.space.create.$post({ name: spaceInput.value });
-
-		// TODO: Add toast error if creation impossible
-		if (error) {
-			console.error(error);
-			return;
-		}
-
-		auth.user?.spaces.push(data);
+		space.create(spaceInput!.value);
 	}
 
 	async function handleCreateBranch(e: SubmitEvent) {
 		if (!branchInput) return;
 		e.preventDefault();
 
-		const existingBranch = space.currentSpace!.branches.find(
-			(branch) => branch.name === branchInput!.value
-		);
-		if (existingBranch) {
-			await space.goto(space.currentSpace!, existingBranch);
-			branch.changingBranch = false;
-			branch.cells = undefined;
-
-			return;
-		}
-
-		const { data, error } = await tuyau.v1.branch.create.$post({
-			branchName: branchInput.value,
-			spaceId: space.currentSpace!.id
-		});
-
-		// TODO: Add toast error if creation impossible
-		if (error) {
-			console.error(error);
-			return;
-		}
-
-		const spaceIdx = auth.user?.spaces.findIndex((s) => s.id === space.currentSpace!.id);
-		auth.user?.spaces[spaceIdx!].branches.push(data);
-
-		await space.goto(space.currentSpace!, data);
-		branch.cells = undefined;
+		branch.create(branchInput!.value);
 	}
 
 	$effect(() => {

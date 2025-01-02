@@ -1,6 +1,6 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
-const CreateBranchController = () => import('./usecases/CreateBranch/controller.js')
+const CreateBranchController = () => import('#branch/usecases/CreateBranch/controller')
 const GetCellsController = () => import('#branch/usecases/GetCells/controller')
 const UploadMediaController = () => import('#branch/usecases/UploadMedia/controller')
 

@@ -1,22 +1,34 @@
 import { tuyau } from '$lib/api';
-import type { SpaceForm } from '$lib/schemas/space';
 import type { TBranch, TSpace } from '$lib/types/space';
 import { redirect } from '@sveltejs/kit';
 import { auth } from './auth.svelte';
 import { goto } from '$app/navigation';
+import { branch } from './branch.svelte';
 
 class Space {
 	changingSpace = $state(false);
 	currentSpace = $state<TSpace | undefined>();
 	currentBranch = $state<TBranch | undefined>();
 
-	async create(space: SpaceForm) {
-		const response = await tuyau.v1.space.create.$post(space);
-		if (response.status > 300) {
-			return { status: 'error.space.create', message: response.error.value.message };
+	async create(spaceName: string) {
+		const existingSpace = auth.user?.spaces.find((space) => space.name === spaceName);
+		if (existingSpace) {
+			await space.goto(existingSpace);
+			space.changingSpace = false;
+			branch.cells = undefined;
+
+			return;
 		}
 
-		return { status: 'success' };
+		const { data, error } = await tuyau.v1.space.create.$post({ name: spaceName });
+
+		// TODO: Add toast error if creation impossible
+		if (error) {
+			console.error(error);
+			return;
+		}
+
+		auth.user?.spaces.push(data);
 	}
 
 	goto_first_space() {
