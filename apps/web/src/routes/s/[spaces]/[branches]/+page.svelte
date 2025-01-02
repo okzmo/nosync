@@ -13,12 +13,25 @@
 	import Media from 'ui/cells/media.svelte';
 	import Note from 'ui/cells/note.svelte';
 
-	const shownCells = $derived.by(() => {
+	const shownCells = $derived.by(async () => {
 		if (!global.ready) return [];
+
+		if (!branch.cells) {
+			const { data, error } = await tuyau.v1.branch
+				.cells({ branchId: '' + space.currentBranch?.id })
+				.$get();
+
+			if (error) {
+				console.error(error);
+			}
+
+			branch.cells = data;
+		}
+
 		return branch.processCells(branch.cells);
 	});
 
-	let dots = $state<number[][]>([]);
+	let squares = $state<number[][]>([]);
 
 	function calculateGrid() {
 		const { innerWidth, innerHeight } = window;
@@ -26,20 +39,10 @@
 		const columns = Math.floor(innerWidth / spacing);
 		const rows = Math.floor(innerHeight / spacing);
 
-		dots = Array(rows * columns).fill(0);
+		squares = Array(rows * columns).fill(0);
 	}
 
 	onMount(async () => {
-		const { data, error } = await tuyau.v1
-			.branch({ branchId: '' + space.currentBranch?.id })
-			.$get();
-
-		if (error) {
-			console.error(error);
-		}
-
-		branch.cells = data;
-
 		window.addEventListener('resize', () => branch.processCells(branch.cells));
 		window.addEventListener('resize', calculateGrid);
 		calculateGrid();
@@ -65,25 +68,27 @@
 <Dropzone />
 <MaximizeZone />
 <div id="dot-grid" class="grid-container">
-	{#each dots as _}
+	{#each squares as _}
 		<div class="grid-square"></div>
 	{/each}
 </div>
 
 <div class="relative h-screen w-screen overflow-auto p-4" bind:this={branch.cellWrapper}>
-	{#if shownCells.length > 0}
-		{#each shownCells as cell, i}
-			{#if cell.type === 'media'}
-				<Media photo={cell} i={i - 1} />
-			{:else if cell.type === 'note'}
-				<Note note={cell} i={i - 1} />
-			{:else if cell.type === 'default'}
-				<MainButton main={cell} />
-			{/if}
-		{/each}
-	{:else}
-		<p>You didn't add anything yet!</p>
-	{/if}
+	{#await shownCells then cells}
+		{#if cells.length > 0}
+			{#each cells as cell, i}
+				{#if cell.type === 'media'}
+					<Media photo={cell} i={i - 1} />
+				{:else if cell.type === 'note'}
+					<Note note={cell} i={i - 1} />
+				{:else if cell.type === 'default'}
+					<MainButton main={cell} />
+				{/if}
+			{/each}
+		{:else}
+			<p>You didn't add anything yet!</p>
+		{/if}
+	{/await}
 </div>
 
 <style>

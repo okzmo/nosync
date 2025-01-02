@@ -1,5 +1,7 @@
 import { backdrop } from './backdrop.svelte';
+import { branch } from './branch.svelte';
 import { panel } from './panel.svelte';
+import { space } from './space.svelte';
 
 class Menu {
 	open = $state(false);
@@ -15,8 +17,20 @@ class Menu {
 					break;
 				case 'Escape':
 					e.preventDefault();
+
+					if (space.changingSpace) {
+						space.changingSpace = false;
+						return;
+					}
+
+					if (branch.changingBranch) {
+						branch.changingBranch = false;
+						return;
+					}
+
 					this.closeMenu();
 					panel.shrink();
+
 					break;
 			}
 		});

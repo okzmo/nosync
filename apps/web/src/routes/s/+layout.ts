@@ -1,8 +1,10 @@
+import { browser } from '$app/environment';
 import { auth } from '$lib/stores/auth.svelte';
 import { space } from '$lib/stores/space.svelte';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ url }) => {
+	if (!browser) return;
 	await auth.check();
 
 	const [, , spaceName, branchName] = url.pathname.split('/');

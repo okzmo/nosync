@@ -3,8 +3,10 @@ import type { SpaceForm } from '$lib/schemas/space';
 import type { TBranch, TSpace } from '$lib/types/space';
 import { redirect } from '@sveltejs/kit';
 import { auth } from './auth.svelte';
+import { goto } from '$app/navigation';
 
 class Space {
+	changingSpace = $state(false);
 	currentSpace = $state<TSpace | undefined>();
 	currentBranch = $state<TBranch | undefined>();
 
@@ -28,13 +30,14 @@ class Space {
 		);
 	}
 
-	goto(space: TSpace, branch?: TBranch) {
+	async goto(space: TSpace, branch?: TBranch) {
 		if (!branch) {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;
-			throw redirect(303, `/s/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
+			await goto(`/s/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
+		} else {
+			await goto(`/s/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
 		}
-		throw redirect(303, `/s/${space.name.toLowerCase()}/${branch!.name.toLowerCase()}`);
 	}
 
 	has(spaceName: string, branchName?: string) {

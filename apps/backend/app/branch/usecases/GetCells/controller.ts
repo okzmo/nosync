@@ -10,6 +10,7 @@ export default class GetCellsController {
   constructor(private getCells: GetCellsService) {}
 
   async handle({ request, response, bouncer }: HttpContext) {
+    console.log(request.params)
     const branchId = request.param('branchId')
     const validBranchId = await getCellsValidator.validate({ branchId: branchId })
     if (!validBranchId) {

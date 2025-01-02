@@ -38,13 +38,17 @@ type V1CellDeletecellDelete = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/DeleteCell/validator.ts')['deleteCellValidator']>>
   response: MakeTuyauResponse<import('../app/cell/usecases/DeleteCell/controller.ts').default['handle'], true>
 }
-type V1BranchIdGetHead = {
+type V1BranchCellsIdGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/branch/usecases/GetCells/controller.ts').default['handle'], false>
 }
 type V1BranchUploadPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/UploadMedia/validators.ts')['uploadMediaValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/UploadMedia/controller.ts').default['handle'], true>
+}
+type V1BranchCreatePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/CreateSpace/validator.ts')['createSpaceValidator']>>
+  response: MakeTuyauResponse<import('../app/space/usecases/CreateSpace/controller.ts').default['handle'], true>
 }
 type V1SpaceCreatePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/CreateSpace/validator.ts')['createSpaceValidator']>>
@@ -98,16 +102,23 @@ export interface ApiDefinition {
       };
     };
     'branch': {
-      ':branchId': {
-        '$url': {
+      'cells': {
+        ':branchId': {
+          '$url': {
+          };
+          '$get': V1BranchCellsIdGetHead;
+          '$head': V1BranchCellsIdGetHead;
         };
-        '$get': V1BranchIdGetHead;
-        '$head': V1BranchIdGetHead;
       };
       'upload': {
         '$url': {
         };
         '$post': V1BranchUploadPost;
+      };
+      'create': {
+        '$url': {
+        };
+        '$post': V1BranchCreatePost;
       };
     };
     'space': {
@@ -179,9 +190,9 @@ const routes = [
   {
     params: ["branchId"],
     name: 'branch.getCells',
-    path: '/v1/branch/:branchId',
+    path: '/v1/branch/cells/:branchId',
     method: ["GET","HEAD"],
-    types: {} as V1BranchIdGetHead,
+    types: {} as V1BranchCellsIdGetHead,
   },
   {
     params: [],
@@ -189,6 +200,13 @@ const routes = [
     path: '/v1/branch/upload',
     method: ["POST"],
     types: {} as V1BranchUploadPost,
+  },
+  {
+    params: [],
+    name: 'branch.create',
+    path: '/v1/branch/create',
+    method: ["POST"],
+    types: {} as V1BranchCreatePost,
   },
   {
     params: [],

@@ -15,8 +15,8 @@ export default class CreateSpaceController {
       return response.forbidden('You are not logged in')
     }
 
-    await this.createSpace.execute(user.id, data.name)
+    const newSpace = await this.createSpace.execute(user.id, data.name)
 
-    return response.ok(true)
+    return newSpace
   }
 }

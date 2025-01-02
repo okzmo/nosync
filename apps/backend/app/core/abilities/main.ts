@@ -17,10 +17,10 @@ import Space from '#space/models/space'
 import User from '#user/models/user'
 import Branch from '#branch/models/branch'
 
-/**
- * Delete the following ability to start from
- * scratch
- */
 export const ownSpace = Bouncer.ability(async (user: User, branch: Branch) => {
   return await Space.query().where('id', branch.space_id).where('owner_id', user.id).then(Boolean)
+})
+
+export const canCreateBranch = Bouncer.ability(async (user: User, space: Space) => {
+  return await Space.query().where('id', space.id).where('owner_id', user.id).then(Boolean)
 })

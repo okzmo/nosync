@@ -3,8 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "turbo dev:web queue:listen",
+    "dev:tauri": "turbo dev",
     "dev:web": "turbo dev:web",
+    "queue:listen": "turbo queue:listen --filter=backend",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,svelte}\"",
     "db:up": "docker compose -f ./compose.db.yaml up -d",

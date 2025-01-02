@@ -19,6 +19,10 @@
     "dev:web": {
       "cache": false,
       "persistent": true
+    },
+    "queue:listen": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

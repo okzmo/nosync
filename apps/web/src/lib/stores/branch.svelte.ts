@@ -13,9 +13,10 @@ import { global, GUTTER } from './global.svelte';
 import { space } from './space.svelte';
 
 class Branch {
-	cells = $state<TCell[]>([]);
+	cells = $state<TCell[] | undefined>();
 	cellWrapper = $state<HTMLDivElement | null>();
 	branchChannel = $state<Subscription | undefined>();
+	changingBranch = $state(false);
 
 	async initializeTransmit() {
 		branch.branchChannel = transmit.subscription(`branch/${space.currentBranch?.id}`);
@@ -30,18 +31,14 @@ class Branch {
 		});
 	}
 
-	async getCells() {
-		const { data } = await tuyau.v1.branch({ branchId: '' + space.currentBranch?.id }).$get();
-
-		return data;
-	}
-
 	addCells(cells: any) {
+		if (!this.cells) return;
 		if (!cells) return [];
 		this.cells.push(...cells);
 	}
 
 	updateImageCell(data: any) {
+		if (!this.cells) return;
 		const idx = this.cells.findIndex((c) => c.id === data.cellId);
 		this.cells[idx].tags = data.tags;
 		this.cells[idx].media.url = data.imageUrl;
