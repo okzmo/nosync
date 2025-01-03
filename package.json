@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev:web queue:listen",
+    "dev": "turbo dev:web queue:listen sync:cells",
     "dev:tauri": "turbo dev",
     "dev:web": "turbo dev:web",
     "queue:listen": "turbo queue:listen --filter=backend",

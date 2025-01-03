@@ -23,6 +23,10 @@
     "queue:listen": {
       "cache": false,
       "persistent": true
+    },
+    "sync:cells": {
+      "cache": false,
+      "persistent": true
     }
   }
 }
