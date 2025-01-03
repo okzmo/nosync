@@ -12,7 +12,7 @@ class Cell {
 	maximized = $state<TPhoto | undefined>();
 
 	async saveTitle(title: string) {
-		if (!this.active) return;
+		if (!this.active || !branch.cells) return;
 		if (branch.cells[this.activeIdx].title === title) return;
 
 		branch.cells[this.activeIdx].title = title;
@@ -27,7 +27,7 @@ class Cell {
 	}
 
 	async saveContent(content: JSONContent) {
-		if (!this.active) return;
+		if (!this.active || !branch.cells) return;
 		if (branch.cells[this.activeIdx].content === content) return;
 
 		branch.cells[this.activeIdx].content = content;
@@ -70,7 +70,7 @@ class Cell {
 	}
 
 	async delete(cellId: number, idx: number) {
-		const removed = branch.cells.splice(idx, 1);
+		const removed = branch.cells!.splice(idx, 1);
 
 		const { error } = await tuyau.v1.cell.delete_cell.$delete({
 			id: cellId,
@@ -79,7 +79,7 @@ class Cell {
 
 		// TODO: Add toast error if deletion impossible
 		if (error) {
-			branch.cells.splice(idx, 0, removed[0]);
+			branch.cells!.splice(idx, 0, removed[0]);
 			console.error(error);
 			return;
 		}
