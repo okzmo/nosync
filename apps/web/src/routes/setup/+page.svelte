@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { tuyau } from '$lib/api/index.js';
 	import { spaceCreation } from '$lib/schemas/space';
 	import { Control, Field, FieldErrors } from 'formsnap';
@@ -15,10 +16,15 @@
 		validationMethod: 'oninput',
 		async onUpdate({ form }) {
 			if (form.valid) {
-				const { error } = await tuyau.v1.space.create.$post(form.data);
+				const { data, error } = await tuyau.v1.space.create.$post(form.data);
 				if (error) {
 					console.error(error);
 				}
+
+				const first_space = data.name.toLowerCase();
+				const first_branch = data.branches[0].name.toLowerCase();
+
+				return goto(`/${first_space}/${first_branch}`);
 			}
 		}
 	});

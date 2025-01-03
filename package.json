@@ -10,7 +10,9 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,svelte}\"",
     "db:up": "docker compose -f ./compose.db.yaml up -d",
-    "db:down": "docker compose -f ./compose.db.yaml down"
+    "db:down": "docker compose -f ./compose.db.yaml down",
+    "db:migration": "turbo db:migration --filter=backend",
+    "db:seed": "turbo db:seed --filter=backend && sh ./meilisearch/seed.sh"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

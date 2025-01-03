@@ -90,6 +90,7 @@ class Branch {
 		auth.user?.spaces[spaceIdx!].branches.push(data);
 
 		await space.goto(space.currentSpace!, data);
+		branch.changingBranch = false;
 		branch.cells = undefined;
 	}
 }

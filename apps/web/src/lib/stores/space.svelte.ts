@@ -1,6 +1,5 @@
 import { tuyau } from '$lib/api';
 import type { TBranch, TSpace } from '$lib/types/space';
-import { redirect } from '@sveltejs/kit';
 import { auth } from './auth.svelte';
 import { goto } from '$app/navigation';
 import { branch } from './branch.svelte';
@@ -30,18 +29,20 @@ class Space {
 		}
 
 		auth.user?.spaces.push(data);
+		await space.goto(data);
+		space.changingSpace = false;
+		branch.cells = undefined;
 	}
 
 	async goto_first_space() {
 		const first_space = auth.user?.spaces[0];
 		const first_branch = first_space?.branches[0];
+		if (!first_branch || !first_space) return;
+
 		this.currentSpace = first_space;
 		this.currentBranch = first_branch;
 		await global.subscribeTo(first_space.id, first_branch.id);
-		throw redirect(
-			303,
-			`/s/${first_space!.name.toLowerCase()}/${first_branch?.name.toLowerCase()}`
-		);
+		return goto(`/${first_space.name.toLocaleLowerCase()}/${first_branch.name.toLowerCase()}`);
 	}
 
 	async goto(space: TSpace, branch?: TBranch) {
@@ -49,10 +50,10 @@ class Space {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;
 			await global.subscribeTo(space.id, first_branch.id);
-			await goto(`/s/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
+			await goto(`/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
 		} else {
 			await global.subscribeTo(space.id, branch.id);
-			await goto(`/s/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
+			await goto(`/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
 		}
 	}
 

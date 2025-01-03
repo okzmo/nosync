@@ -12,6 +12,8 @@
     "build": "node ace build",
     "dev:web": "node ace serve --hmr",
     "dev": "node ace serve --hmr",
+    "db:migration": "node ace migration:fresh",
+    "db:seed": "node ace db:seed",
     "queue:listen": "node ace queue:listen",
     "test": "node ace test",
     "lint": "eslint .",

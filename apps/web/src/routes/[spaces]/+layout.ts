@@ -1,21 +1,14 @@
 import { browser } from '$app/environment';
 import { auth } from '$lib/stores/auth.svelte';
 import { space } from '$lib/stores/space.svelte';
-import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ url }) => {
+export const load = async ({ url }) => {
 	if (!browser) return;
 	await auth.check();
 
-	const [, , spaceName, branchName] = url.pathname.split('/');
-	if (!spaceName) {
-		if (auth.user && auth.user.spaces.length > 0) {
-			space.goto_first_space();
-		}
-		return;
-	}
-
+	const [, spaceName, branchName] = url.pathname.split('/');
 	const { s, b } = space.has(spaceName, branchName);
+
 	if (spaceName && branchName && s && b) {
 		return;
 	}

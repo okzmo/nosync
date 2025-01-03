@@ -31,7 +31,7 @@
 					return;
 				}
 
-				return goto('/s');
+				return goto('/setup');
 			}
 		}
 	});

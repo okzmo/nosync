@@ -6,10 +6,13 @@ import { zod } from 'sveltekit-superforms/adapters';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {
-	const response = await tuyau.v1.auth.valid.$get();
+	const { data, error } = await tuyau.v1.auth.valid.$get();
 
-	if (response.status === 202) {
-		throw redirect(302, '/s');
+	if (!error) {
+		const first_space = data.spaces[0].name.toLowerCase();
+		const first_branch = data.spaces[0].branches[0].name.toLowerCase();
+
+		throw redirect(302, `/${first_space}/${first_branch}`);
 	}
 
 	return {

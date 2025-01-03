@@ -27,6 +27,12 @@
     "sync:cells": {
       "cache": false,
       "persistent": true
+    },
+    "db:migration": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
     }
   }
 }
