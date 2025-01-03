@@ -44,7 +44,7 @@
 			class="group absolute flex flex-col items-start justify-start overflow-hidden rounded-2xl border border-zinc-50/10 bg-zinc-900 px-6 py-4 shadow-2xl transition-colors after:absolute after:left-0 after:top-0 after:h-full after:w-full after:content-normal after:bg-gradient-to-t after:from-zinc-900 after:to-transparent hover:border-zinc-50/30 active:border-zinc-50/20"
 			style="height: {note.height}px; width: {note.width}px; transform: translate({note.x}px, {note.y}px);"
 		>
-			<h3 class="text-2xl font-semibold">{note.title}</h3>
+			<h3 class="w-[14rem] truncate text-left text-2xl font-semibold">{note.title}</h3>
 			{#if note.content && !isEmpty}
 				<div class="note-block mt-2">
 					{@html generateHTML(note.content, [
@@ -86,7 +86,7 @@
 
 <style lang="postcss">
 	.note-block {
-		:global(h1) {
+		:global(h1, h2, h3, h4, h5, h6) {
 			margin-top: 0.5rem;
 			text-align: left;
 			font-weight: bold;

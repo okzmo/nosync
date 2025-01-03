@@ -15,6 +15,10 @@
 		menu.init();
 		global.initializeTransmit();
 		global.subscribeTo(space.currentSpace!.id, space.currentBranch!.id);
+
+		window.addEventListener('contextmenu', (e) => {
+			e.preventDefault();
+		});
 	});
 </script>
 
