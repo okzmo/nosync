@@ -2,6 +2,7 @@ import vine from '@vinejs/vine'
 
 export const uploadMediaValidator = vine.compile(
   vine.object({
+    spaceId: vine.string(),
     branchId: vine.string(),
     files: vine.array(
       vine.file({

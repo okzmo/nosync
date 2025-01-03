@@ -7,6 +7,7 @@ import Media from '#media/models/media'
 import transmit from '@adonisjs/transmit/services/main'
 
 interface ProcessImageJobPayload {
+  spaceId: string
   branchId: string
   fileKey: string
   cellId: number
@@ -17,7 +18,7 @@ export default class ProcessImageJob extends Job {
     return import.meta.url
   }
 
-  async handle({ fileKey, cellId, branchId }: ProcessImageJobPayload) {
+  async handle({ fileKey, cellId, spaceId, branchId }: ProcessImageJobPayload) {
     const file = await drive.use('fs').getBytes(fileKey)
 
     await drive.use('s3').put(fileKey, file)
@@ -55,7 +56,7 @@ export default class ProcessImageJob extends Job {
     await media.save()
     await cell.save()
 
-    transmit.broadcast(`branch/${branchId}`, {
+    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:updateUploadedImage',
       cellId: cellId,
       tags: result.steps[0].text,

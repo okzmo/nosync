@@ -64,7 +64,6 @@ class Global {
 		await branch.branchChannel?.create();
 
 		branch.branchChannel.onMessage((data: TransmitUpdateImage) => {
-			console.log(data);
 			switch (data.type) {
 				case 'branch:updateUploadedImage':
 					branch.updateImageCell(data);

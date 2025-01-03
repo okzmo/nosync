@@ -55,6 +55,7 @@ class DropZone {
 			files.push(...e.dataTransfer?.files);
 		}
 
+		formData.append('spaceId', '' + space.currentSpace!.id);
 		formData.append('branchId', '' + space.currentBranch!.id);
 		files.forEach((file) => {
 			formData.append(`files[]`, file);
