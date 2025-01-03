@@ -42,6 +42,10 @@ type V1BranchCellsIdGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/branch/usecases/GetCells/controller.ts').default['handle'], false>
 }
+type V1BranchSearchcellsPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/SearchCells/validator.ts')['searchCellsValidator']>>
+  response: MakeTuyauResponse<import('../app/branch/usecases/SearchCells/controller.ts').default['handle'], true>
+}
 type V1BranchUploadPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/UploadMedia/validators.ts')['uploadMediaValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/UploadMedia/controller.ts').default['handle'], true>
@@ -109,6 +113,11 @@ export interface ApiDefinition {
           '$get': V1BranchCellsIdGetHead;
           '$head': V1BranchCellsIdGetHead;
         };
+      };
+      'search_cells': {
+        '$url': {
+        };
+        '$post': V1BranchSearchcellsPost;
       };
       'upload': {
         '$url': {
@@ -193,6 +202,13 @@ const routes = [
     path: '/v1/branch/cells/:branchId',
     method: ["GET","HEAD"],
     types: {} as V1BranchCellsIdGetHead,
+  },
+  {
+    params: [],
+    name: 'branch.searchCells',
+    path: '/v1/branch/search_cells',
+    method: ["POST"],
+    types: {} as V1BranchSearchcellsPost,
   },
   {
     params: [],

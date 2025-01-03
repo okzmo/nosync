@@ -1,8 +1,27 @@
 <script lang="ts">
+	import { tuyau } from '$lib/api';
+	import { branch } from '$lib/stores/branch.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
+	import { space } from '$lib/stores/space.svelte';
 	import { fade } from 'svelte/transition';
 
 	let input = $state<HTMLInputElement | null>(null);
+	let inputValue = $state('');
+
+	async function handleInput(e) {
+		if (!input || input !== document.activeElement) return;
+
+		const { data, error } = await tuyau.v1.branch.search_cells.$post({
+			branchId: space.currentBranch!.id,
+			query: inputValue || ''
+		});
+
+		if (error) {
+			console.error(error);
+		}
+
+		branch.cells = data;
+	}
 
 	$effect(() => {
 		if (menu.open) {
@@ -15,6 +34,8 @@
 	{#if menu.open}
 		<input
 			bind:this={input}
+			bind:value={inputValue}
+			oninput={handleInput}
 			type="text"
 			placeholder="Search"
 			class="relative z-[1] w-full border-none bg-transparent px-14 pb-8 font-serif text-5xl italic leading-none text-zinc-50 placeholder:text-zinc-50/30 focus:outline-none focus:ring-0"
