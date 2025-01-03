@@ -1,4 +1,5 @@
 import { global, GUTTER } from '$lib/stores/global.svelte';
+import type { ApiCell } from '$lib/types/api';
 import type { TNote, TPhoto } from '$lib/types/space';
 import { blurhashToDataURL, generateMaximizedSize } from './media';
 
@@ -40,7 +41,7 @@ export function calculateCellPosition(cell: TPhoto | TNote) {
 	return cell;
 }
 
-export function calculatePhotoSize(cell) {
+export function calculatePhotoSize(cell: ApiCell) {
 	const photo = cell.media;
 	const colWidth = global.colWidth;
 	const aspectRatio = photo.width / photo.height;

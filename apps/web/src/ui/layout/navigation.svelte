@@ -54,7 +54,6 @@
 
 	.progressive-blur.up {
 		transition: opacity 75ms cubic-bezier(0, 0.55, 0.45, 1);
-		will-change: transform;
 		backface-visibility: hidden;
 		position: absolute;
 		top: 0;

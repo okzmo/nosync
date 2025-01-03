@@ -8,13 +8,19 @@ import (
 	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/lib/pq"
 	"github.com/meilisearch/meilisearch-go"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("ERROR LOADING .env", err)
+	}
+
 	connStr := os.Getenv("DB_LINK")
-	_, err := sql.Open("postgres", connStr)
+	_, err = sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}

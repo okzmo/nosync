@@ -50,17 +50,22 @@ class Cell {
 		const { data, error } = await tuyau.v1.cell.create_note.$post({
 			branchId: space.currentBranch?.id
 		});
-		console.log(data);
 
 		if (error) {
 			console.error(error);
-			branch.cells.pop();
+			if (branch.cells) {
+				branch.cells.pop();
+			}
 			backdrop.close();
 			panel.close();
 			return;
 		}
 
-		branch.cells.push(data);
+		if (branch.cells) {
+			branch.cells.push(data);
+		} else {
+			branch.cells = [data];
+		}
 		cell.active = data;
 	}
 

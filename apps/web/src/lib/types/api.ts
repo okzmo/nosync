@@ -10,15 +10,15 @@ export interface ApiCell {
 
 export interface ApiMedia {
 	id: number;
-	cell_id: number;
+	cellId: number;
 	url: string;
 	width: number;
 	height: number;
 	mime: string;
 	duration: number;
-	blur_hash: string;
-	file_size: number;
-	thumbnail_url: string;
+	blurHash: string;
+	fileSize: number;
+	thumbnailUrl: string;
 }
 
 export interface TransmitUpdateImage {

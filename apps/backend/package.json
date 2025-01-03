@@ -32,6 +32,7 @@
     "#providers/*": "./providers/*.js",
     "#policies/*": "./app/core/policies/*.js",
     "#abilities/*": "./app/core/abilities/*.js",
+    "#meilisearch/*": "./app/core/meilisearch/*.js",
     "#database/*": "./database/*.js",
     "#start/*": "./start/*.js",
     "#tests/*": "./tests/*.js",
@@ -76,6 +77,7 @@
     "blurhash": "^2.0.5",
     "ioredis": "^5.4.2",
     "luxon": "^3.5.0",
+    "meilisearch": "^0.47.0",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
     "sharp": "^0.33.5"
