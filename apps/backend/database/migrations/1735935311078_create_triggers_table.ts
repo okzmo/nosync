@@ -120,7 +120,7 @@ export default class extends BaseSchema {
       .rawQuery(
         `
       CREATE TRIGGER notify_cell_deletion_trigger
-        AFTER INSERT OR UPDATE ON cells
+        AFTER DELETE ON cells
         FOR EACH ROW EXECUTE FUNCTION notify_cell_deletion();
     `
       )

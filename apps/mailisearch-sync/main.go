@@ -52,10 +52,12 @@ func main() {
 		case "cell_deletion":
 			if data, ok := payload["data"].(map[string]any); ok {
 				if id, ok := data["id"].(float64); ok {
+					log.Println("DELETING DOCUMENT", payload)
 					client.Index("cells").DeleteDocument(fmt.Sprintf("%d", int(id)))
 				}
 			}
 		case "cell_changes":
+			log.Println("ADDING DOCUMENT", payload)
 			client.Index("cells").AddDocuments(payload["data"])
 		}
 
