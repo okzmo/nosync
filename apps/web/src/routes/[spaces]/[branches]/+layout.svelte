@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { global } from '$lib/stores/global.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
+	import { search } from '$lib/stores/search.svelte';
 	import { space } from '$lib/stores/space.svelte';
 	import { onMount } from 'svelte';
 	import Backdrop from 'ui/layout/backdrop.svelte';
@@ -28,3 +29,8 @@
 
 <Panel />
 <Backdrop />
+
+<div
+	class="pointer-events-none fixed left-0 top-0 z-[999] h-screen w-screen transition"
+	style="box-shadow: inset 0px 0px 50px {search.effect ? search.activeCommand?.color : '#ffffff00'}"
+></div>

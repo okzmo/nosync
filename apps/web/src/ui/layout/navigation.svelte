@@ -4,6 +4,7 @@
 	import SolarSettingsBoldDuotone from '~icons/solar/settings-bold-duotone';
 	import SolarSun2BoldDuotone from '~icons/solar/sun-2-bold-duotone';
 	import Breadcrumbs from './navigation/breadcrumbs.svelte';
+	import { search } from '$lib/stores/search.svelte';
 </script>
 
 <header class="fixed top-0 z-[999] flex w-full items-center justify-between px-8 pt-5">
