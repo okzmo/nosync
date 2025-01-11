@@ -63,5 +63,12 @@ export default await Env.create(new URL('../', import.meta.url), {
 
   MEILI_MASTER_KEY: Env.schema.string(),
 
-  MEILI_HOST: Env.schema.string()
+  MEILI_HOST: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring the mail package
+  |----------------------------------------------------------
+  */
+  RESEND_API_KEY: Env.schema.string()
 })

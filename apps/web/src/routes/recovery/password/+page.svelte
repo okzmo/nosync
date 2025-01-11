@@ -1,30 +1,29 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { tuyau } from '$lib/api';
-	import { register } from '$lib/schemas/auth';
+	import { recoveryPasswordFromEmail } from '$lib/schemas/auth';
 	import { Button } from 'bits-ui';
 	import { Control, Field } from 'formsnap';
 	import { superForm } from 'sveltekit-superforms';
 	import { zod } from 'sveltekit-superforms/adapters';
 	import SolarLetterBoldDuotone from '~icons/solar/letter-bold-duotone';
-	import SolarLockPasswordBoldDuotone from '~icons/solar/lock-password-bold-duotone';
 	import SolarShieldWarningBoldDuotone from '~icons/solar/shield-warning-bold-duotone';
 	import Input from 'ui/shared/input.svelte';
 
 	let globalError = $state('');
 	let globalMessage = $state('');
 	let email_input = $state<HTMLInputElement>();
-	let password_input = $state<HTMLInputElement>();
 
 	let { data } = $props();
 
 	const form = superForm(data.form, {
 		SPA: true,
-		validators: zod(register),
+		validators: zod(recoveryPasswordFromEmail),
 		resetForm: true,
 		validationMethod: 'onsubmit',
 		async onUpdate({ form }) {
 			if (form.valid) {
-				const { data, error } = await tuyau.v1.auth.register.$post(form.data);
+				const { data, error } = await tuyau.v1.auth.password.reset.$post(form.data);
 				if (error) {
 					globalError = error.value.errors[0].message;
 					setTimeout(() => email_input?.focus(), 5);
@@ -32,6 +31,8 @@
 				}
 
 				globalMessage = data;
+				await new Promise((resolve) => setTimeout(resolve, 2000));
+				goto(`/signin`);
 			}
 		}
 	});
@@ -50,7 +51,7 @@
 
 {#if globalMessage}
 	<p
-		class="absolute left-[49.35%] top-[14rem] flex -translate-x-1/2 items-center gap-x-2 rounded-2xl text-green-300"
+		class="absolute left-[49.35%] top-[14rem] flex -translate-x-1/2 items-center gap-x-2 rounded-2xl text-green-500"
 	>
 		{globalMessage}
 	</p>
@@ -77,37 +78,13 @@
 					{/snippet}
 				</Control>
 			</Field>
-			<Field {form} name="password">
-				<Control>
-					{#snippet children({ props })}
-						<Input
-							{props}
-							inputError={$errors.password && $errors.password.length > 0}
-							label="Password"
-							placeholder="Password"
-							bind:input={password_input}
-							bind:value={$formData.password}
-							type="password"
-							Icon={SolarLockPasswordBoldDuotone}
-							classes="mt-3"
-						/>
-					{/snippet}
-				</Control>
-			</Field>
 			<Button.Root
 				class="mt-6 rounded-2xl bg-zinc-50 py-3 font-medium text-zinc-950 transition-all hover:bg-zinc-50/90 active:scale-[0.99]"
 			>
-				Create an account
+				Reset password
 			</Button.Root>
 		</div>
 	</form>
-
-	<a
-		href="/signin"
-		class="mt-5 w-fit text-sm text-zinc-50/20 transition-colors hover:text-zinc-50/40 hover:underline"
-	>
-		I already have an account
-	</a>
 </div>
 
 <div class="absolute left-5 top-4 flex flex-col font-code">
@@ -115,5 +92,5 @@
 	<p class="uppercase">
 		Version <span class="bg-version bg-clip-text text-transparent">[ocean wave]</span>
 	</p>
-	<p class="uppercase">State: [sign up]</p>
+	<p class="uppercase">State: [password recovery]</p>
 </div>

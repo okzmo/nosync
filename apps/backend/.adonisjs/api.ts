@@ -22,6 +22,22 @@ type V1AuthLogoutPost = {
   request: unknown
   response: MakeTuyauResponse<import('../app/user/usecases/Logout/controller.ts').default['handle'], false>
 }
+type V1AuthVerifyEmailIdPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/VerifyEmail/validator.ts')['verifyEmailSendValidator']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/VerifyEmail/controller.ts').default['send'], true>
+}
+type V1AuthChecktokenPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPassword/validator.ts')['checkToken']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/ResetPassword/controller.ts').default['checkToken'], true>
+}
+type V1AuthPasswordResetPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPassword/validator.ts')['resetPasswordSendValidator']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/ResetPassword/controller.ts').default['send'], true>
+}
+type V1AuthRecoveryPasswordIdPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPassword/validator.ts')['resetPasswordValidator']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/ResetPassword/controller.ts').default['handle'], true>
+}
 type V1CellSavetitlePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/SaveTitle/validator.ts')['saveTitleValidator']>>
   response: MakeTuyauResponse<import('../app/cell/usecases/SaveTitle/controller.ts').default['handle'], true>
@@ -81,6 +97,36 @@ export interface ApiDefinition {
         '$url': {
         };
         '$post': V1AuthLogoutPost;
+      };
+      'verify': {
+        'email': {
+          ':token': {
+            '$url': {
+            };
+            '$post': V1AuthVerifyEmailIdPost;
+          };
+        };
+      };
+      'check_token': {
+        '$url': {
+        };
+        '$post': V1AuthChecktokenPost;
+      };
+      'password': {
+        'reset': {
+          '$url': {
+          };
+          '$post': V1AuthPasswordResetPost;
+        };
+      };
+      'recovery': {
+        'password': {
+          ':token': {
+            '$url': {
+            };
+            '$post': V1AuthRecoveryPasswordIdPost;
+          };
+        };
       };
     };
     'cell': {
@@ -167,6 +213,34 @@ const routes = [
     path: '/v1/auth/logout',
     method: ["POST"],
     types: {} as V1AuthLogoutPost,
+  },
+  {
+    params: ["token"],
+    name: 'verifyEmail',
+    path: '/v1/auth/verify/email/:token',
+    method: ["POST"],
+    types: {} as V1AuthVerifyEmailIdPost,
+  },
+  {
+    params: [],
+    name: 'checkToken',
+    path: '/v1/auth/check_token',
+    method: ["POST"],
+    types: {} as V1AuthChecktokenPost,
+  },
+  {
+    params: [],
+    name: 'passwordReset',
+    path: '/v1/auth/password/reset',
+    method: ["POST"],
+    types: {} as V1AuthPasswordResetPost,
+  },
+  {
+    params: ["token"],
+    name: 'recovery.password',
+    path: '/v1/auth/recovery/password/:token',
+    method: ["POST"],
+    types: {} as V1AuthRecoveryPasswordIdPost,
   },
   {
     params: [],
