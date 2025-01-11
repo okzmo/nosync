@@ -16,7 +16,8 @@ export function calculateNoteSize(cell): TNote {
 		width: Math.floor(colWidth),
 		height: Math.floor(colWidth),
 		x: 0,
-		y: 0
+		y: 0,
+		tags: cell.tags
 	};
 
 	return p;

@@ -51,7 +51,7 @@
 				</h3>
 			{/if}
 
-			{#if photo.content}
+			{#if photo.content?.content?.[0]?.content}
 				<SolarPenNewSquareBoldDuotone
 					class="absolute right-3 top-3 text-zinc-50/40 transition-colors group-hover:text-zinc-50"
 					height={20}
