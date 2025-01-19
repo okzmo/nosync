@@ -7,17 +7,17 @@ export default class extends BaseSeeder {
       {
         email: 'math@brea.sh',
         password: 'secret',
-        first_time: true,
+        firstTime: true,
       },
       {
         email: 'john@brea.sh',
         password: 'secret',
-        first_time: true,
+        firstTime: true,
       },
       {
         email: 'mike@brea.sh',
         password: 'secret',
-        first_time: true,
+        firstTime: true,
       },
     ])
   }

@@ -16,7 +16,7 @@ export default defineConfig({
     () => import('@tuyau/core/commands'),
     () => import('@adonisjs/bouncer/commands'),
     () => import('@rlanz/bull-queue/commands'),
-    () => import('@adonisjs/mail/commands')
+    () => import('@adonisjs/mail/commands'),
   ],
 
   /*
@@ -45,8 +45,7 @@ export default defineConfig({
     () => import('@adonisjs/drive/drive_provider'),
     () => import('@rlanz/bull-queue/queue_provider'),
     () => import('@adonisjs/transmit/transmit_provider'),
-    () => import('#providers/meilisearch_provider'),
-    () => import('@adonisjs/mail/mail_provider')
+    () => import('@adonisjs/mail/mail_provider'),
   ],
 
   /*

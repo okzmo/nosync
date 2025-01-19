@@ -64,5 +64,5 @@ export default class ProcessImageJob extends Job {
     })
   }
 
-  async rescue(payload: ProcessImageJobPayload) {}
+  async rescue(_payload: ProcessImageJobPayload) {}
 }
