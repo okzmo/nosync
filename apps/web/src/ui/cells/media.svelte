@@ -22,27 +22,26 @@
 			role="button"
 			tabindex="0"
 			onclick={() => {
-				backdrop.open();
+				cell.activeIdx = i;
+				cell.active = photo;
 				panel.open();
 			}}
 			onkeydown={(e) => {
 				if (e.key === 'Enter') {
-					backdrop.open();
+					cell.activeIdx = i;
+					cell.active = photo;
 					panel.open();
 				}
 			}}
-			onmouseover={() => {
-				cell.activeIdx = i;
-				cell.active = photo;
-			}}
-			onfocus={() => {
-				cell.activeIdx = i;
-				cell.active = photo;
-			}}
-			class="group absolute overflow-hidden rounded-2xl shadow-2xl before:absolute before:inset-0 before:content-normal before:rounded-2xl before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
+			class="group absolute overflow-hidden shadow-xl before:absolute before:inset-0 before:content-normal before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
 			style="height: {photo.height}px; width: {photo.width}px; transform: translate({photo.x}px, {photo.y}px);"
 		>
 			<img src={photo.url} alt="" class="h-full w-full select-none object-cover" />
+			<img
+				alt=""
+				class="absolute left-0 top-0 z-[-1] h-full w-full select-none object-cover"
+				src={photo.blurHash}
+			/>
 			{#if photo.title}
 				<h3
 					class="absolute bottom-3 left-5 font-serif text-xl italic opacity-0 transition-opacity group-hover:opacity-100"
@@ -61,12 +60,13 @@
 
 			<button
 				aria-label="Maximize the picture"
+				tabindex="-1"
 				onclick={(e) => {
 					e.stopPropagation();
 					cell.maximized = photo;
 					backdrop.open();
 				}}
-				class="absolute left-2 top-2 rounded-xl bg-zinc-700/40 p-2 opacity-0 backdrop-blur-sm transition-all hover:bg-zinc-700/70 active:bg-zinc-700/50 group-hover:opacity-100"
+				class="absolute left-2 top-2 bg-zinc-950 p-2 text-zinc-50/30 opacity-0 transition-all duration-75 hover:text-zinc-50 active:text-zinc-50/90 group-hover:opacity-100"
 			>
 				<SolarMaximizeBold height={16} width={16} />
 			</button>

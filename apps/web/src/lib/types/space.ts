@@ -41,6 +41,7 @@ export type TPhoto = {
 	x: number;
 	y: number;
 	aspectRatio: number;
+	createdAt: string;
 };
 
 export type TNote = {
@@ -53,4 +54,5 @@ export type TNote = {
 	height: number;
 	x: number;
 	y: number;
+	createdAt: string;
 };

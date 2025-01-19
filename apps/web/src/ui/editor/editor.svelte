@@ -38,7 +38,7 @@
 					dropcursor: false,
 					gapcursor: false
 				}),
-				Placeholder.configure({ placeholder: "Write something, or press '/' for commands..." }),
+				Placeholder.configure({ placeholder: 'Write something...' }),
 				TaskList,
 				TaskItem.configure({
 					nested: true,
@@ -58,13 +58,19 @@
 			editor.destroy();
 		}
 	});
+
+	$effect(() => {
+		editor?.commands.setContent(content || null);
+	});
 </script>
 
-<div bind:this={element}></div>
+<div class="flex-1 overflow-y-auto" bind:this={element}></div>
 
 <style lang="postcss">
 	:global(.tiptap) {
-		@apply mt-4;
+		@apply h-full overflow-y-auto bg-zinc-925 p-3;
+
+		scroll-padding-block: 16px;
 
 		:global(& > *) {
 			margin-top: 0.5rem;

@@ -14,7 +14,7 @@
 
 <style lang="postcss">
 	:global(body) {
-		@apply overflow-hidden bg-zinc-950 text-zinc-50;
+		@apply bg-zinc-950 text-zinc-50;
 	}
 
 	:global(::-webkit-scrollbar) {

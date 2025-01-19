@@ -5,6 +5,7 @@ import { backdrop } from './backdrop.svelte';
 import { branch } from './branch.svelte';
 import { panel } from './panel.svelte';
 import { space } from './space.svelte';
+import { formatDate } from '$lib/utils/date';
 
 class Cell {
 	active = $state<TPhoto | TNote | undefined>();
@@ -42,9 +43,8 @@ class Cell {
 	}
 
 	async createNote() {
-		cell.active = { type: 'note' };
+		cell.active = { type: 'note', content: null, createdAt: formatDate(new Date().toString()) };
 		cell.activeIdx = branch.cells.length;
-		backdrop.open();
 		panel.open();
 
 		const { data, error } = await tuyau.v1.cell.create_note.$post({
@@ -66,7 +66,10 @@ class Cell {
 		} else {
 			branch.cells = [data];
 		}
-		cell.active = data;
+		cell.active = {
+			...data,
+			createdAt: formatDate(data.createdAt)
+		};
 	}
 
 	async delete(cellId: number, idx: number) {

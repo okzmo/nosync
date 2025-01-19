@@ -1,12 +1,11 @@
-import { global, GUTTER } from '$lib/stores/global.svelte';
+import { mainStore, GUTTER } from '$lib/stores/mainStore.svelte';
 import type { ApiCell } from '$lib/types/api';
 import type { TNote, TPhoto } from '$lib/types/space';
+import { formatDate } from './date';
 import { blurhashToDataURL, generateMaximizedSize } from './media';
 
-export const columnHeights = Array(global.nbColumns).fill(0);
-
-export function calculateNoteSize(cell): TNote {
-	const colWidth = global.colWidth;
+export function calculateNoteSize(cell: ApiCell): TNote {
+	const colWidth = mainStore.colWidth;
 
 	const p: TNote = {
 		id: cell.id,
@@ -17,15 +16,17 @@ export function calculateNoteSize(cell): TNote {
 		height: Math.floor(colWidth),
 		x: 0,
 		y: 0,
-		tags: cell.tags
+		tags: cell.tags,
+		createdAt: formatDate(cell.createdAt)
 	};
 
 	return p;
 }
 
 export function calculateCellPosition(cell: TPhoto | TNote) {
-	const columns = global.nbColumns;
-	const columnWidth = global.colWidth;
+	const columns = mainStore.nbColumns;
+	const columnWidth = mainStore.colWidth;
+	const columnHeights = mainStore.columnHeights;
 
 	let minHeightColumn = 0;
 	for (let i = 1; i < columns; i++) {
@@ -44,7 +45,7 @@ export function calculateCellPosition(cell: TPhoto | TNote) {
 
 export function calculatePhotoSize(cell: ApiCell) {
 	const photo = cell.media;
-	const colWidth = global.colWidth;
+	const colWidth = mainStore.colWidth;
 	const aspectRatio = photo.width / photo.height;
 	const picHeight = colWidth / aspectRatio;
 	const blurHash = blurhashToDataURL(photo.blurHash);
@@ -55,7 +56,7 @@ export function calculatePhotoSize(cell: ApiCell) {
 		type: 'media',
 		title: cell.title,
 		content: cell.content,
-		blurHash: '',
+		blurHash: blurHash,
 		tags: '',
 		url: photo.url === '' ? blurHash : photo.url,
 		originalHeight: maximizedSize.height,
@@ -64,27 +65,9 @@ export function calculatePhotoSize(cell: ApiCell) {
 		height: Math.floor(picHeight),
 		x: 0,
 		y: 0,
-		aspectRatio: aspectRatio
+		aspectRatio: aspectRatio,
+		createdAt: formatDate(cell.createdAt)
 	};
 
 	return p;
-}
-
-export function calculatePhotoPosition(photo: TPhoto) {
-	const columns = global.nbColumns;
-	const columnWidth = global.colWidth;
-
-	let minHeightColumn = 0;
-	for (let i = 1; i < columns; i++) {
-		if (columnHeights[i] < columnHeights[minHeightColumn]) {
-			minHeightColumn = i;
-		}
-	}
-
-	photo.x = columnWidth * minHeightColumn + GUTTER * minHeightColumn;
-	photo.y = columnHeights[minHeightColumn];
-
-	columnHeights[minHeightColumn] += photo.height + GUTTER;
-
-	return photo;
 }

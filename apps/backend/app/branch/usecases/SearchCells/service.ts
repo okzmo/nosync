@@ -10,6 +10,7 @@ export class SearchCellsService {
 
     const cells = await client.index('cells').search(searchQuery, {
       filter: `branchId = ${branchId}`,
+      limit: 30,
       sort: ['createdAt:asc'],
     })
 

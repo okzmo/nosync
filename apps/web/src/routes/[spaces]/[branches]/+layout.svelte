@@ -1,21 +1,22 @@
 <script lang="ts">
-	import { global } from '$lib/stores/global.svelte';
+	import { mainStore } from '$lib/stores/mainStore.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
 	import { search } from '$lib/stores/search.svelte';
 	import { space } from '$lib/stores/space.svelte';
 	import { onMount } from 'svelte';
 	import Backdrop from 'ui/layout/backdrop.svelte';
 	import Navigation from 'ui/layout/navigation.svelte';
+	import Noise from 'ui/layout/noise.svelte';
 	import Search from 'ui/layout/search.svelte';
-	import Panel from 'ui/panel/panel.svelte';
+	// import Panel from 'ui/panel/panel.svelte';
 
 	let { children } = $props();
 
 	onMount(async () => {
-		global.init();
+		mainStore.init();
 		menu.init();
-		global.initializeTransmit();
-		global.subscribeTo(space.currentSpace!.id, space.currentBranch!.id);
+		mainStore.initializeTransmit();
+		mainStore.subscribeTo(space.currentSpace!.id, space.currentBranch!.id);
 
 		window.addEventListener('contextmenu', (e) => {
 			e.preventDefault();
@@ -27,8 +28,9 @@
 {@render children()}
 <Search />
 
-<Panel />
+<!-- <Panel /> -->
 <Backdrop />
+<Noise />
 
 <div
 	class="pointer-events-none fixed left-0 top-0 z-[999] h-screen w-screen transition"

@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { backdrop } from '$lib/stores/backdrop.svelte';
 	import { ContextMenu } from 'bits-ui';
 	import { cell } from '$lib/stores/cell.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
 	import type { TNote } from '$lib/types/space';
 	import { generateHTML } from '@tiptap/core';
 	import TaskItem from '@tiptap/extension-task-item';
@@ -10,6 +8,7 @@
 	import StarterKit from '@tiptap/starter-kit';
 	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
 	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
+	import { panel } from '$lib/stores/panel.svelte';
 
 	type Props = {
 		note: TNote;
@@ -17,11 +16,22 @@
 	};
 	let { note, i }: Props = $props();
 
+	let content = $state('');
 	let isEmpty = $state(false);
 
 	$effect(() => {
 		if (note.content) {
-			isEmpty = !note.content.content?.[0].hasOwnProperty('content');
+			content = generateHTML(note.content, [
+				StarterKit,
+				TaskList,
+				TaskItem.configure({
+					nested: true,
+					HTMLAttributes: {
+						class: 'editor--task-item'
+					}
+				})
+			]);
+			isEmpty = content.length === '<p></p>'.length;
 		}
 	});
 </script>
@@ -30,33 +40,17 @@
 	<ContextMenu.Trigger>
 		<button
 			onclick={() => {
-				backdrop.open();
+				cell.activeIdx = i;
+				cell.active = note;
 				panel.open();
 			}}
-			onmouseover={() => {
-				cell.activeIdx = i;
-				cell.active = note;
-			}}
-			onfocus={() => {
-				cell.activeIdx = i;
-				cell.active = note;
-			}}
-			class="group absolute flex flex-col items-start justify-start overflow-hidden rounded-2xl border border-zinc-50/10 bg-zinc-900 px-6 py-4 shadow-2xl transition-colors after:absolute after:left-0 after:top-0 after:h-full after:w-full after:content-normal after:bg-gradient-to-t after:from-zinc-900 after:to-transparent hover:border-zinc-50/30 active:border-zinc-50/20"
+			class="group absolute flex flex-col items-start justify-start overflow-hidden bg-zinc-925 px-6 py-4 shadow-xl transition-colors after:absolute after:left-0 after:top-0 after:h-full after:w-full after:content-normal after:bg-gradient-to-t after:from-zinc-925 after:to-transparent hover:bg-zinc-900"
 			style="height: {note.height}px; width: {note.width}px; transform: translate({note.x}px, {note.y}px);"
 		>
-			<h3 class="w-[14rem] truncate text-left text-2xl font-semibold">{note.title}</h3>
+			<h3 class="w-[10rem] truncate text-left text-xl font-semibold">{note.title}</h3>
 			{#if note.content && !isEmpty}
 				<div class="note-block mt-2">
-					{@html generateHTML(note.content, [
-						StarterKit,
-						TaskList,
-						TaskItem.configure({
-							nested: true,
-							HTMLAttributes: {
-								class: 'editor--task-item'
-							}
-						})
-					])}
+					{@html content}
 				</div>
 			{:else}
 				<p class="mt-1 text-zinc-50/30">No content yet...</p>

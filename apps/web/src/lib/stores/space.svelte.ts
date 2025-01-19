@@ -3,7 +3,7 @@ import type { TBranch, TSpace } from '$lib/types/space';
 import { auth } from './auth.svelte';
 import { goto } from '$app/navigation';
 import { branch } from './branch.svelte';
-import { global } from './global.svelte';
+import { mainStore } from './mainStore.svelte';
 
 class Space {
 	changingSpace = $state(false);
@@ -41,7 +41,7 @@ class Space {
 
 		this.currentSpace = first_space;
 		this.currentBranch = first_branch;
-		await global.subscribeTo(first_space.id, first_branch.id);
+		await mainStore.subscribeTo(first_space.id, first_branch.id);
 		return goto(`/${first_space.name.toLocaleLowerCase()}/${first_branch.name.toLowerCase()}`);
 	}
 
@@ -49,10 +49,10 @@ class Space {
 		if (!branch) {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;
-			await global.subscribeTo(space.id, first_branch.id);
+			await mainStore.subscribeTo(space.id, first_branch.id);
 			await goto(`/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
 		} else {
-			await global.subscribeTo(space.id, branch.id);
+			await mainStore.subscribeTo(space.id, branch.id);
 			await goto(`/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
 		}
 	}

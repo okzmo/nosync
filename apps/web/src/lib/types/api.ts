@@ -2,12 +2,14 @@ import type { JSONContent } from '@tiptap/core';
 
 export interface ApiCell {
 	id: number;
-	branch_id: number;
+	branchId: number;
 	title: string;
 	type: string;
 	content: JSONContent;
 	tags: string;
 	media: ApiMedia;
+	createdAt: string;
+	updatedAt: string;
 }
 
 export interface ApiMedia {
