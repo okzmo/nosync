@@ -7,6 +7,7 @@
 	import { cell } from '$lib/stores/cell.svelte';
 	import { twJoin } from 'tailwind-merge';
 	import { panel } from '$lib/stores/panel.svelte';
+	import { AspectRatio } from 'bits-ui';
 
 	let content = $state<Content | undefined>();
 	let typing = $state(false);
@@ -43,7 +44,11 @@
 		<figure
 			class={twJoin(
 				'transition-height w-full overflow-hidden bg-zinc-925',
-				cell.active.aspectRatio > 1 ? 'h-[250px]' : 'h-[450px]'
+				cell.active.aspectRatio > 1
+					? 'h-[250px]'
+					: cell.active.aspectRatio === 1
+						? 'h-[400px]'
+						: 'h-[450px]'
 			)}
 		>
 			<img src={cell.active.resizedUrl} alt="" class="h-full w-full object-cover" />

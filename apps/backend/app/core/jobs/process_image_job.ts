@@ -5,7 +5,6 @@ import Cell from '#cell/models/cell'
 import drive from '@adonisjs/drive/services/main'
 import Media from '#media/models/media'
 import transmit from '@adonisjs/transmit/services/main'
-import { optimizeImage } from '../utils/media.js'
 import sharp from 'sharp'
 
 interface ProcessImageJobPayload {
@@ -32,8 +31,25 @@ export default class ProcessImageJob extends Job {
       .toBuffer()
 
     await drive.use('s3').put(optimKey, optimizedImage)
+    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+      type: 'branch:finishResizedImageUpload',
+      cellId: cellId,
+      resizedUrl: `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`,
+    })
+
     await drive.use('s3').put(originKey, file)
+    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+      type: 'branch:finishOriginalImageUpload',
+      cellId: cellId,
+      originalUrl: `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`,
+    })
+
     await drive.use('fs').delete(originKey)
+
+    const media = await Media.findByOrFail('cell_id', cellId)
+    media.originalUrl = `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`
+    media.resizedUrl = `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`
+    await media.save()
 
     const result = await generateText({
       model: openai('gpt-4o-mini'),
@@ -61,19 +77,13 @@ export default class ProcessImageJob extends Job {
     })
 
     const cell = await Cell.findOrFail(cellId)
-    const media = await Media.findByOrFail('cell_id', cellId)
     cell.tags = result.steps[0].text
-    media.originalUrl = `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`
-    media.resizedUrl = `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`
-    await media.save()
     await cell.save()
 
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
-      type: 'branch:updateUploadedImage',
+      type: 'branch:finishTagsCreation',
       cellId: cellId,
       tags: result.steps[0].text,
-      originalUrl: `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`,
-      resizedUrl: `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`,
     })
   }
 

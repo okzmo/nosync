@@ -26,10 +26,8 @@ export class UploadMediaService {
 
       // blur the image and upload
       const blurredPic = await sharp(file.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
-      await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
 
-      // temporarly move the image to disk for the queue
-      await file.moveToDisk(originalKey, 'fs')
+      await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
 
       const cell = new Cell()
       cell.branchId = Number.parseInt(branchId)
@@ -50,16 +48,17 @@ export class UploadMediaService {
       media.duration = metadatas[i].duration
       media.save()
 
+      medias.push({ ...savedCell.toJSON(), media: media.toJSON() })
+
       // process the image in the queue for tagging with openai and save to bucket
-      await queue.dispatch(ProcessImageJob, {
+      await file.moveToDisk(originalKey, 'fs')
+      queue.dispatch(ProcessImageJob, {
         spaceId,
         branchId,
         originKey: originalKey,
         optimKey: optimKey,
         cellId: savedCell.id,
       })
-
-      medias.push({ ...savedCell.toJSON(), media: media.toJSON() })
     }
 
     return medias

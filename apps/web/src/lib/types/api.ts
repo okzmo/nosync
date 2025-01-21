@@ -27,10 +27,20 @@ export interface ApiMedia {
 	blurUrl: string;
 }
 
-export interface TransmitUpdateImage {
+export interface TransmitUpdateResizedImage {
+	type: string;
+	cellId: number;
+	resizedUrl: string;
+}
+
+export interface TransmitUpdateOriginalImage {
+	type: string;
+	cellId: number;
+	originalUrl: string;
+}
+
+export interface TransmitUpdateTags {
 	type: string;
 	cellId: number;
 	tags: string;
-	originalUrl: string;
-	resizedUrl: string;
 }

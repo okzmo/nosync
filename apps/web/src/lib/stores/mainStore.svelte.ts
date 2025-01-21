@@ -2,6 +2,7 @@ import { Transmit } from '@adonisjs/transmit-client';
 import { branch } from './branch.svelte';
 import type { TransmitUpdateImage } from '$lib/types/api';
 import { auth } from './auth.svelte';
+import { cell } from './cell.svelte';
 
 export const PADDING = 16;
 export const GUTTER = 14;
@@ -66,8 +67,14 @@ class MainStore {
 
 		branch.branchChannel.onMessage((data: TransmitUpdateImage) => {
 			switch (data.type) {
-				case 'branch:updateUploadedImage':
-					branch.updateImageCell(data);
+				case 'branch:finishTagsCreation':
+					cell.updateTags(data);
+					break;
+				case 'branch:finishResizedImageUpload':
+					cell.updateResizedImage(data);
+					break;
+				case 'branch:finishOriginalImageUpload':
+					cell.updateOriginalImage(data);
 					break;
 			}
 		});

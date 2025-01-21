@@ -24,14 +24,14 @@
 		validationMethod: 'onsubmit',
 		async onUpdate({ form }) {
 			if (form.valid) {
-				const { data, error } = await tuyau.v1.auth.login.$post(form.data);
+				const { error } = await tuyau.v1.auth.login.$post(form.data);
 				if (error) {
 					globalError = error.value.errors[0].message;
 					setTimeout(() => email_input?.focus(), 5);
 					return;
 				}
 
-				return goto(`/${data.spaces[0].name}/${data.spaces[0].branches[0].name}`);
+				return goto(`/setup`);
 			}
 		}
 	});

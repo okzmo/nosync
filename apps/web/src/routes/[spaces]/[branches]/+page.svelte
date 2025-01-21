@@ -74,5 +74,6 @@
 <style>
 	.transition-container {
 		transition: transform 350ms cubic-bezier(0.625, 0.05, 0, 1);
+		will-change: transform;
 	}
 </style>

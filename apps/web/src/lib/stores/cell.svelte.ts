@@ -6,11 +6,34 @@ import { branch } from './branch.svelte';
 import { panel } from './panel.svelte';
 import { space } from './space.svelte';
 import { formatDate } from '$lib/utils/date';
+import type {
+	TransmitUpdateOriginalImage,
+	TransmitUpdateResizedImage,
+	TransmitUpdateTags
+} from '$lib/types/api';
 
 class Cell {
 	active = $state<TPhoto | TNote | undefined>();
 	activeIdx = $state(-1);
 	maximized = $state<TPhoto | undefined>();
+
+	updateResizedImage(data: TransmitUpdateResizedImage) {
+		if (!branch.cells) return;
+		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
+		branch.cells[idx].media.resizedUrl = data.resizedUrl;
+	}
+
+	updateOriginalImage(data: TransmitUpdateOriginalImage) {
+		if (!branch.cells) return;
+		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
+		branch.cells[idx].media.originalUrl = data.originalUrl;
+	}
+
+	updateTags(data: TransmitUpdateTags) {
+		if (!branch.cells) return;
+		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
+		branch.cells[idx].tags = data.tags;
+	}
 
 	async saveTitle(title: string) {
 		if (!this.active || !branch.cells) return;
