@@ -5,24 +5,35 @@ import Cell from '#cell/models/cell'
 import drive from '@adonisjs/drive/services/main'
 import Media from '#media/models/media'
 import transmit from '@adonisjs/transmit/services/main'
+import { optimizeImage } from '../utils/media.js'
+import sharp from 'sharp'
 
 interface ProcessImageJobPayload {
   spaceId: string
   branchId: string
-  fileKey: string
+  originKey: string
+  optimKey: string
   cellId: number
 }
+
+const RESIZED_SIZE = 600
 
 export default class ProcessImageJob extends Job {
   static get $$filepath() {
     return import.meta.url
   }
 
-  async handle({ fileKey, cellId, spaceId, branchId }: ProcessImageJobPayload) {
-    const file = await drive.use('fs').getBytes(fileKey)
+  async handle({ originKey, optimKey, cellId, spaceId, branchId }: ProcessImageJobPayload) {
+    const file = await drive.use('fs').getBytes(originKey)
 
-    await drive.use('s3').put(fileKey, file)
-    await drive.use('fs').delete(fileKey)
+    const optimizedImage = await sharp(file, { animated: true, pages: -1 })
+      .resize(RESIZED_SIZE)
+      .webp({ quality: 75, force: true, effort: 4 })
+      .toBuffer()
+
+    await drive.use('s3').put(optimKey, optimizedImage)
+    await drive.use('s3').put(originKey, file)
+    await drive.use('fs').delete(originKey)
 
     const result = await generateText({
       model: openai('gpt-4o-mini'),
@@ -37,7 +48,7 @@ export default class ProcessImageJob extends Job {
             },
             {
               type: 'image',
-              image: new URL(`https://f003.backblazeb2.com/file/dumpiapp/${fileKey}`),
+              image: new URL(`https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`),
               experimental_providerMetadata: {
                 openai: {
                   imageDetail: 'low',
@@ -52,7 +63,8 @@ export default class ProcessImageJob extends Job {
     const cell = await Cell.findOrFail(cellId)
     const media = await Media.findByOrFail('cell_id', cellId)
     cell.tags = result.steps[0].text
-    media.url = `https://f003.backblazeb2.com/file/dumpiapp/${fileKey}`
+    media.originalUrl = `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`
+    media.resizedUrl = `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`
     await media.save()
     await cell.save()
 
@@ -60,7 +72,8 @@ export default class ProcessImageJob extends Job {
       type: 'branch:updateUploadedImage',
       cellId: cellId,
       tags: result.steps[0].text,
-      imageUrl: `https://f003.backblazeb2.com/file/dumpiapp/${fileKey}`,
+      originalUrl: `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`,
+      resizedUrl: `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`,
     })
   }
 

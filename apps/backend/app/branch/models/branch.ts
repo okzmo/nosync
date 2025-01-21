@@ -8,12 +8,12 @@ export default class Branch extends BaseModel {
   declare id: number
 
   @column()
-  declare space_id: number
+  declare spaceId: number
 
   @column()
   declare name: string
 
-  @hasMany(() => Cell, { foreignKey: 'branch_id' })
+  @hasMany(() => Cell)
   declare cells: HasMany<typeof Cell>
 
   @column.dateTime({ autoCreate: true })

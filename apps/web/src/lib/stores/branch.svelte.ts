@@ -23,7 +23,8 @@ class Branch {
 		if (!this.cells) return;
 		const idx = this.cells.findIndex((c) => c.id === data.cellId);
 		this.cells[idx].tags = data.tags;
-		this.cells[idx].media.url = data.imageUrl;
+		this.cells[idx].media.originalUrl = data.originalUrl;
+		this.cells[idx].media.resizedUrl = data.resizedUrl;
 	}
 
 	processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TDefault> {

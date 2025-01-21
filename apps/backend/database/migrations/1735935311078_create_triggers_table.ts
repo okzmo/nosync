@@ -30,12 +30,13 @@ export default class extends BaseSchema {
           SELECT
             m.id,
             m.cell_id as "cellId",
-            m.url,
             m.width,
             m.height,
             m.file_size as "fileSize",
             m.mime,
-            m.blur_hash as "blurHash",
+            m.original_url as "originalUrl",
+            m.resized_url as "resizedUrl",
+            m.blur_url as "blurUrl",
             m.thumbnail_url as "thumbnailUrl",
             m.duration
           FROM media m
@@ -82,12 +83,13 @@ export default class extends BaseSchema {
           SELECT
             m.id,
             m.cell_id as "cellId",
-            m.url,
             m.width,
             m.height,
             m.file_size as "fileSize",
             m.mime,
-            m.blur_hash as "blurHash",
+            m.original_url as "originalUrl",
+            m.resized_url as "resizedUrl",
+            m.blur_url as "blurUrl",
             m.thumbnail_url as "thumbnailUrl",
             m.duration
           FROM media m

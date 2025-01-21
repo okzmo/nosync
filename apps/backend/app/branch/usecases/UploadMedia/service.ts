@@ -5,8 +5,8 @@ import { fileMetadata, uploadMediaValidator } from './validators.js'
 import queue from '@rlanz/bull-queue/services/main'
 import ProcessImageJob from '#jobs/process_image_job'
 import sharp from 'sharp'
-import { encode } from 'blurhash'
 import { InferInput } from '@vinejs/vine/types'
+import drive from '@adonisjs/drive/services/main'
 
 export class UploadMediaService {
   async execute(data: InferInput<typeof uploadMediaValidator>) {
@@ -20,33 +20,33 @@ export class UploadMediaService {
 
     // create a cell and a media object in DB for each file
     for (const [i, file] of files.entries()) {
-      const key = `${cuid()}.${file.extname}`
+      const key = cuid()
+      const originalKey = `${key}.${file.extname}`
+      const optimKey = `${key}.webp`
 
-      const { data: resizedData, info } = await sharp(file.tmpPath)
-        .resize(50, 50, { fit: 'inside' })
-        .ensureAlpha()
-        .raw()
-        .toBuffer({ resolveWithObject: true })
-      const blurhash = encode(new Uint8ClampedArray(resizedData), info.width, info.height, 4, 3)
+      // blur the image and upload
+      const blurredPic = await sharp(file.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
+      await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
 
-      // temporarly move the image to disk for the jobs in the queue
-      await file.moveToDisk(key, 'fs')
+      // temporarly move the image to disk for the queue
+      await file.moveToDisk(originalKey, 'fs')
 
       const cell = new Cell()
-      cell.branch_id = Number.parseInt(branchId)
+      cell.branchId = Number.parseInt(branchId)
       cell.type = metadatas[i].mime
       cell.tags = ''
       const savedCell = await cell.save()
 
       const media = new Media()
-      media.cell_id = savedCell.id
-      media.url = ''
+      media.cellId = savedCell.id
+      media.originalUrl = ''
+      media.resizedUrl = ''
+      media.blurUrl = `https://f003.backblazeb2.com/file/dumpiapp/${key}_blur.webp`
       media.width = metadatas[i].width
       media.height = metadatas[i].height
-      media.file_size = metadatas[i].size
+      media.fileSize = metadatas[i].size
       media.mime = metadatas[i].mime
-      media.blur_hash = blurhash
-      media.thumbnail_url = '' // from S3
+      media.thumbnailUrl = '' // from S3
       media.duration = metadatas[i].duration
       media.save()
 
@@ -54,7 +54,8 @@ export class UploadMediaService {
       await queue.dispatch(ProcessImageJob, {
         spaceId,
         branchId,
-        fileKey: key,
+        originKey: originalKey,
+        optimKey: optimKey,
         cellId: savedCell.id,
       })
 

@@ -6,8 +6,8 @@ export const uploadMediaValidator = vine.compile(
     branchId: vine.string(),
     files: vine.array(
       vine.file({
-        size: '5gb',
-        extnames: ['jpg', 'png', 'pdf', 'gif'],
+        size: '2gb',
+        extnames: ['jpg', 'png', 'pdf', 'gif', 'mp4'],
       })
     ),
     filesMetadata: vine.array(vine.string()),

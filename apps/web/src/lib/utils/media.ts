@@ -32,16 +32,22 @@ export async function getMediaMetadata(file: File): Promise<FileMetadata> {
 	}
 
 	if (file.type.startsWith('video/')) {
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			const video = document.createElement('video');
+			video.onerror = () => {
+				URL.revokeObjectURL(video.src);
+				reject(new Error('Failed to upload the video'));
+			};
+
 			video.onloadedmetadata = () => {
 				metadata.width = video.videoWidth;
 				metadata.height = video.videoHeight;
-				metadata.duration = video.duration;
+				metadata.duration = Math.floor(video.duration);
 				URL.revokeObjectURL(video.src);
 				resolve(metadata);
 			};
 			video.src = URL.createObjectURL(file);
+			video.load();
 		});
 	}
 

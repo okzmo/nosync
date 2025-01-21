@@ -15,7 +15,8 @@
 	let titleInput = $state<HTMLInputElement | null>();
 
 	function deleteActiveCell() {
-		cell.delete(cell.active?.id, cell.activeIdx);
+		if (!cell.active) return;
+		cell.delete(cell.active.id, cell.activeIdx);
 		panel.close();
 		cell.active = undefined;
 		cell.activeIdx = -1;
@@ -38,14 +39,14 @@
 <aside
 	class="sticky left-4 top-4 flex h-[calc(100vh-32px)] w-[400px] flex-col gap-y-3 border-[0.5px] border-zinc-700 p-3"
 >
-	{#if cell.active?.url}
+	{#if cell.active?.type === 'media' && cell.active.resizedUrl}
 		<figure
 			class={twJoin(
-				'w-full overflow-hidden bg-zinc-925',
-				cell.active?.aspectRatio > 1 ? 'h-[250px]' : 'h-[450px]'
+				'transition-height w-full overflow-hidden bg-zinc-925',
+				cell.active.aspectRatio > 1 ? 'h-[250px]' : 'h-[450px]'
 			)}
 		>
-			<img src={cell.active?.url} alt="" class="h-full w-full object-cover" />
+			<img src={cell.active.resizedUrl} alt="" class="h-full w-full object-cover" />
 		</figure>
 	{/if}
 	<div
@@ -119,3 +120,10 @@
 		</button>
 	</div>
 </aside>
+
+<style>
+	.transition-height {
+		transition: height 350ms cubic-bezier(0.625, 0.05, 0, 1);
+		will-change: height;
+	}
+</style>

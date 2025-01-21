@@ -20,14 +20,17 @@ export interface ApiMedia {
 	height: number;
 	mime: string;
 	duration: number;
-	blurHash: string;
 	fileSize: number;
 	thumbnailUrl: string;
+	originalUrl: string;
+	resizedUrl: string;
+	blurUrl: string;
 }
 
 export interface TransmitUpdateImage {
 	type: string;
 	cellId: number;
 	tags: string;
-	imageUrl: string;
+	originalUrl: string;
+	resizedUrl: string;
 }

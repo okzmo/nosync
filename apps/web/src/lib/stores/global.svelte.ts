@@ -1,7 +1,6 @@
 import { Transmit } from '@adonisjs/transmit-client';
 import { branch } from './branch.svelte';
 import type { TransmitUpdateImage } from '$lib/types/api';
-import { space } from './space.svelte';
 import { auth } from './auth.svelte';
 
 export const PADDING = 16;

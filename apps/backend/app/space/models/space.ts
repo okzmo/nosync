@@ -7,13 +7,13 @@ export default class Space extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
-  @column()
-  declare owner_id: number
+  @column({ columnName: 'owner_id' })
+  declare userId: number
 
   @column()
   declare name: string
 
-  @hasMany(() => Branch, { foreignKey: 'space_id' })
+  @hasMany(() => Branch)
   declare branches: HasMany<typeof Branch>
 
   @column.dateTime({ autoCreate: true })

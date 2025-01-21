@@ -45,10 +45,10 @@ export function calculateCellPosition(cell: TPhoto | TNote) {
 
 export function calculatePhotoSize(cell: ApiCell) {
 	const photo = cell.media;
+	console.log(photo);
 	const colWidth = mainStore.colWidth;
 	const aspectRatio = photo.width / photo.height;
 	const picHeight = colWidth / aspectRatio;
-	const blurHash = blurhashToDataURL(photo.blurHash);
 	const maximizedSize = generateMaximizedSize(photo.height, photo.width);
 
 	const p: TPhoto = {
@@ -56,9 +56,10 @@ export function calculatePhotoSize(cell: ApiCell) {
 		type: 'media',
 		title: cell.title,
 		content: cell.content,
-		blurHash: blurHash,
 		tags: '',
-		url: photo.url === '' ? blurHash : photo.url,
+		originalUrl: photo.originalUrl === '' ? '' : photo.originalUrl,
+		resizedUrl: photo.resizedUrl === '' ? photo.blurUrl : photo.resizedUrl,
+		blurUrl: photo.blurUrl,
 		originalHeight: maximizedSize.height,
 		originalWidth: maximizedSize.width,
 		width: Math.floor(colWidth),

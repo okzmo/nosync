@@ -18,7 +18,7 @@ import User from '#user/models/user'
 import Branch from '#branch/models/branch'
 
 export const ownSpace = Bouncer.ability(async (user: User, branch: Branch) => {
-  return await Space.query().where('id', branch.space_id).where('owner_id', user.id).then(Boolean)
+  return await Space.query().where('id', branch.spaceId).where('owner_id', user.id).then(Boolean)
 })
 
 export const canCreateBranch = Bouncer.ability(async (user: User, space: Space) => {

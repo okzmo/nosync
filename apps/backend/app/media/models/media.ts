@@ -6,10 +6,16 @@ export default class Media extends BaseModel {
   declare id: number
 
   @column()
-  declare cell_id: number
+  declare cellId: number
 
   @column()
-  declare url: string
+  declare originalUrl: string
+
+  @column()
+  declare resizedUrl: string
+
+  @column()
+  declare blurUrl: string
 
   @column()
   declare width: number
@@ -24,13 +30,10 @@ export default class Media extends BaseModel {
   declare duration: number
 
   @column()
-  declare blur_hash: string
+  declare fileSize: number
 
   @column()
-  declare file_size: number
-
-  @column()
-  declare thumbnail_url: string
+  declare thumbnailUrl: string
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime

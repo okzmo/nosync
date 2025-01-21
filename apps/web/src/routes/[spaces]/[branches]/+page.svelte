@@ -24,6 +24,7 @@
 			if (error) {
 				console.error(error);
 			}
+			console.log(data);
 
 			branch.cells = data as ApiCell[];
 		}
@@ -48,7 +49,7 @@
 	class:translate-x-0={panel.isOpen}
 	bind:this={branch.cellWrapper}
 >
-	<div class="relative h-full w-[415px]">
+	<div class="relative h-full w-[415px] pt-4">
 		<Sidebar />
 	</div>
 	<div class="relative h-full w-screen p-4">

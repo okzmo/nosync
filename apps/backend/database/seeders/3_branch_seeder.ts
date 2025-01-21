@@ -5,19 +5,19 @@ export default class extends BaseSeeder {
   async run() {
     await Branch.createMany([
       {
-        space_id: 1,
+        spaceId: 1,
         name: 'root',
       },
       {
-        space_id: 2,
+        spaceId: 2,
         name: 'root',
       },
       {
-        space_id: 3,
+        spaceId: 3,
         name: 'root',
       },
       {
-        space_id: 1,
+        spaceId: 1,
         name: 'wallpapers',
       },
     ])

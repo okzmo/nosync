@@ -31,8 +31,9 @@ export type TPhoto = {
 	type: 'media';
 	title: string;
 	content: JSONContent | undefined;
-	blurHash: string;
-	url: string;
+	blurUrl: string;
+	originalUrl: string;
+	resizedUrl: string;
 	width: number;
 	height: number;
 	originalWidth: number;

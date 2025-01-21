@@ -8,7 +8,7 @@ export default class Cell extends BaseModel {
   declare id: number
 
   @column()
-  declare branch_id: number
+  declare branchId: number
 
   @column()
   declare title: string
@@ -22,7 +22,7 @@ export default class Cell extends BaseModel {
   @column()
   declare tags: string
 
-  @hasOne(() => Media, { foreignKey: 'cell_id' })
+  @hasOne(() => Media)
   declare media: HasOne<typeof Media>
 
   @column.dateTime({ autoCreate: true })

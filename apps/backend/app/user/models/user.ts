@@ -29,7 +29,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare isEmailVerified: boolean
 
-  @hasMany(() => Space, { foreignKey: 'owner_id' })
+  @hasMany(() => Space)
   declare spaces: HasMany<typeof Space>
 
   @hasMany(() => Token)
