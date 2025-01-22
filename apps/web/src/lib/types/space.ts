@@ -63,6 +63,7 @@ export type TVideo = {
 	x: number;
 	y: number;
 	aspectRatio: number;
+	duration: number;
 	createdAt: string;
 };
 

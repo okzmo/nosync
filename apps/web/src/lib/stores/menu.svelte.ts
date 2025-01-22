@@ -1,5 +1,6 @@
 import { backdrop } from './backdrop.svelte';
 import { branch } from './branch.svelte';
+import { cell } from './cell.svelte';
 import { panel } from './panel.svelte';
 import { space } from './space.svelte';
 
@@ -29,7 +30,8 @@ class Menu {
 					}
 
 					this.closeMenu();
-					panel.shrink();
+					panel.close();
+					cell.maximized = undefined;
 
 					break;
 			}

@@ -70,7 +70,7 @@
 					cell.maximized = photo;
 					backdrop.open();
 				}}
-				class="absolute left-2 top-2 bg-zinc-950 p-2 text-zinc-50/30 opacity-0 transition-all duration-75 hover:text-zinc-50 active:text-zinc-50/90 group-hover:opacity-100"
+				class="absolute left-2 top-2 bg-zinc-950 p-2 text-zinc-50/30 opacity-100 transition-all duration-75 hover:text-zinc-50 active:text-zinc-50/90 group-hover:opacity-100 lg:opacity-0"
 			>
 				<SolarMaximizeBold height={16} width={16} />
 			</button>

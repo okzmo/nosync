@@ -60,8 +60,8 @@ export function calculatePhotoSize(cell: ApiCell) {
 		originalUrl: photo.originalUrl === '' ? '' : photo.originalUrl,
 		resizedUrl: photo.resizedUrl === '' ? photo.blurUrl : photo.resizedUrl,
 		blurUrl: photo.blurUrl,
-		originalHeight: maximizedSize.height,
-		originalWidth: maximizedSize.width,
+		originalHeight: Math.floor(maximizedSize.height),
+		originalWidth: Math.floor(maximizedSize.width),
 		width: Math.floor(colWidth),
 		height: Math.floor(picHeight),
 		x: 0,
@@ -90,13 +90,14 @@ export function calculateVideoSize(cell: ApiCell) {
 		originalUrl: video.originalUrl === '' ? '' : video.originalUrl,
 		thumbnailUrl: video.thumbnailUrl === '' ? video.blurUrl : video.thumbnailUrl,
 		blurUrl: video.blurUrl,
-		originalHeight: maximizedSize.height,
-		originalWidth: maximizedSize.width,
+		originalHeight: Math.floor(maximizedSize.height),
+		originalWidth: Math.floor(maximizedSize.width),
 		width: Math.floor(colWidth),
 		height: Math.floor(picHeight),
 		x: 0,
 		y: 0,
 		aspectRatio: aspectRatio,
+		duration: video.duration,
 		createdAt: formatDate(cell.createdAt)
 	};
 
