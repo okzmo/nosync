@@ -33,6 +33,7 @@ class DropZone {
 		this.dragCounter = 0;
 		this.isOpen = false;
 		const formData = new FormData();
+		console.log(e);
 
 		const files = [];
 		let filesMetadata = [];
@@ -69,7 +70,7 @@ class DropZone {
 				formData.append(`thumbnails[]`, metadata.firstFrame, `thumbnail_${file.name}.jpg`);
 			}
 		}
-		console.log(filesMetadata);
+		console.log(files, filesMetadata);
 
 		const { data, error } = await tuyau.v1.branch.upload.$post(formData);
 		console.log(error);

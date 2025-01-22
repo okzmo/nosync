@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import MaterialSymbolsPlayArrowRounded from '~icons/material-symbols/play-arrow-rounded';
 	import MaterialSymbolsPauseRounded from '~icons/material-symbols/pause-rounded';
+	import { twJoin } from 'tailwind-merge';
 
 	let videoEl = $state<HTMLVideoElement | null>();
 	let playBtn = $state<HTMLButtonElement | null>();
@@ -118,6 +119,13 @@
 <figure
 	onmousemove={handleScrubber}
 	onmouseup={handleMouseupScrubber}
+	onclick={() => {
+		if (paused) {
+			videoEl?.play();
+		} else {
+			videoEl?.pause();
+		}
+	}}
 	role="presentation"
 	style="aspect-ratio: {video.originalWidth} / {video.originalHeight}; padding-bottom: calc({video.originalWidth} / {video.originalHeight}); padding-left: {width}vw"
 	class="fixed left-1/2 top-1/2 z-[998] max-h-[80vh] max-w-[80vw] -translate-x-1/2 -translate-y-1/2 overflow-hidden border border-black before:pointer-events-none before:absolute before:left-0 before:top-0 before:z-[11] before:h-full before:w-full before:content-normal before:border before:border-zinc-50/10"
@@ -133,7 +141,10 @@
 		</video>
 		<div
 			role="presentation"
-			class="absolute bottom-10 left-1/2 z-[10] flex w-[50rem] -translate-x-1/2 items-center gap-x-4 opacity-0 transition-opacity group-hover:opacity-100"
+			class={twJoin(
+				'absolute bottom-10 left-1/2 z-[10] flex -translate-x-1/2 items-center gap-x-4 opacity-0 transition-opacity group-hover:opacity-100',
+				video.aspectRatio > 1 ? 'w-[50rem]' : 'w-[70%]'
+			)}
 		>
 			<button bind:this={playBtn}>
 				{#if paused}
