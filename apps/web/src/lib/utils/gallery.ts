@@ -1,8 +1,8 @@
 import { mainStore, GUTTER } from '$lib/stores/mainStore.svelte';
 import type { ApiCell } from '$lib/types/api';
-import type { TNote, TPhoto } from '$lib/types/space';
+import type { TNote, TPhoto, TVideo } from '$lib/types/space';
 import { formatDate } from './date';
-import { blurhashToDataURL, generateMaximizedSize } from './media';
+import { generateMaximizedSize } from './media';
 
 export function calculateNoteSize(cell: ApiCell): TNote {
 	const colWidth = mainStore.colWidth;
@@ -23,7 +23,7 @@ export function calculateNoteSize(cell: ApiCell): TNote {
 	return p;
 }
 
-export function calculateCellPosition(cell: TPhoto | TNote) {
+export function calculateCellPosition(cell: TPhoto | TVideo | TNote) {
 	const columns = mainStore.nbColumns;
 	const columnWidth = mainStore.colWidth;
 	const columnHeights = mainStore.columnHeights;
@@ -52,13 +52,44 @@ export function calculatePhotoSize(cell: ApiCell) {
 
 	const p: TPhoto = {
 		id: cell.id,
-		type: 'media',
+		type: 'photo',
 		title: cell.title,
 		content: cell.content,
+		mime: photo.mime,
 		tags: '',
 		originalUrl: photo.originalUrl === '' ? '' : photo.originalUrl,
 		resizedUrl: photo.resizedUrl === '' ? photo.blurUrl : photo.resizedUrl,
 		blurUrl: photo.blurUrl,
+		originalHeight: maximizedSize.height,
+		originalWidth: maximizedSize.width,
+		width: Math.floor(colWidth),
+		height: Math.floor(picHeight),
+		x: 0,
+		y: 0,
+		aspectRatio: aspectRatio,
+		createdAt: formatDate(cell.createdAt)
+	};
+
+	return p;
+}
+
+export function calculateVideoSize(cell: ApiCell) {
+	const video = cell.media;
+	const colWidth = mainStore.colWidth;
+	const aspectRatio = video.width / video.height;
+	const picHeight = colWidth / aspectRatio;
+	const maximizedSize = generateMaximizedSize(video.height, video.width);
+
+	const p: TVideo = {
+		id: cell.id,
+		type: 'video',
+		title: cell.title,
+		content: cell.content,
+		mime: video.mime,
+		tags: '',
+		originalUrl: video.originalUrl === '' ? '' : video.originalUrl,
+		thumbnailUrl: video.thumbnailUrl === '' ? video.blurUrl : video.thumbnailUrl,
+		blurUrl: video.blurUrl,
 		originalHeight: maximizedSize.height,
 		originalWidth: maximizedSize.width,
 		width: Math.floor(colWidth),

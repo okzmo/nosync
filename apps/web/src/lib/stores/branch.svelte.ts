@@ -1,6 +1,11 @@
 import { tuyau } from '$lib/api';
-import type { TDefault, TNote, TPhoto } from '$lib/types/space';
-import { calculateCellPosition, calculateNoteSize, calculatePhotoSize } from '$lib/utils/gallery';
+import type { TDefault, TNote, TPhoto, TVideo } from '$lib/types/space';
+import {
+	calculateCellPosition,
+	calculateNoteSize,
+	calculatePhotoSize,
+	calculateVideoSize
+} from '$lib/utils/gallery';
 import { Subscription } from '@adonisjs/transmit-client';
 import { mainStore, GUTTER } from './mainStore.svelte';
 import { space } from './space.svelte';
@@ -27,7 +32,7 @@ class Branch {
 		this.cells[idx].media.resizedUrl = data.resizedUrl;
 	}
 
-	processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TDefault> {
+	processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TVideo | TDefault> {
 		if (!cells) return [];
 		mainStore.columnHeights.fill(0);
 		const processedCells = [];
@@ -44,10 +49,14 @@ class Branch {
 		mainStore.columnHeights[0] += mainCell.height + GUTTER;
 
 		for (const cell of cells) {
-			if (cell.type.startsWith('image') || cell.type.startsWith('video')) {
+			if (cell.type.startsWith('image')) {
 				const photo_size = calculatePhotoSize(cell);
 				const photo_pos = calculateCellPosition(photo_size);
 				processedCells.push(photo_pos);
+			} else if (cell.type.startsWith('video')) {
+				const video_size = calculateVideoSize(cell);
+				const video_pos = calculateCellPosition(video_size);
+				processedCells.push(video_pos);
 			} else if (cell.type.startsWith('note')) {
 				const note_size = calculateNoteSize(cell);
 				const note_pos = calculateCellPosition(note_size);

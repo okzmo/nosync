@@ -40,7 +40,7 @@
 <aside
 	class="sticky left-4 top-4 flex h-[calc(100vh-32px)] w-[400px] flex-col gap-y-3 border-[0.5px] border-zinc-700 p-3"
 >
-	{#if cell.active?.type === 'media' && cell.active.resizedUrl}
+	{#if cell.active?.type === 'photo' || cell.active?.type === 'video'}
 		<figure
 			class={twJoin(
 				'transition-height w-full overflow-hidden bg-zinc-925',
@@ -51,7 +51,11 @@
 						: 'h-[450px]'
 			)}
 		>
-			<img src={cell.active.resizedUrl} alt="" class="h-full w-full object-cover" />
+			<img
+				src={cell.active?.resizedUrl || cell.active?.thumbnailUrl}
+				alt=""
+				class="h-full w-full object-cover"
+			/>
 		</figure>
 	{/if}
 	<div

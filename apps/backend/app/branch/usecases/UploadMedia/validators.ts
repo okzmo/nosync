@@ -10,6 +10,12 @@ export const uploadMediaValidator = vine.compile(
         extnames: ['jpg', 'png', 'pdf', 'gif', 'mp4'],
       })
     ),
+    thumbnails: vine.array(
+      vine.file({
+        size: '2gb',
+        extnames: ['jpg'],
+      })
+    ),
     filesMetadata: vine.array(vine.string()),
   })
 )

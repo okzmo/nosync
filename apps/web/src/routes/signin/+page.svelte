@@ -25,6 +25,7 @@
 		async onUpdate({ form }) {
 			if (form.valid) {
 				const { error } = await tuyau.v1.auth.login.$post(form.data);
+				console.log(error);
 				if (error) {
 					globalError = error.value.errors[0].message;
 					setTimeout(() => email_input?.focus(), 5);

@@ -9,8 +9,9 @@
 	import Dropzone from 'ui/branch/dropzone.svelte';
 	import MaximizeZone from 'ui/branch/maximize-zone.svelte';
 	import MainButton from 'ui/cells/main-button.svelte';
-	import Media from 'ui/cells/media.svelte';
 	import Note from 'ui/cells/note.svelte';
+	import Photo from 'ui/cells/photo.svelte';
+	import Video from 'ui/cells/video.svelte';
 	import Sidebar from 'ui/sidebar/sidebar.svelte';
 
 	const shownCells = $derived.by(async () => {
@@ -24,7 +25,6 @@
 			if (error) {
 				console.error(error);
 			}
-			console.log(data);
 
 			branch.cells = data as ApiCell[];
 		}
@@ -56,8 +56,10 @@
 		{#await shownCells then cells}
 			{#if cells.length > 0}
 				{#each cells as cell, i}
-					{#if cell.type === 'media'}
-						<Media photo={cell} i={i - 1} />
+					{#if cell.type === 'photo'}
+						<Photo photo={cell} i={i - 1} />
+					{:else if cell.type === 'video'}
+						<Video video={cell} i={i - 1} />
 					{:else if cell.type === 'note'}
 						<Note note={cell} i={i - 1} />
 					{:else if cell.type === 'default'}

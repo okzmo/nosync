@@ -33,7 +33,7 @@ export interface TransmitUpdateResizedImage {
 	resizedUrl: string;
 }
 
-export interface TransmitUpdateOriginalImage {
+export interface TransmitUpdateOriginal {
 	type: string;
 	cellId: number;
 	originalUrl: string;
@@ -43,4 +43,10 @@ export interface TransmitUpdateTags {
 	type: string;
 	cellId: number;
 	tags: string;
+}
+
+export interface TransmitUpdateThumbnail {
+	type: string;
+	cellId: number;
+	thumbnailUrl: string;
 }

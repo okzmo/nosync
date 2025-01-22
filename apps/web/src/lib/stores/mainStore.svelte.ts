@@ -74,7 +74,13 @@ class MainStore {
 					cell.updateResizedImage(data);
 					break;
 				case 'branch:finishOriginalImageUpload':
-					cell.updateOriginalImage(data);
+					cell.updateOriginalUrl(data);
+					break;
+				case 'branch:finishThumbnailVideoUpload':
+					cell.updateThumbnail(data);
+					break;
+				case 'branch:finishOriginalVideoUpload':
+					cell.updateOriginalUrl(data);
 					break;
 			}
 		});

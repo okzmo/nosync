@@ -7,6 +7,7 @@ export type FileMetadata = {
 	width: number;
 	height: number;
 	duration: number;
+	firstFrame?: Blob;
 };
 export async function getMediaMetadata(file: File): Promise<FileMetadata> {
 	const metadata: FileMetadata = {
@@ -34,25 +35,60 @@ export async function getMediaMetadata(file: File): Promise<FileMetadata> {
 	if (file.type.startsWith('video/')) {
 		return new Promise((resolve, reject) => {
 			const video = document.createElement('video');
-			video.onerror = () => {
-				URL.revokeObjectURL(video.src);
-				reject(new Error('Failed to upload the video'));
+
+			const blob = new Blob([file], { type: file.type });
+			const url = URL.createObjectURL(blob);
+			video.src = url;
+			video.autoplay = true;
+			video.muted = true;
+
+			const cleanup = () => {
+				video.removeAttribute('src');
+				URL.revokeObjectURL(url);
 			};
 
-			video.onloadedmetadata = () => {
+			video.onerror = () => {
+				cleanup();
+				reject(new Error(`Failed to upload the video: ${video.error?.message}`));
+			};
+
+			video.onloadedmetadata = async () => {
 				metadata.width = video.videoWidth;
 				metadata.height = video.videoHeight;
 				metadata.duration = Math.floor(video.duration);
-				URL.revokeObjectURL(video.src);
+
+				const thumbnail = (await generateThumbnail(video)) as Blob;
+				metadata.firstFrame = thumbnail;
+
+				video.pause();
+				cleanup();
 				resolve(metadata);
 			};
-			video.src = URL.createObjectURL(file);
-			video.load();
 		});
 	}
 
 	return metadata;
 }
+
+const generateThumbnail = async (video: HTMLVideoElement) => {
+	return new Promise((resolve) => {
+		video.onseeked = () => {
+			const canvas = document.createElement('canvas');
+			const ctx = canvas.getContext('2d');
+
+			canvas.width = video.videoWidth;
+			canvas.height = video.videoHeight;
+
+			ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+
+			canvas.toBlob((blob) => {
+				resolve(blob);
+			}, 'image/jpeg');
+		};
+		video.currentTime = 0.1;
+	});
+};
+
 export function blurhashToDataURL(blurhash: string, width = 32, height = 32) {
 	const pixels = decode(blurhash, width, height);
 	const canvas = document.createElement('canvas');

@@ -28,12 +28,33 @@ export type TDefault = {
 
 export type TPhoto = {
 	id: number;
-	type: 'media';
+	type: 'photo';
 	title: string;
 	content: JSONContent | undefined;
 	blurUrl: string;
 	originalUrl: string;
 	resizedUrl: string;
+	width: number;
+	mime: string;
+	height: number;
+	originalWidth: number;
+	originalHeight: number;
+	tags: string;
+	x: number;
+	y: number;
+	aspectRatio: number;
+	createdAt: string;
+};
+
+export type TVideo = {
+	id: number;
+	type: 'video';
+	title: string;
+	content: JSONContent | undefined;
+	blurUrl: string;
+	originalUrl: string;
+	thumbnailUrl: string;
+	mime: string;
 	width: number;
 	height: number;
 	originalWidth: number;

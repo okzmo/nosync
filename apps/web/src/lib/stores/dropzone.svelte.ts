@@ -32,9 +32,10 @@ class DropZone {
 		e.preventDefault();
 		this.dragCounter = 0;
 		this.isOpen = false;
+		const formData = new FormData();
+
 		const files = [];
 		let filesMetadata = [];
-		const formData = new FormData();
 
 		if (e.dataTransfer?.items) {
 			const processedFiles: Promise<FileMetadata>[] = [];
@@ -57,14 +58,21 @@ class DropZone {
 
 		formData.append('spaceId', '' + space.currentSpace!.id);
 		formData.append('branchId', '' + space.currentBranch!.id);
-		files.forEach((file) => {
+
+		for (let i = 0; i < files.length; ++i) {
+			const file = files[i];
+			const metadata = filesMetadata[i];
+
 			formData.append(`files[]`, file);
-		});
-		filesMetadata.forEach((metadata) => {
 			formData.append(`filesMetadata[]`, JSON.stringify(metadata));
-		});
+			if (metadata.firstFrame) {
+				formData.append(`thumbnails[]`, metadata.firstFrame, `thumbnail_${file.name}.jpg`);
+			}
+		}
+		console.log(filesMetadata);
 
 		const { data, error } = await tuyau.v1.branch.upload.$post(formData);
+		console.log(error);
 
 		if (error) {
 			console.error(error);

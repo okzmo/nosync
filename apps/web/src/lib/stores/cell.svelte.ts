@@ -1,5 +1,5 @@
 import { tuyau } from '$lib/api';
-import type { TNote, TPhoto } from '$lib/types/space';
+import type { TNote, TPhoto, TVideo } from '$lib/types/space';
 import type { JSONContent } from '@tiptap/core';
 import { backdrop } from './backdrop.svelte';
 import { branch } from './branch.svelte';
@@ -7,15 +7,16 @@ import { panel } from './panel.svelte';
 import { space } from './space.svelte';
 import { formatDate } from '$lib/utils/date';
 import type {
-	TransmitUpdateOriginalImage,
+	TransmitUpdateOriginal,
 	TransmitUpdateResizedImage,
-	TransmitUpdateTags
+	TransmitUpdateTags,
+	TransmitUpdateThumbnail
 } from '$lib/types/api';
 
 class Cell {
-	active = $state<TPhoto | TNote | undefined>();
+	active = $state<TPhoto | TNote | TVideo | undefined>();
 	activeIdx = $state(-1);
-	maximized = $state<TPhoto | undefined>();
+	maximized = $state<TPhoto | TVideo | undefined>();
 
 	updateResizedImage(data: TransmitUpdateResizedImage) {
 		if (!branch.cells) return;
@@ -23,7 +24,7 @@ class Cell {
 		branch.cells[idx].media.resizedUrl = data.resizedUrl;
 	}
 
-	updateOriginalImage(data: TransmitUpdateOriginalImage) {
+	updateOriginalUrl(data: TransmitUpdateOriginal) {
 		if (!branch.cells) return;
 		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
 		branch.cells[idx].media.originalUrl = data.originalUrl;
@@ -33,6 +34,12 @@ class Cell {
 		if (!branch.cells) return;
 		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
 		branch.cells[idx].tags = data.tags;
+	}
+
+	updateThumbnail(data: TransmitUpdateThumbnail) {
+		if (!branch.cells) return;
+		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
+		branch.cells[idx].media.thumbnailUrl = data.thumbnailUrl;
 	}
 
 	async saveTitle(title: string) {
