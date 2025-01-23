@@ -54,7 +54,8 @@
 			<img
 				src={cell.active?.resizedUrl || cell.active?.thumbnailUrl}
 				alt=""
-				class="h-full w-full object-cover"
+				draggable="false"
+				class="h-full w-full select-none object-cover"
 			/>
 		</figure>
 	{/if}

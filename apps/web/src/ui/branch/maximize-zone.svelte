@@ -1,14 +1,13 @@
 <script>
 	import { cell } from '$lib/stores/cell.svelte';
 	import { onMount } from 'svelte';
-	import VideoPlayer from './video-player.svelte';
+	import VideoPlayer from 'ui/video-player/video-player.svelte';
 
 	let width = $state(0);
 
 	function calculateResponsiveMediaWidth() {
 		if (cell.maximized) {
 			const res = (cell.maximized.originalWidth / window.innerWidth) * 100;
-			console.log(cell.maximized.originalWidth, res);
 			width = res > 85 ? 85 : res;
 		}
 	}
