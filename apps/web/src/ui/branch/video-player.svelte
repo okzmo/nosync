@@ -3,34 +3,36 @@
 	import { onMount } from 'svelte';
 	import MaterialSymbolsPlayArrowRounded from '~icons/material-symbols/play-arrow-rounded';
 	import MaterialSymbolsPauseRounded from '~icons/material-symbols/pause-rounded';
+	import MaterialSymbolsVolumeDownRounded from '~icons/material-symbols/volume-down-rounded';
 	import { twJoin } from 'tailwind-merge';
 
 	let videoEl = $state<HTMLVideoElement | null>();
 	let playBtn = $state<HTMLButtonElement | null>();
+	let volumeBtn = $state<HTMLButtonElement | null>();
+	let volumeEl = $state<HTMLDivElement | null>();
 	let progressBar = $state<HTMLDivElement | null>();
 	let scrubber = $state<HTMLDivElement | null>();
 	let timeLabel = $state<HTMLElement | null>();
+	let volume = $state(0);
 
 	let paused = $state(true);
 	let wasPaused = $state(true);
 	let isScrubbing = $state(false);
+	let toggleVolume = $state(false);
+	let changingVolume = $state(false);
 
 	const { video, width = $bindable() }: { video: TVideo; width: number } = $props();
 
 	function handleScrubber(e: MouseEvent) {
 		if (!isScrubbing) return;
-		const vidRect = videoEl!.getBoundingClientRect();
-		const rectScrubber = scrubber?.getBoundingClientRect();
-		if (!rectScrubber || !vidRect) return;
 
-		const scrubberWidth = rectScrubber.width;
-		const scrubberStart = (vidRect.width - scrubberWidth) / 2;
+		const scrubberRect = scrubber!.getBoundingClientRect();
+		const sliderWidth = scrubberRect.width;
+		const offsetX = e.clientX - scrubberRect.left;
 
-		const pos = ((e.clientX - vidRect.left - scrubberStart) / scrubberWidth) * 100;
-		if (pos > -0.1 && pos <= 100.14) {
-			progressBar!.style.width = pos.toFixed(2) + '%';
-			videoEl!.currentTime = (pos * video.duration) / 100;
-		}
+		const pos = Math.max(0, Math.min(100, (offsetX / sliderWidth) * 100));
+		progressBar!.style.width = pos + '%';
+		videoEl!.currentTime = (pos * video.duration) / 100;
 	}
 
 	function handleMousedownScrubber(e: MouseEvent) {
@@ -39,19 +41,17 @@
 			videoEl?.pause();
 			wasPaused = false;
 		}
-		const vidRect = videoEl!.getBoundingClientRect();
-		const rectScrubber = scrubber?.getBoundingClientRect();
-		if (!rectScrubber || !vidRect) return;
+		const scrubberRect = scrubber!.getBoundingClientRect();
+		const sliderWidth = scrubberRect.width;
+		const offsetX = e.clientX - scrubberRect.left;
 
-		const scrubberWidth = rectScrubber.width;
-		const scrubberStart = (vidRect.width - scrubberWidth) / 2;
-
-		const pos = ((e.clientX - vidRect.left - scrubberStart) / scrubberWidth) * 100;
+		const pos = Math.max(0, Math.min(100, (offsetX / sliderWidth) * 100));
 		progressBar!.style.width = pos + '%';
 		videoEl!.currentTime = (pos * video.duration) / 100;
 	}
 
-	function handleMouseupScrubber() {
+	function handleMouseupScrubber(e: MouseEvent) {
+		e.stopPropagation();
 		isScrubbing = false;
 		if (!wasPaused) {
 			videoEl?.play();
@@ -59,8 +59,9 @@
 		}
 	}
 
-	function handleClickPlayBtn() {
+	function handleClickPlayBtn(e: MouseEvent) {
 		if (!videoEl) return;
+		e.stopPropagation();
 		if (paused) {
 			videoEl.play();
 		} else {
@@ -103,12 +104,39 @@
 		timeLabel!.textContent = `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs}`;
 	}
 
+	function handleClickVolumeBtn() {
+		toggleVolume = !toggleVolume;
+	}
+
+	function handleMousedownVolumeChange() {
+		changingVolume = true;
+	}
+
+	function handleMousemoveVolumeChange(e: MouseEvent) {
+		if (!changingVolume) return;
+
+		const volumeRect = volumeEl!.getBoundingClientRect();
+		const sliderWidth = volumeRect.width;
+		const offsetX = e.clientX - volumeRect.left;
+
+		let newVolume = Math.max(0, Math.min(1, offsetX / sliderWidth));
+
+		volume = newVolume;
+		videoEl!.volume = newVolume;
+	}
+
+	function handleMouseupVolumeChange() {
+		changingVolume = false;
+	}
+
 	onMount(() => {
 		playBtn?.addEventListener('click', handleClickPlayBtn);
 		videoEl?.addEventListener('play', handleVideoPlaying);
 		videoEl?.addEventListener('pause', handleVideoPausing);
 		videoEl?.addEventListener('timeupdate', handleTimeUpdate);
 		window.addEventListener('keypress', handleKeypress);
+
+		volume = videoEl?.volume;
 
 		const mins = Math.floor(video.duration / 60);
 		const secs = Math.floor(video.duration % 60);
@@ -146,13 +174,48 @@
 				video.aspectRatio > 1 ? 'w-[50rem]' : 'w-[70%]'
 			)}
 		>
-			<button bind:this={playBtn}>
+			<button bind:this={playBtn} class="select-none">
 				{#if paused}
 					<MaterialSymbolsPlayArrowRounded height={32} width={32} />
 				{:else}
 					<MaterialSymbolsPauseRounded height={32} width={32} />
 				{/if}
 			</button>
+			<div
+				onmousedown={handleMousedownVolumeChange}
+				onmouseup={handleMouseupVolumeChange}
+				onmousemove={handleMousemoveVolumeChange}
+				onclick={(e) => e.stopPropagation()}
+				bind:this={volumeEl}
+				role="presentation"
+				class={twJoin(
+					'transition-volume-width relative h-8 flex-shrink-0 overflow-hidden rounded-md',
+					toggleVolume ? 'w-28 bg-white/30 backdrop-blur-2xl' : 'w-8 hover:bg-white/20',
+					changingVolume && 'hover:cursor-none'
+				)}
+			>
+				<div
+					class="transition-width pointer-events-none absolute h-full bg-white"
+					style="width: {toggleVolume ? volume * 100 + '%' : 0}"
+				></div>
+				<button
+					bind:this={volumeBtn}
+					class={twJoin(
+						'absolute bottom-0 left-0 select-none',
+						changingVolume && 'hover:cursor-none'
+					)}
+					onclick={changingVolume ? null : handleClickVolumeBtn}
+				>
+					<MaterialSymbolsVolumeDownRounded
+						height={32}
+						width={32}
+						class={twJoin(
+							'pointer-events-none transition-colors',
+							toggleVolume && volume > 0.1 ? 'text-zinc-950' : 'text-white'
+						)}
+					/>
+				</button>
+			</div>
 			<div
 				onmousedown={handleMousedownScrubber}
 				role="presentation"
@@ -195,6 +258,13 @@
 
 	.transition-height {
 		transition: height 350ms cubic-bezier(0.625, 0.05, 0, 1);
+	}
+
+	.transition-volume-width {
+		transition:
+			width 350ms cubic-bezier(0.625, 0.05, 0, 1),
+			background-color 350ms cubic-bezier(0.625, 0.05, 0, 1),
+			backdrop-filter 300ms ease-out;
 	}
 
 	.transition-width {

@@ -40,6 +40,7 @@
 				src={photo.resizedUrl}
 				alt=""
 				class="h-full w-full select-none border-[0px] object-cover"
+				loading="lazy"
 			/>
 			<img
 				alt=""
