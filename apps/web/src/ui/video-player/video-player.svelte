@@ -12,6 +12,8 @@
 	let timeLabel = $state<HTMLElement | null>();
 	let volume = $state(0);
 	let toggleVolume = $state(false);
+	let togglePlayerUI = $state(false);
+	let hideUITimeout: ReturnType<typeof setTimeout> | null = $state(null);
 
 	let paused = $state(true);
 	let wasPaused = $state(true);
@@ -50,7 +52,6 @@
 
 	function handleKeydown(e: KeyboardEvent) {
 		if (!videoEl) return;
-		console.log(e.key);
 
 		if (e.key === ' ') {
 			e.preventDefault();
@@ -60,36 +61,42 @@
 			} else {
 				videoEl.pause();
 			}
-		} else if (e.key === 'ArrowRight') {
+		} else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
 			e.preventDefault();
 			e.stopPropagation();
-			videoEl.currentTime += 10;
-		} else if (e.key === 'ArrowLeft') {
+
+			togglePlayerUI = true;
+
+			const step = 10 * (e.key === 'ArrowRight' ? 1 : -1);
+			videoEl.currentTime += step;
+
+			if (hideUITimeout) {
+				clearTimeout(hideUITimeout);
+			}
+
+			hideUITimeout = setTimeout(() => {
+				togglePlayerUI = false;
+			}, 1500);
+		} else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
 			e.preventDefault();
 			e.stopPropagation();
-			videoEl.currentTime -= 10;
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			e.stopPropagation();
+
 			toggleVolume = true;
-			let newVolume = Math.max(0, Math.min(1, volume + 0.05));
+			togglePlayerUI = true;
+
+			const step = 0.05 * (e.key === 'ArrowUp' ? 1 : -1);
+			const newVolume = Math.max(0, Math.min(1, volume + step));
 			volume = newVolume;
 			videoEl!.volume = newVolume;
 
-			setTimeout(() => {
-				toggleVolume = false;
-			}, 3000);
-		} else if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			e.stopPropagation();
-			toggleVolume = true;
-			let newVolume = Math.max(0, Math.min(1, volume - 0.05));
-			volume = newVolume;
-			videoEl!.volume = newVolume;
+			if (hideUITimeout) {
+				clearTimeout(hideUITimeout);
+			}
 
-			setTimeout(() => {
+			hideUITimeout = setTimeout(() => {
 				toggleVolume = false;
-			}, 3000);
+				togglePlayerUI = false;
+			}, 1500);
 		}
 	}
 
@@ -138,6 +145,7 @@
 	<div class="group absolute left-0 z-10 h-full w-full">
 		<div
 			class="absolute left-0 top-0 h-full w-full bg-zinc-950/20 opacity-0 transition-opacity group-hover:opacity-100"
+			class:opacity-100={togglePlayerUI}
 		></div>
 		<video bind:this={videoEl} class="h-full w-full select-none object-cover" preload="metadata">
 			<source src={video.originalUrl} type={video.mime} />
@@ -149,6 +157,7 @@
 				'absolute  left-1/2 z-[10] flex -translate-x-1/2 items-center gap-x-3 opacity-0 transition-opacity group-hover:opacity-100',
 				video.aspectRatio > 1 ? 'bottom-10 w-[50rem]' : 'bottom-8 w-[80%]'
 			)}
+			class:opacity-100={togglePlayerUI}
 		>
 			<PlayButton bind:paused bind:videoEl />
 			<Volume bind:volume bind:toggleVolume bind:videoEl />

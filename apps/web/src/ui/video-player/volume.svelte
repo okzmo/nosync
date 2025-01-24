@@ -107,7 +107,7 @@
 			backdrop-filter 300ms ease-out;
 	}
 
-	.transition-width {
+	:global(.transition-width) {
 		transition: width 100ms ease-out;
 	}
 </style>

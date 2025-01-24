@@ -104,9 +104,9 @@
 </div>
 
 <div class="absolute left-5 top-4 flex flex-col font-code">
-	<h1 class="uppercase">Dumpi <span class="text-[#F22E48]">[alpha release]</span></h1>
+	<h1 class="uppercase">1sync <span class="text-[#F22E48]">[alpha release]</span></h1>
 	<p class="uppercase">
-		Version <span class="bg-version bg-clip-text text-transparent">[ocean wave]</span>
+		Version <span class="bg-version bg-clip-text text-transparent">[new era]</span>
 	</p>
 	<p class="uppercase">State: [sign in]</p>
 </div>
