@@ -5,8 +5,8 @@ Requires=backend.service
 
 [Service]
 EnvironmentFile=/etc/envs/meilisync.env
-WorkingDirectory=/home/deploy/releases
-ExecStart=/home/deploy/releases/meilisync
+WorkingDirectory=/home/deploy/production
+ExecStart=/home/deploy/production/meilisync
 User=deploy
 Group=deploy
 LimitNOFILE=65536

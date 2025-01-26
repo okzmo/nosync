@@ -32,14 +32,16 @@ export default class ProcessVideoJob extends Job {
       .webp({ quality: 75, effort: 4 })
       .toBuffer()
 
-    await drive.use('s3').put(thumbnailKey, optimizedThumbnail)
+    await drive
+      .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
+      .put(thumbnailKey, optimizedThumbnail)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishThumbnailVideoUpload',
       cellId: cellId,
       thumbnailUrl: `${env.get('AWS_CDN_URL')}/${thumbnailKey}`,
     })
 
-    await drive.use('s3').put(originKey, video)
+    await drive.use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3').put(originKey, video)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalVideoUpload',
       cellId: cellId,

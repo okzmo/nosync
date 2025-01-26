@@ -6,8 +6,9 @@ Requires=postgresql.service
 [Service]
 Type=oneshot
 EnvironmentFile=/etc/envs/backend.env
-WorkingDirectory=/home/deploy/releases/build
-ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node ace migration:fresh --force
+WorkingDirectory=/home/deploy/production/backend
+#ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node ace migration:fresh --force
+ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node ace migration:run --force
 User=deploy
 Group=deploy
 

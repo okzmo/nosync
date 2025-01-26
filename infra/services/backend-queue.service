@@ -5,7 +5,7 @@ Requires=redis.service
 
 [Service]
 EnvironmentFile=/etc/envs/backend.env
-WorkingDirectory=/home/deploy/releases/build
+WorkingDirectory=/home/deploy/production/backend
 ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node ace queue:listen
 User=deploy
 Group=deploy

@@ -5,8 +5,8 @@ Requires=postgresql.service redis.service
 
 [Service]
 EnvironmentFile=/etc/envs/backend.env
-WorkingDirectory=/home/deploy/releases/build
-ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node /home/deploy/releases/build/bin/server.js
+WorkingDirectory=/home/deploy/production/backend
+ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node /home/deploy/production/backend/bin/server.js
 User=deploy
 Group=deploy
 LimitNOFILE=65536

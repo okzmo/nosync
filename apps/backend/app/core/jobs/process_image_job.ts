@@ -31,14 +31,16 @@ export default class ProcessImageJob extends Job {
       .webp({ quality: 75, force: true, effort: 4 })
       .toBuffer()
 
-    await drive.use('s3').put(optimKey, optimizedImage)
+    await drive
+      .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
+      .put(optimKey, optimizedImage)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishResizedImageUpload',
       cellId: cellId,
       resizedUrl: `${env.get('AWS_CDN_URL')}/${optimKey}`,
     })
 
-    await drive.use('s3').put(originKey, file)
+    await drive.use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3').put(originKey, file)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalImageUpload',
       cellId: cellId,
