@@ -9,6 +9,14 @@
 
 	let input = $state<HTMLInputElement | null>(null);
 	let inputValue = $state('');
+	let timer: ReturnType<typeof setTimeout>;
+
+	const debounce = (f: () => void) => {
+		clearTimeout(timer);
+		timer = setTimeout(() => {
+			f();
+		}, 50);
+	};
 
 	async function handleInput() {
 		if (search.activeCommand) return;
@@ -85,7 +93,7 @@
 			<input
 				bind:this={input}
 				bind:value={inputValue}
-				oninput={handleInput}
+				oninput={() => debounce(handleInput)}
 				onkeydown={handleKeydown}
 				type="text"
 				placeholder="Search"
