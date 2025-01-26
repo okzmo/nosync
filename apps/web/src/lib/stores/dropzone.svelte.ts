@@ -1,4 +1,5 @@
 import { tuyau } from '$lib/api';
+import { generateFakeCell } from '$lib/utils/gallery';
 import { getMediaMetadata, type FileMetadata } from '$lib/utils/media';
 import { branch } from './branch.svelte';
 import { panel } from './panel.svelte';
@@ -33,7 +34,6 @@ class DropZone {
 		this.dragCounter = 0;
 		this.isOpen = false;
 		const formData = new FormData();
-		console.log(e);
 
 		const files = [];
 		let filesMetadata = [];
@@ -60,9 +60,12 @@ class DropZone {
 		formData.append('spaceId', '' + space.currentSpace!.id);
 		formData.append('branchId', '' + space.currentBranch!.id);
 
+		const fakeCells = [];
 		for (let i = 0; i < files.length; ++i) {
 			const file = files[i];
 			const metadata = filesMetadata[i];
+
+			fakeCells.push(await generateFakeCell(file, metadata));
 
 			formData.append(`files[]`, file);
 			formData.append(`filesMetadata[]`, JSON.stringify(metadata));
@@ -70,16 +73,15 @@ class DropZone {
 				formData.append(`thumbnails[]`, metadata.firstFrame, `thumbnail_${file.name}.jpg`);
 			}
 		}
-		console.log(files, filesMetadata);
+		branch.addCells(fakeCells);
 
 		const { data, error } = await tuyau.v1.branch.upload.$post(formData);
-		console.log(error);
 
 		if (error) {
 			console.error(error);
 		}
 
-		branch.addCells(data);
+		branch.updateCells(data);
 	};
 }
 

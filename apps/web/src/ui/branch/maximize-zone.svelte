@@ -36,11 +36,13 @@
 				.originalHeight}); padding-left: {width}vw"
 			class="fixed left-1/2 top-1/2 z-[998] max-h-[80vh] max-w-[80vw] -translate-x-1/2 -translate-y-1/2 overflow-hidden border border-black before:absolute before:left-0 before:top-0 before:z-[11] before:h-full before:w-full before:content-normal before:border before:border-zinc-50/15"
 		>
-			<img
-				src={cell.maximized.originalUrl}
-				alt=""
-				class="absolute left-0 z-10 h-full w-full select-none object-cover"
-			/>
+			{#if cell.maximized.originalUrl !== ''}
+				<img
+					src={cell.maximized.originalUrl}
+					alt=""
+					class="absolute left-0 z-10 h-full w-full select-none object-cover"
+				/>
+			{/if}
 			<img
 				alt=""
 				class="absolute inset-0 h-full w-full select-none object-cover"

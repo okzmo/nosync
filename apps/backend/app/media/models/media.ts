@@ -6,7 +6,7 @@ export default class Media extends BaseModel {
   declare id: number
 
   @column()
-  declare cellId: number
+  declare cellId: string
 
   @column()
   declare originalUrl: string

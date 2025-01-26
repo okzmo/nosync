@@ -1,27 +1,9 @@
 import { mainStore, GUTTER } from '$lib/stores/mainStore.svelte';
+import { space } from '$lib/stores/space.svelte';
 import type { ApiCell } from '$lib/types/api';
 import type { TNote, TPhoto, TVideo } from '$lib/types/space';
 import { formatDate } from './date';
-import { generateMaximizedSize } from './media';
-
-export function calculateNoteSize(cell: ApiCell): TNote {
-	const colWidth = mainStore.colWidth;
-
-	const p: TNote = {
-		id: cell.id,
-		type: 'note',
-		title: cell.title,
-		content: cell.content,
-		width: Math.floor(colWidth),
-		height: Math.floor(colWidth),
-		x: 0,
-		y: 0,
-		tags: cell.tags,
-		createdAt: formatDate(cell.createdAt)
-	};
-
-	return p;
-}
+import { generateMaximizedSize, uniqueId, type FileMetadata } from './media';
 
 export function calculateCellPosition(cell: TPhoto | TVideo | TNote) {
 	const columns = mainStore.nbColumns;
@@ -43,6 +25,31 @@ export function calculateCellPosition(cell: TPhoto | TVideo | TNote) {
 	return cell;
 }
 
+/**
+ * Give the exact size needed in the masonry grid for a note Cell
+ **/
+export function calculateNoteSize(cell: ApiCell): TNote {
+	const colWidth = mainStore.colWidth;
+
+	const p: TNote = {
+		id: cell.id,
+		type: 'note',
+		title: cell.title,
+		content: cell.content,
+		width: Math.floor(colWidth),
+		height: Math.floor(colWidth),
+		x: 0,
+		y: 0,
+		tags: cell.tags,
+		createdAt: formatDate(cell.createdAt)
+	};
+
+	return p;
+}
+
+/**
+ * Give the exact size needed in the masonry grid for a photo Cell
+ **/
 export function calculatePhotoSize(cell: ApiCell) {
 	const photo = cell.media;
 	const colWidth = mainStore.colWidth;
@@ -57,8 +64,8 @@ export function calculatePhotoSize(cell: ApiCell) {
 		content: cell.content,
 		mime: photo.mime,
 		tags: '',
-		originalUrl: photo.originalUrl === '' ? '' : photo.originalUrl,
-		resizedUrl: photo.resizedUrl === '' ? photo.blurUrl : photo.resizedUrl,
+		originalUrl: photo.originalUrl,
+		resizedUrl: photo.resizedUrl,
 		blurUrl: photo.blurUrl,
 		originalHeight: Math.floor(maximizedSize.height),
 		originalWidth: Math.floor(maximizedSize.width),
@@ -73,6 +80,9 @@ export function calculatePhotoSize(cell: ApiCell) {
 	return p;
 }
 
+/**
+ * Give the exact size needed in the masonry grid for a video Cell
+ **/
 export function calculateVideoSize(cell: ApiCell) {
 	const video = cell.media;
 	const colWidth = mainStore.colWidth;
@@ -102,4 +112,66 @@ export function calculateVideoSize(cell: ApiCell) {
 	};
 
 	return p;
+}
+
+function loadImage(url: string): Promise<HTMLImageElement> {
+	return new Promise((resolve, reject) => {
+		const img = new Image();
+		img.onload = () => resolve(img);
+		img.onerror = reject;
+		img.src = url;
+	});
+}
+
+/**
+ * Create a fake cell to give the user an instant feedback while we upload's data etc
+ **/
+export async function generateFakeCell(file: File, metadata: FileMetadata) {
+	let blurredPic = '';
+	if (metadata.mime.includes('image') || metadata.mime.includes('video')) {
+		const imageData = await file.arrayBuffer();
+		const blobUrl = URL.createObjectURL(new Blob([imageData]));
+		const image = await loadImage(blobUrl);
+
+		const canvas = document.createElement('canvas');
+		canvas.width = image.width;
+		canvas.height = image.height;
+		const ctx = canvas.getContext('2d')!;
+		ctx.filter = 'blur(24px)';
+		ctx.drawImage(image, 0, 0);
+
+		const blob = await new Promise<Blob | null>((resolve) =>
+			canvas.toBlob((b) => resolve(b), 'image/webp', 0.5)
+		);
+		if (blob) {
+			blurredPic = URL.createObjectURL(blob);
+		}
+		URL.revokeObjectURL(blobUrl);
+	}
+
+	const fakeCell: ApiCell = {
+		id: metadata.id,
+		branchId: space.currentBranch!.id,
+		title: '',
+		type: metadata.mime,
+		content: {},
+		tags: '',
+		createdAt: '',
+		updatedAt: '',
+		media: {
+			id: uniqueId(),
+			cellId: metadata.id,
+			width: metadata.width,
+			height: metadata.height,
+			mime: metadata.mime,
+			duration: 0,
+			fileSize: metadata.size,
+			thumbnailUrl: '',
+			originalUrl: '',
+			resizedUrl: '',
+			blurUrl: blurredPic
+		}
+	};
+
+	return fakeCell;
 }

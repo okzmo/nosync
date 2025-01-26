@@ -1,7 +1,7 @@
 import type { JSONContent } from '@tiptap/core';
 
 export interface ApiCell {
-	id: number;
+	id: string;
 	branchId: number;
 	title: string;
 	type: string;
@@ -14,8 +14,7 @@ export interface ApiCell {
 
 export interface ApiMedia {
 	id: number;
-	cellId: number;
-	url: string;
+	cellId: string;
 	width: number;
 	height: number;
 	mime: string;
@@ -27,26 +26,32 @@ export interface ApiMedia {
 	blurUrl: string;
 }
 
+export type TransmitMessages =
+	| TransmitUpdateResizedImage
+	| TransmitUpdateOriginal
+	| TransmitUpdateTags
+	| TransmitUpdateThumbnail;
+
 export interface TransmitUpdateResizedImage {
-	type: string;
-	cellId: number;
+	type: 'branch:finishResizedImageUpload';
+	cellId: string;
 	resizedUrl: string;
 }
 
 export interface TransmitUpdateOriginal {
-	type: string;
-	cellId: number;
+	type: 'branch:finishOriginalImageUpload' | 'branch:finishOriginalVideoUpload';
+	cellId: string;
 	originalUrl: string;
 }
 
 export interface TransmitUpdateTags {
-	type: string;
-	cellId: number;
+	type: 'branch:finishTagsCreation';
+	cellId: string;
 	tags: string;
 }
 
 export interface TransmitUpdateThumbnail {
-	type: string;
-	cellId: number;
+	type: 'branch:finishThumbnailVideoUpload';
+	cellId: string;
 	thumbnailUrl: string;
 }

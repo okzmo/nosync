@@ -24,17 +24,6 @@ const driveConfig = defineConfig({
       visibility: 'public',
       supportsACL: false,
     }),
-    b2: services.s3({
-      endpoint: 'https://s3.eu-central-003.backblazeb2.com',
-      credentials: {
-        accessKeyId: env.get('AWS_ACCESS_KEY_ID'),
-        secretAccessKey: env.get('AWS_SECRET_ACCESS_KEY'),
-      },
-      region: env.get('AWS_REGION'),
-      bucket: env.get('S3_BUCKET'),
-      visibility: 'public',
-      forcePathStyle: true,
-    }),
   },
 })
 

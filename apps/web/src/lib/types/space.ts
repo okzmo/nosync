@@ -27,7 +27,7 @@ export type TDefault = {
 };
 
 export type TPhoto = {
-	id: number;
+	id: string;
 	type: 'photo';
 	title: string;
 	content: JSONContent | undefined;
@@ -47,7 +47,7 @@ export type TPhoto = {
 };
 
 export type TVideo = {
-	id: number;
+	id: string;
 	type: 'video';
 	title: string;
 	content: JSONContent | undefined;
@@ -68,7 +68,7 @@ export type TVideo = {
 };
 
 export type TNote = {
-	id: number;
+	id: string;
 	type: 'note';
 	title: string;
 	content: JSONContent | undefined;

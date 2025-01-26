@@ -60,6 +60,7 @@ export class UploadMediaService {
     spaceId: string,
     branchId: string,
     metadata: {
+      id: string
       size: number
       width: number
       height: number
@@ -74,11 +75,10 @@ export class UploadMediaService {
 
     // blur the image and upload
     const blurredPic = await sharp(file.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive
-      .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
-      .put(`${key}_blur.webp`, blurredPic)
+    await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
 
     const cell = new Cell()
+    cell.id = metadata.id
     cell.branchId = Number.parseInt(branchId)
     cell.type = metadata.mime
     cell.tags = ''
@@ -130,9 +130,7 @@ export class UploadMediaService {
 
     // blur the first frame of the video and upload
     const blurredPic = await sharp(thumbnail.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive
-      .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
-      .put(`${key}_blur.webp`, blurredPic)
+    await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
 
     const cell = new Cell()
     cell.branchId = Number.parseInt(branchId)

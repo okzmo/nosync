@@ -8,9 +8,7 @@ export class DeleteCellService {
 
     if (cellToDel?.type.includes('image') || cellToDel?.type.includes('video')) {
       const originalKey = cellToDel.media.originalUrl.split('/').at(-1)
-      drive
-        .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
-        .deleteAll(originalKey?.split('.')[0])
+      drive.use('s3').deleteAll(originalKey?.split('.')[0])
     }
 
     await cellToDel?.delete()

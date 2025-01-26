@@ -13,7 +13,7 @@ interface ProcessImageJobPayload {
   branchId: string
   originKey: string
   optimKey: string
-  cellId: number
+  cellId: string
 }
 
 const RESIZED_SIZE = 600
@@ -26,21 +26,23 @@ export default class ProcessImageJob extends Job {
   async handle({ originKey, optimKey, cellId, spaceId, branchId }: ProcessImageJobPayload) {
     const file = await drive.use('fs').getBytes(originKey)
 
-    const optimizedImage = await sharp(file, { animated: true, pages: -1 })
+    const isAnimated = originKey.includes('gif')
+    const optimizedImage = await sharp(file, {
+      animated: isAnimated,
+      pages: isAnimated ? -1 : undefined,
+    })
       .resize(RESIZED_SIZE)
       .webp({ quality: 75, force: true, effort: 4 })
       .toBuffer()
 
-    await drive
-      .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
-      .put(optimKey, optimizedImage)
+    await drive.use('s3').put(optimKey, optimizedImage)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishResizedImageUpload',
       cellId: cellId,
       resizedUrl: `${env.get('AWS_CDN_URL')}/${optimKey}`,
     })
 
-    await drive.use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3').put(originKey, file)
+    await drive.use('s3').put(originKey, file)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalImageUpload',
       cellId: cellId,

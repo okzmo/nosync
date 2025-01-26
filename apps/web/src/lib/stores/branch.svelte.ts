@@ -10,7 +10,7 @@ import { Subscription } from '@adonisjs/transmit-client';
 import { mainStore, GUTTER } from './mainStore.svelte';
 import { space } from './space.svelte';
 import { auth } from './auth.svelte';
-import type { ApiCell, TransmitUpdateImage } from '$lib/types/api';
+import type { ApiCell } from '$lib/types/api';
 
 class Branch {
 	cells = $state<ApiCell[] | undefined>();
@@ -24,12 +24,17 @@ class Branch {
 		this.cells.push(...cells);
 	}
 
-	updateImageCell(data: TransmitUpdateImage) {
+	updateCells(cells: ApiCell[]) {
 		if (!this.cells) return;
-		const idx = this.cells.findIndex((c) => c.id === data.cellId);
-		this.cells[idx].tags = data.tags;
-		this.cells[idx].media.originalUrl = data.originalUrl;
-		this.cells[idx].media.resizedUrl = data.resizedUrl;
+		if (!cells) return [];
+
+		for (const cell of cells) {
+			const cellToUpdate = this.cells.findIndex((c) => c.id === cell.id);
+			if (cellToUpdate !== -1) {
+				this.cells[cellToUpdate] = { ...cell };
+			}
+			console.log(this.cells[cellToUpdate]);
+		}
 	}
 
 	processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TVideo | TDefault> {

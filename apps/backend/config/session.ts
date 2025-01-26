@@ -27,7 +27,7 @@ const sessionConfig = defineConfig({
     httpOnly: true,
     secure: app.inProduction,
     sameSite: 'lax',
-    domain: '.nosync.app',
+    domain: app.inProduction ? '.nosync.app' : undefined,
   },
 
   /**

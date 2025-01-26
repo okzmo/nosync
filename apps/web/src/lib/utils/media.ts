@@ -1,6 +1,7 @@
 import { decode } from 'blurhash';
 
 export type FileMetadata = {
+	id: string;
 	name: string;
 	mime: string;
 	size: number;
@@ -9,8 +10,19 @@ export type FileMetadata = {
 	duration: number;
 	firstFrame?: Blob;
 };
+
+export function uniqueId(length = 16) {
+	return parseInt(
+		Math.ceil(Math.random() * Date.now())
+			.toPrecision(length)
+			.toString()
+			.replace('.', '')
+	);
+}
+
 export async function getMediaMetadata(file: File): Promise<FileMetadata> {
 	const metadata: FileMetadata = {
+		id: '' + uniqueId(),
 		name: file.name,
 		mime: file.type,
 		size: file.size,

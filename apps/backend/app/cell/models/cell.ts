@@ -5,7 +5,7 @@ import Media from '#media/models/media'
 
 export default class Cell extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
 
   @column()
   declare branchId: number
