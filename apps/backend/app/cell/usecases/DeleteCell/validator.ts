@@ -2,7 +2,7 @@ import vine from '@vinejs/vine'
 
 export const deleteCellValidator = vine.compile(
   vine.object({
-    id: vine.number(),
+    id: vine.string(),
     branchId: vine.number(),
   })
 )

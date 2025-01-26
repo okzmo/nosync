@@ -102,7 +102,7 @@ class Cell {
 		};
 	}
 
-	async delete(cellId: number, idx: number) {
+	async delete(cellId: string, idx: number) {
 		const removed = branch.cells!.splice(idx, 1);
 
 		const { error } = await tuyau.v1.cell.delete_cell.$delete({

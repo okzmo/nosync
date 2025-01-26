@@ -128,9 +128,29 @@ function loadImage(url: string): Promise<HTMLImageElement> {
  **/
 export async function generateFakeCell(file: File, metadata: FileMetadata) {
 	let blurredPic = '';
-	if (metadata.mime.includes('image') || metadata.mime.includes('video')) {
+	if (metadata.mime.includes('image')) {
 		const imageData = await file.arrayBuffer();
 		const blobUrl = URL.createObjectURL(new Blob([imageData]));
+		const image = await loadImage(blobUrl);
+
+		const canvas = document.createElement('canvas');
+		canvas.width = image.width;
+		canvas.height = image.height;
+		const ctx = canvas.getContext('2d')!;
+		ctx.filter = 'blur(24px)';
+		ctx.drawImage(image, 0, 0);
+
+		const blob = await new Promise<Blob | null>((resolve) =>
+			canvas.toBlob((b) => resolve(b), 'image/webp', 0.5)
+		);
+		if (blob) {
+			blurredPic = URL.createObjectURL(blob);
+		}
+		URL.revokeObjectURL(blobUrl);
+	}
+
+	if (metadata.mime.includes('video') && metadata.firstFrame) {
+		const blobUrl = URL.createObjectURL(metadata.firstFrame);
 		const image = await loadImage(blobUrl);
 
 		const canvas = document.createElement('canvas');

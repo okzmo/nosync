@@ -1,9 +1,8 @@
 import Cell from '#cell/models/cell'
-import env from '#start/env'
 import drive from '@adonisjs/drive/services/main'
 
 export class DeleteCellService {
-  async execute(id: number) {
+  async execute(id: string) {
     const cellToDel = await Cell.query().where('id', id).preload('media').first()
 
     if (cellToDel?.type.includes('image') || cellToDel?.type.includes('video')) {

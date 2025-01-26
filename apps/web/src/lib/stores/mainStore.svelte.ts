@@ -1,6 +1,6 @@
 import { Transmit } from '@adonisjs/transmit-client';
 import { branch } from './branch.svelte';
-import type { TransmitUpdateImage } from '$lib/types/api';
+import type { TransmitMessages } from '$lib/types/api';
 import { auth } from './auth.svelte';
 import { cell } from './cell.svelte';
 
@@ -65,7 +65,7 @@ class MainStore {
 		branch.branchChannel = this.transmit.subscription(`space:${spaceId}:branch:${branchId}`);
 		await branch.branchChannel?.create();
 
-		branch.branchChannel.onMessage((data: TransmitUpdateImage) => {
+		branch.branchChannel.onMessage((data: TransmitMessages) => {
 			switch (data.type) {
 				case 'branch:finishTagsCreation':
 					cell.updateTags(data);

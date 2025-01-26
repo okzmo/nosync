@@ -115,6 +115,7 @@ export class UploadMediaService {
     spaceId: string,
     branchId: string,
     metadata: {
+      id: string
       size: number
       width: number
       height: number
@@ -133,6 +134,7 @@ export class UploadMediaService {
     await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
 
     const cell = new Cell()
+    cell.id = metadata.id
     cell.branchId = Number.parseInt(branchId)
     cell.type = metadata.mime
     cell.tags = ''

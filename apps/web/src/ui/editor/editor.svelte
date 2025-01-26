@@ -32,7 +32,7 @@
 			element: element,
 			onBlur: onBlur,
 			onUpdate: onUpdate,
-			content: content,
+			content: content || '',
 			extensions: [
 				StarterKit.configure({
 					dropcursor: false,
