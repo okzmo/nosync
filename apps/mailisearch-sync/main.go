@@ -3,7 +3,6 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -53,9 +52,9 @@ func main() {
 		switch notif.Channel {
 		case "cell_deletion":
 			if data, ok := payload["data"].(map[string]any); ok {
-				if id, ok := data["id"].(float64); ok {
+				if id, ok := data["id"].(string); ok {
 					log.Println("DELETING DOCUMENT", payload)
-					task, err := client.Index("cells").DeleteDocument(fmt.Sprintf("%d", int(id)))
+					task, err := client.Index("cells").DeleteDocument(id)
 					log.Println("TASK:", task)
 					if err != nil {
 						log.Println("ERROR:", err)

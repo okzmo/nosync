@@ -14,6 +14,16 @@ import type { ApiCell } from '$lib/types/api';
 
 class Branch {
 	cells = $state<ApiCell[] | undefined>();
+	searchCells = $state<ApiCell[] | undefined>();
+	shownCells = $derived.by<ApiCell[] | undefined>(() => {
+		if (this.searchCells && this.searchCells.length > 0) {
+			return this.searchCells;
+		} else if (this.cells && this.cells.length > 0) {
+			return this.cells;
+		} else {
+			return [];
+		}
+	});
 	cellWrapper = $state<HTMLDivElement | null>();
 	branchChannel = $state<Subscription | undefined>();
 	changingBranch = $state(false);
@@ -31,9 +41,16 @@ class Branch {
 		for (const cell of cells) {
 			const cellToUpdate = this.cells.findIndex((c) => c.id === cell.id);
 			if (cellToUpdate !== -1) {
-				this.cells[cellToUpdate] = { ...cell };
+				this.cells[cellToUpdate] = {
+					...cell,
+					tags: this.cells[cellToUpdate].tags,
+					media: {
+						...cell.media,
+						resizedUrl: this.cells[cellToUpdate].media.resizedUrl,
+						originalUrl: this.cells[cellToUpdate].media.originalUrl
+					}
+				};
 			}
-			console.log(this.cells[cellToUpdate]);
 		}
 	}
 
@@ -82,8 +99,8 @@ class Branch {
 		);
 		if (existingBranch) {
 			await space.goto(space.currentSpace!, existingBranch);
-			branch.changingBranch = false;
-			branch.cells = undefined;
+			this.changingBranch = false;
+			this.cells = undefined;
 
 			return;
 		}
@@ -103,8 +120,8 @@ class Branch {
 		auth.user?.spaces[spaceIdx!].branches.push(data);
 
 		await space.goto(space.currentSpace!, data);
-		branch.changingBranch = false;
-		branch.cells = undefined;
+		this.changingBranch = false;
+		this.cells = undefined;
 	}
 }
 

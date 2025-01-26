@@ -5,7 +5,7 @@ export default class extends BaseSeeder {
   async run() {
     await Media.createMany([
       {
-        cellId: 1,
+        cellId: '1',
         resizedUrl: 'https://f003.backblazeb2.com/file/dumpiapp/xy03uzlb28oxratzozjqsp34.jpg',
         width: 735,
         height: 1209,
@@ -13,7 +13,7 @@ export default class extends BaseSeeder {
         mime: 'image/jpeg',
       },
       {
-        cellId: 2,
+        cellId: '2',
         resizedUrl: 'https://f003.backblazeb2.com/file/dumpiapp/hxshnr8dsyw4szzym6tevs4i.jpg',
         width: 736,
         height: 1036,
@@ -22,7 +22,7 @@ export default class extends BaseSeeder {
       },
 
       {
-        cellId: 4,
+        cellId: '4',
         resizedUrl: 'https://f003.backblazeb2.com/file/dumpiapp/xy03uzlb28oxratzozjqsp34.jpg',
         width: 735,
         height: 1209,
@@ -30,7 +30,7 @@ export default class extends BaseSeeder {
         mime: 'image/jpeg',
       },
       {
-        cellId: 5,
+        cellId: '5',
         resizedUrl: 'https://f003.backblazeb2.com/file/dumpiapp/hxshnr8dsyw4szzym6tevs4i.jpg',
         width: 736,
         height: 1036,
@@ -39,7 +39,7 @@ export default class extends BaseSeeder {
       },
 
       {
-        cellId: 7,
+        cellId: '7',
         resizedUrl: 'https://f003.backblazeb2.com/file/dumpiapp/xy03uzlb28oxratzozjqsp34.jpg',
         width: 735,
         height: 1209,
@@ -47,7 +47,7 @@ export default class extends BaseSeeder {
         mime: 'image/jpeg',
       },
       {
-        cellId: 8,
+        cellId: '8',
         resizedUrl: 'https://f003.backblazeb2.com/file/dumpiapp/hxshnr8dsyw4szzym6tevs4i.jpg',
         width: 736,
         height: 1036,

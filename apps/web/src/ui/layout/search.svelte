@@ -12,16 +12,21 @@
 
 	async function handleInput() {
 		if (search.activeCommand) return;
-		const { data, error } = await tuyau.v1.branch.search_cells.$post({
-			branchId: space.currentBranch!.id,
-			query: inputValue || ''
-		});
 
-		if (error) {
-			console.error(error);
+		if (inputValue !== '') {
+			const { data, error } = await tuyau.v1.branch.search_cells.$post({
+				branchId: space.currentBranch!.id,
+				query: inputValue
+			});
+
+			if (error) {
+				console.error(error);
+			}
+
+			branch.searchCells = data;
+		} else {
+			branch.searchCells = [];
 		}
-
-		branch.cells = data;
 	}
 
 	async function handleKeydown(e: KeyboardEvent) {

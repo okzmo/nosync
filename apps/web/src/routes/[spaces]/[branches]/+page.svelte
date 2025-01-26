@@ -29,7 +29,7 @@
 			branch.cells = data as ApiCell[];
 		}
 
-		return branch.processCells(branch.cells);
+		return branch.processCells(branch.shownCells);
 	});
 
 	onMount(async () => {
