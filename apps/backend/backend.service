@@ -1,0 +1,23 @@
+[Unit]
+Description=NOSYNC Backend Service
+After=network.target postgresql.service
+Requires=postgresql.service
+
+[Service]
+WorkingDirectory=/home/production/backend
+ExecStart=/usr/bin/node /home/deploy/production/backend/bin/server.js
+User=deploy
+Group=deploy
+LimitNOFILE=65536
+Restart=on-failure
+TimeoutSec=30
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+StandardOutput=journal
+StandardError=journal
+EnvironmentFile=/etc/envs/backend.env
+
+[Install]
+WantedBy=multi-user.target

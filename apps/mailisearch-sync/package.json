@@ -1,6 +1,6 @@
 {
   "name": "mailisearch-sync",
   "scripts": {
-    "sync:cells": "go run main.go"
+    "sync:cells": "ENVIRONMENT=development go run main.go"
   }
 }

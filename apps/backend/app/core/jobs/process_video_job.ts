@@ -6,6 +6,7 @@ import drive from '@adonisjs/drive/services/main'
 import Media from '#media/models/media'
 import transmit from '@adonisjs/transmit/services/main'
 import sharp from 'sharp'
+import env from '#start/env'
 
 interface ProcessVideoJobPayload {
   spaceId: string
@@ -35,22 +36,22 @@ export default class ProcessVideoJob extends Job {
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishThumbnailVideoUpload',
       cellId: cellId,
-      thumbnailUrl: `https://f003.backblazeb2.com/file/dumpiapp/${thumbnailKey}`,
+      thumbnailUrl: `${env.get('AWS_CDN_URL')}/${thumbnailKey}`,
     })
 
     await drive.use('s3').put(originKey, video)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalVideoUpload',
       cellId: cellId,
-      originalUrl: `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`,
+      originalUrl: `${env.get('AWS_CDN_URL')}/${originKey}`,
     })
 
     await drive.use('fs').delete(originKey)
     await drive.use('fs').delete(thumbnailKey)
 
     const media = await Media.findByOrFail('cell_id', cellId)
-    media.originalUrl = `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`
-    media.thumbnailUrl = `https://f003.backblazeb2.com/file/dumpiapp/${thumbnailKey}`
+    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originKey}`
+    media.thumbnailUrl = `${env.get('AWS_CDN_URL')}/${thumbnailKey}`
     await media.save()
 
     const result = await generateText({
@@ -68,7 +69,7 @@ export default class ProcessVideoJob extends Job {
             },
             {
               type: 'image',
-              image: new URL(`https://f003.backblazeb2.com/file/dumpiapp/${thumbnailKey}`),
+              image: new URL(`${env.get('AWS_CDN_URL')}/${thumbnailKey}`),
               experimental_providerMetadata: {
                 openai: {
                   imageDetail: 'low',

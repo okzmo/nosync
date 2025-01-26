@@ -4,6 +4,7 @@ import { registerValidator } from './validator.js'
 import Token from '#user/models/token'
 import mail from '@adonisjs/mail/services/main'
 import VerifyENotification from '#mails/verify_e_notification'
+import env from '#start/env'
 
 export default class RegisterController {
   async handle({ response, request }: HttpContext) {
@@ -19,7 +20,7 @@ export default class RegisterController {
       relation: 'verifyEmailTokens',
       type: 'VERIFY_EMAIL',
     })
-    const resetLink = `http://localhost:5173/verify/email/${token}`
+    const resetLink = `${env.get('FRONTEND_URL')}/verify/email/${token}`
     await mail.sendLater(new VerifyENotification(user, resetLink))
 
     return response.ok('An email has been sent to your email')

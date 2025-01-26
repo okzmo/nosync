@@ -51,7 +51,7 @@ class MainStore {
 	async initializeTransmit() {
 		if (!auth.user?.spaces) return;
 		const transmitConn = new Transmit({
-			baseUrl: 'http://localhost:3333'
+			baseUrl: import.meta.env.VITE_API_URL
 		});
 		this.transmit = transmitConn;
 	}

@@ -17,6 +17,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   APP_KEY: Env.schema.string(),
   HOST: Env.schema.string({ format: 'host' }),
   LOG_LEVEL: Env.schema.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']),
+  FRONTEND_URL: Env.schema.string(),
 
   /*
   |----------------------------------------------------------
@@ -46,9 +47,8 @@ export default await Env.create(new URL('../', import.meta.url), {
   AWS_ACCESS_KEY_ID: Env.schema.string(),
   AWS_SECRET_ACCESS_KEY: Env.schema.string(),
   AWS_REGION: Env.schema.string(),
+  AWS_CDN_URL: Env.schema.string(),
   S3_BUCKET: Env.schema.string(),
-
-  HUGGINGFACE_API_KEY: Env.schema.string(),
 
   OPENAI_API_KEY: Env.schema.string(),
 
@@ -70,5 +70,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring the mail package
   |----------------------------------------------------------
   */
-  RESEND_API_KEY: Env.schema.string()
+  RESEND_API_KEY: Env.schema.string(),
 })

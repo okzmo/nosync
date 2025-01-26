@@ -14,13 +14,15 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("ERROR LOADING .env", err)
+	if os.Getenv("ENVIRONMENT") == "development" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("ERROR LOADING .env", err)
+		}
 	}
 
 	connStr := os.Getenv("DB_LINK")
-	_, err = sql.Open("postgres", connStr)
+	_, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -53,12 +55,20 @@ func main() {
 			if data, ok := payload["data"].(map[string]any); ok {
 				if id, ok := data["id"].(float64); ok {
 					log.Println("DELETING DOCUMENT", payload)
-					client.Index("cells").DeleteDocument(fmt.Sprintf("%d", int(id)))
+					task, err := client.Index("cells").DeleteDocument(fmt.Sprintf("%d", int(id)))
+					log.Println("TASK:", task)
+					if err != nil {
+						log.Println("ERROR:", err)
+					}
 				}
 			}
 		case "cell_changes":
 			log.Println("ADDING DOCUMENT", payload)
-			client.Index("cells").AddDocuments(payload["data"])
+			task, err := client.Index("cells").AddDocuments(payload["data"], "id")
+			log.Println("TASK:", task)
+			if err != nil {
+				log.Println("ERROR:", err)
+			}
 		}
 
 	}

@@ -2,7 +2,7 @@ import User from '#user/models/user'
 import { BaseMail } from '@adonisjs/mail'
 
 export default class PasswordResetNotification extends BaseMail {
-  from = 'Acme <onboarding@resend.dev>'
+  from = 'Nosync <no-reply@updates.nosync.app>'
   subject = 'Reset Password'
 
   constructor(

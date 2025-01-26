@@ -5,19 +5,19 @@ export default class extends BaseSeeder {
   async run() {
     await Space.createMany([
       {
-        owner_id: 1,
+        userId: 1,
         name: 'life',
       },
       {
-        owner_id: 1,
+        userId: 1,
         name: 'work',
       },
       {
-        owner_id: 2,
+        userId: 2,
         name: 'personal',
       },
       {
-        owner_id: 3,
+        userId: 3,
         name: 'core',
       },
     ])

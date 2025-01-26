@@ -10,6 +10,8 @@ import drive from '@adonisjs/drive/services/main'
 import { MultipartFile } from '@adonisjs/core/bodyparser'
 import { UnprocessableMediaException } from '#branch/exceptions/unprocessable_media.exception'
 import ProcessVideoJob from '#jobs/process_video_job'
+import { MissingThumbnailException } from '#branch/exceptions/missing_thumbnail.exception'
+import env from '#start/env'
 
 export class UploadMediaService {
   async execute(data: InferInput<typeof uploadMediaValidator>) {
@@ -34,6 +36,8 @@ export class UploadMediaService {
           medias.push({ ...imageCell, media: imageMedia })
           break
         case 'video':
+          if (!thumbnails || thumbnails.length <= 0) throw new MissingThumbnailException()
+
           const [videoCell, videoMedia] = await this.#uploadVideo(
             file,
             spaceId,
@@ -70,7 +74,9 @@ export class UploadMediaService {
 
     // blur the image and upload
     const blurredPic = await sharp(file.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
+    await drive
+      .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
+      .put(`${key}_blur.webp`, blurredPic)
 
     const cell = new Cell()
     cell.branchId = Number.parseInt(branchId)
@@ -82,7 +88,7 @@ export class UploadMediaService {
     media.cellId = savedCell.id
     media.originalUrl = ''
     media.resizedUrl = ''
-    media.blurUrl = `https://f003.backblazeb2.com/file/dumpiapp/${key}_blur.webp`
+    media.blurUrl = `${env.get('AWS_CDN_URL')}/${key}_blur.webp`
     media.width = metadata.width
     media.height = metadata.height
     media.fileSize = metadata.size
@@ -124,7 +130,9 @@ export class UploadMediaService {
 
     // blur the first frame of the video and upload
     const blurredPic = await sharp(thumbnail.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
+    await drive
+      .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
+      .put(`${key}_blur.webp`, blurredPic)
 
     const cell = new Cell()
     cell.branchId = Number.parseInt(branchId)
@@ -136,7 +144,7 @@ export class UploadMediaService {
     media.cellId = savedCell.id
     media.originalUrl = ''
     media.resizedUrl = ''
-    media.blurUrl = `https://f003.backblazeb2.com/file/dumpiapp/${key}_blur.webp`
+    media.blurUrl = `${env.get('AWS_CDN_URL')}/${key}_blur.webp`
     media.width = metadata.width
     media.height = metadata.height
     media.fileSize = metadata.size

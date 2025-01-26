@@ -6,6 +6,7 @@ import drive from '@adonisjs/drive/services/main'
 import Media from '#media/models/media'
 import transmit from '@adonisjs/transmit/services/main'
 import sharp from 'sharp'
+import env from '#start/env'
 
 interface ProcessImageJobPayload {
   spaceId: string
@@ -34,21 +35,21 @@ export default class ProcessImageJob extends Job {
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishResizedImageUpload',
       cellId: cellId,
-      resizedUrl: `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`,
+      resizedUrl: `${env.get('AWS_CDN_URL')}/${optimKey}`,
     })
 
     await drive.use('s3').put(originKey, file)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalImageUpload',
       cellId: cellId,
-      originalUrl: `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`,
+      originalUrl: `${env.get('AWS_CDN_URL')}/${originKey}`,
     })
 
     await drive.use('fs').delete(originKey)
 
     const media = await Media.findByOrFail('cell_id', cellId)
-    media.originalUrl = `https://f003.backblazeb2.com/file/dumpiapp/${originKey}`
-    media.resizedUrl = `https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`
+    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originKey}`
+    media.resizedUrl = `${env.get('AWS_CDN_URL')}/${optimKey}`
     await media.save()
 
     const result = await generateText({
@@ -64,7 +65,7 @@ export default class ProcessImageJob extends Job {
             },
             {
               type: 'image',
-              image: new URL(`https://f003.backblazeb2.com/file/dumpiapp/${optimKey}`),
+              image: new URL(`${env.get('AWS_CDN_URL')}/${optimKey}`),
               experimental_providerMetadata: {
                 openai: {
                   imageDetail: 'low',
