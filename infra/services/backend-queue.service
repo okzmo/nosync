@@ -1,0 +1,23 @@
+[Unit]
+Description=NOSYNC Backend Queue Service
+After=network.target redis.service
+Requires=redis.service
+
+[Service]
+EnvironmentFile=/etc/envs/backend.env
+WorkingDirectory=/home/deploy/releases/build
+ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node ace queue:listen
+User=deploy
+Group=deploy
+LimitNOFILE=65536
+Restart=on-failure
+TimeoutSec=30
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+[Unit]
+Description=NOSYNC Meili sync
+After=network.target backend.service
+Requires=backend.service
+
+[Service]
+EnvironmentFile=/etc/envs/meilisync.env
+WorkingDirectory=/home/deploy/releases
+ExecStart=/home/deploy/releases/meilisync
+User=deploy
+Group=deploy
+LimitNOFILE=65536
+Restart=on-failure
+TimeoutSec=30
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

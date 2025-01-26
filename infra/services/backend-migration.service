@@ -1,0 +1,15 @@
+[Unit]
+Description=Run DB migrations
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+EnvironmentFile=/etc/envs/backend.env
+WorkingDirectory=/home/deploy/releases/build
+ExecStart=/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin/node ace migration:fresh --force
+User=deploy
+Group=deploy
+
+[Install]
+WantedBy=multi-user.target
