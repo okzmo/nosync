@@ -7,10 +7,8 @@
 	import { cell } from '$lib/stores/cell.svelte';
 	import { twJoin } from 'tailwind-merge';
 	import { panel } from '$lib/stores/panel.svelte';
-	import { AspectRatio } from 'bits-ui';
 
-	let content = $state<Content | undefined>();
-	let typing = $state(false);
+	let content = $state<{ id: string; content?: Content } | null>();
 	let title = $state('');
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();
@@ -26,7 +24,7 @@
 	$effect(() => {
 		if (cell.active) {
 			title = cell.active.title;
-			content = cell.active.content;
+			content = { id: cell.active.id, content: cell.active.content };
 		}
 	});
 
@@ -109,7 +107,7 @@
 		<p class="select-none text-lg font-bold uppercase">Date:</p>
 		<date class="select-none">{cell.active?.createdAt}</date>
 	</div>
-	<Editor {content} bind:typing />
+	<Editor {content} />
 	<div class="flex w-full items-center justify-between gap-x-3">
 		<div class="h-[3rem] flex-1 bg-zinc-925"></div>
 		<button

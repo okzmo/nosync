@@ -11,28 +11,24 @@
 	let editor = $state<Editor | undefined>();
 
 	type Props = {
-		content?: Content;
-		typing: boolean;
+		content?: {
+			id: string;
+			content?: Content;
+		};
 	};
 
-	let { content, typing = $bindable() }: Props = $props();
+	let { content }: Props = $props();
 
 	function onBlur() {
 		if (!editor) return;
 		cell.saveContent(editor.getJSON());
-		typing = false;
-	}
-
-	function onUpdate({ editor }) {
-		typing = !editor.isEmpty;
 	}
 
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			onBlur: onBlur,
-			onUpdate: onUpdate,
-			content: content || '',
+			content: content?.content,
 			extensions: [
 				StarterKit.configure({
 					dropcursor: false,
@@ -60,7 +56,7 @@
 	});
 
 	$effect(() => {
-		editor?.commands.setContent(content || null);
+		editor?.commands.setContent(content?.content || null);
 	});
 </script>
 
