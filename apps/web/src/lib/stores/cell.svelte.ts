@@ -21,25 +21,33 @@ class Cell {
 	updateResizedImage(data: TransmitUpdateResizedImage) {
 		if (!branch.cells) return;
 		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
-		branch.cells[idx].media.resizedUrl = data.resizedUrl;
+		if (idx !== -1) {
+			branch.cells[idx].media.resizedUrl = data.resizedUrl;
+		}
 	}
 
 	updateOriginalUrl(data: TransmitUpdateOriginal) {
 		if (!branch.cells) return;
 		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
-		branch.cells[idx].media.originalUrl = data.originalUrl;
+		if (idx !== -1) {
+			branch.cells[idx].media.originalUrl = data.originalUrl;
+		}
 	}
 
 	updateTags(data: TransmitUpdateTags) {
 		if (!branch.cells) return;
 		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
-		branch.cells[idx].tags = data.tags;
+		if (idx !== -1) {
+			branch.cells[idx].tags = data.tags;
+		}
 	}
 
 	updateThumbnail(data: TransmitUpdateThumbnail) {
 		if (!branch.cells) return;
 		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
-		branch.cells[idx].media.thumbnailUrl = data.thumbnailUrl;
+		if (idx !== -1) {
+			branch.cells[idx].media.thumbnailUrl = data.thumbnailUrl;
+		}
 	}
 
 	async saveTitle(title: string) {

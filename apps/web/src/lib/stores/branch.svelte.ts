@@ -14,16 +14,6 @@ import type { ApiCell } from '$lib/types/api';
 
 class Branch {
 	cells = $state<ApiCell[] | undefined>();
-	searchCells = $state<ApiCell[] | undefined>();
-	shownCells = $derived.by<ApiCell[] | undefined>(() => {
-		if (this.searchCells && this.searchCells.length > 0) {
-			return this.searchCells;
-		} else if (this.cells && this.cells.length > 0) {
-			return this.cells;
-		} else {
-			return [];
-		}
-	});
 	cellWrapper = $state<HTMLDivElement | null>();
 	branchChannel = $state<Subscription | undefined>();
 	changingBranch = $state(false);

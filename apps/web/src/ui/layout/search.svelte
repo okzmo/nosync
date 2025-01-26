@@ -21,20 +21,16 @@
 	async function handleInput() {
 		if (search.activeCommand) return;
 
-		if (inputValue !== '') {
-			const { data, error } = await tuyau.v1.branch.search_cells.$post({
-				branchId: space.currentBranch!.id,
-				query: inputValue
-			});
+		const { data, error } = await tuyau.v1.branch.search_cells.$post({
+			branchId: space.currentBranch!.id,
+			query: inputValue
+		});
 
-			if (error) {
-				console.error(error);
-			}
-
-			branch.searchCells = data;
-		} else {
-			branch.searchCells = [];
+		if (error) {
+			console.error(error);
 		}
+
+		branch.cells = data;
 	}
 
 	async function handleKeydown(e: KeyboardEvent) {
