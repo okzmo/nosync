@@ -6,7 +6,7 @@ export class DeleteCellService {
   async execute(id: number) {
     const cellToDel = await Cell.query().where('id', id).preload('media').first()
 
-    if (cellToDel?.type.includes('image')) {
+    if (cellToDel?.type.includes('image') || cellToDel?.type.includes('video')) {
       const originalKey = cellToDel.media.originalUrl.split('/').at(-1)
       drive
         .use(env.get('NODE_ENV') === 'development' ? 'b2' : 's3')
