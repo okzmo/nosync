@@ -36,6 +36,10 @@
 	async function handleKeydown(e: KeyboardEvent) {
 		if (!input || input !== document.activeElement) return;
 
+		if (e.key === 'Escape') {
+			e.preventDefault();
+		}
+
 		if (e.key === 'Backspace') {
 			if (inputValue === '' && search.activeCommand) {
 				e.preventDefault();
@@ -77,7 +81,7 @@
 			{#if search.activeCommand}
 				{@const Icon = search.activeCommand.icon}
 				<div
-					transition:fly={{ x: -5, duration: 75 }}
+					transition:fly={{ x: -5, duration: 45 }}
 					class="z-10 flex flex-shrink-0 items-center gap-x-2 rounded-[0.95rem] py-[0.4rem] pl-2 pr-3"
 					style="background-color: {search.activeCommand.color}; color: {search.activeCommand
 						.textColor}; box-shadow: {search.activeCommand.boxShadow}"
@@ -89,12 +93,19 @@
 			<input
 				bind:this={input}
 				bind:value={inputValue}
+				onblur={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					menu.closeMenu();
+				}}
 				oninput={() => debounce(handleInput)}
 				onkeydown={handleKeydown}
+				autocomplete="off"
+				spellcheck="false"
 				type="text"
 				placeholder="Search"
 				class="relative z-[1] w-full border-none bg-transparent font-serif text-5xl italic leading-none text-zinc-50 placeholder:text-zinc-50/30 focus:outline-none focus:ring-0"
-				transition:fade={{ duration: 75 }}
+				transition:fade={{ duration: 45 }}
 			/>
 		</div>
 	{/if}
@@ -107,7 +118,7 @@
 	}
 
 	.progressive-blur.down {
-		transition: opacity 200ms cubic-bezier(0, 0.55, 0.45, 1);
+		transition: opacity 45ms cubic-bezier(0, 0.55, 0.45, 1);
 		position: absolute;
 		bottom: 0;
 		left: 0;

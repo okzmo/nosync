@@ -55,7 +55,7 @@
 
 <ul
 	class="relative z-[1] flex gap-x-3 font-serif text-lg italic"
-	transition:fade={{ duration: 75 }}
+	transition:fade={{ duration: 45 }}
 >
 	<li bind:this={spaceEl}>
 		{#if space.changingSpace}

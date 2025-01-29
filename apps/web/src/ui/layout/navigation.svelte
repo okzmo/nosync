@@ -4,7 +4,6 @@
 	import SolarSettingsBoldDuotone from '~icons/solar/settings-bold-duotone';
 	import SolarSun2BoldDuotone from '~icons/solar/sun-2-bold-duotone';
 	import Breadcrumbs from './navigation/breadcrumbs.svelte';
-	import { search } from '$lib/stores/search.svelte';
 </script>
 
 <header class="fixed top-0 z-[999] flex w-full items-center justify-between px-8 pt-5">
@@ -13,7 +12,7 @@
 
 		<nav
 			class="fixed left-1/2 z-[1] flex -translate-x-1/2 justify-center"
-			transition:fade={{ duration: 75 }}
+			transition:fade={{ duration: 45 }}
 		>
 			<ul class="flex gap-x-6 font-serif text-lg italic text-zinc-50/50">
 				<li><a href="/" class="text-zinc-50">home</a></li>
@@ -25,7 +24,7 @@
 
 		<ul
 			class="z-[1] flex items-center gap-x-4 font-serif text-lg italic"
-			transition:fade={{ duration: 75 }}
+			transition:fade={{ duration: 45 }}
 		>
 			<li class="flex items-center justify-center">
 				<a href="/settings" class="text-zinc-50/50 transition-colors hover:text-zinc-50">
@@ -54,7 +53,7 @@
 	}
 
 	.progressive-blur.up {
-		transition: opacity 75ms cubic-bezier(0, 0.55, 0.45, 1);
+		transition: opacity 45ms cubic-bezier(0, 0.55, 0.45, 1);
 		backface-visibility: hidden;
 		position: absolute;
 		top: 0;
