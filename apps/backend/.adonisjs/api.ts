@@ -23,8 +23,8 @@ type V1AuthLogoutPost = {
   response: MakeTuyauResponse<import('../app/user/usecases/Logout/controller.ts').default['handle'], false>
 }
 type V1AuthVerifyEmailIdPost = {
-  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/VerifyEmail/validator.ts')['verifyEmailSendValidator']>>
-  response: MakeTuyauResponse<import('../app/user/usecases/VerifyEmail/controller.ts').default['send'], true>
+  request: unknown
+  response: MakeTuyauResponse<import('../app/user/usecases/VerifyEmail/controller.ts').default['handle'], false>
 }
 type V1AuthChecktokenPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPassword/validator.ts')['checkToken']>>
@@ -33,6 +33,10 @@ type V1AuthChecktokenPost = {
 type V1AuthPasswordResetPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPassword/validator.ts')['resetPasswordSendValidator']>>
   response: MakeTuyauResponse<import('../app/user/usecases/ResetPassword/controller.ts').default['send'], true>
+}
+type V1AuthPasswordResetwithcurrentPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPasswordWithCurrent/validator.ts')['resetPasswordValidator']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/ResetPasswordWithCurrent/controller.ts').default['handle'], true>
 }
 type V1AuthRecoveryPasswordIdPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPassword/validator.ts')['resetPasswordValidator']>>
@@ -117,6 +121,11 @@ export interface ApiDefinition {
           '$url': {
           };
           '$post': V1AuthPasswordResetPost;
+        };
+        'reset_with_current': {
+          '$url': {
+          };
+          '$post': V1AuthPasswordResetwithcurrentPost;
         };
       };
       'recovery': {
@@ -234,6 +243,13 @@ const routes = [
     path: '/v1/auth/password/reset',
     method: ["POST"],
     types: {} as V1AuthPasswordResetPost,
+  },
+  {
+    params: [],
+    name: 'recovery.password_with_current',
+    path: '/v1/auth/password/reset_with_current',
+    method: ["POST"],
+    types: {} as V1AuthPasswordResetwithcurrentPost,
   },
   {
     params: ["token"],

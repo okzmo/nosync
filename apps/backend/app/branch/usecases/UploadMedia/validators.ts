@@ -4,6 +4,7 @@ export const uploadMediaValidator = vine.compile(
   vine.object({
     spaceId: vine.string(),
     branchId: vine.string(),
+    title: vine.string().optional(),
     files: vine.array(
       vine.file({
         size: '500mb',

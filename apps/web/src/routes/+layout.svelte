@@ -11,17 +11,3 @@
 </script>
 
 {@render children()}
-
-<style lang="postcss">
-	:global(body) {
-		@apply bg-zinc-950 text-zinc-50;
-	}
-
-	:global(::-webkit-scrollbar) {
-		display: none;
-	}
-
-	:global(*) {
-		scrollbar-width: none;
-	}
-</style>

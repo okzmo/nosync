@@ -23,3 +23,15 @@ export const recoveryPassword = z.object({
 	password: z.string().min(8, 'must be longer than 8 characters.')
 });
 export type RecoveryPasswordForm = z.infer<typeof recoveryPassword>;
+
+export const passwordSchema = z
+	.object({
+		currentPassword: z.string().min(8, 'Must be longer than 8 characters.'),
+		newPassword: z.string().min(8, 'Must be longer than 8 characters.'),
+		confirm: z.string().min(8, 'Must be longer than 8 characters.')
+	})
+	.refine((data) => data.newPassword === data.confirm, {
+		message: "Passwords don't match",
+		path: ['confirm']
+	});
+export type PasswordForm = z.infer<typeof passwordSchema>;

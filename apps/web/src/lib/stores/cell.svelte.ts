@@ -80,36 +80,6 @@ class Cell {
 		await tuyau.v1.cell.save_content.$post(body);
 	}
 
-	async createNote() {
-		cell.active = { type: 'note', content: null, createdAt: formatDate(new Date().toString()) };
-		cell.activeIdx = branch.cells.length;
-		panel.open();
-
-		const { data, error } = await tuyau.v1.cell.create_note.$post({
-			branchId: space.currentBranch?.id
-		});
-
-		if (error) {
-			console.error(error);
-			if (branch.cells) {
-				branch.cells.pop();
-			}
-			backdrop.close();
-			panel.close();
-			return;
-		}
-
-		if (branch.cells) {
-			branch.cells.push(data);
-		} else {
-			branch.cells = [data];
-		}
-		cell.active = {
-			...data,
-			createdAt: formatDate(data.createdAt)
-		};
-	}
-
 	async delete(cellId: string, idx: number) {
 		const removed = branch.cells!.splice(idx, 1);
 

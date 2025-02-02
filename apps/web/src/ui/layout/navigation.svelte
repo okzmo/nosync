@@ -4,6 +4,12 @@
 	import SolarSettingsBoldDuotone from '~icons/solar/settings-bold-duotone';
 	import SolarSun2BoldDuotone from '~icons/solar/sun-2-bold-duotone';
 	import Breadcrumbs from './navigation/breadcrumbs.svelte';
+	import { pushState } from '$app/navigation';
+
+	function showSettings() {
+		menu.closeMenu();
+		pushState('/settings', { showSettings: true });
+	}
 </script>
 
 <header class="fixed top-0 z-[999] flex w-full items-center justify-between px-8 pt-5">
@@ -27,9 +33,9 @@
 			transition:fade={{ duration: 45 }}
 		>
 			<li class="flex items-center justify-center">
-				<a href="/settings" class="text-zinc-50/50 transition-colors hover:text-zinc-50">
+				<button class="text-zinc-50/50 transition-colors hover:text-zinc-50" onclick={showSettings}>
 					<SolarSettingsBoldDuotone height={18} width={18} />
-				</a>
+				</button>
 			</li>
 			<!-- <li class="flex items-center justify-center"> -->
 			<!-- 	<button class="text-zinc-50/50 transition-colors hover:text-zinc-50"> -->

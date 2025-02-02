@@ -13,9 +13,42 @@ import ProcessVideoJob from '#jobs/process_video_job'
 import { MissingThumbnailException } from '#branch/exceptions/missing_thumbnail.exception'
 import env from '#start/env'
 
+interface ImageProps {
+  file: MultipartFile
+  spaceId: string
+  branchId: string
+  title?: string | null
+  metadata: {
+    id: string
+    size: number
+    width: number
+    height: number
+    name: string
+    mime: string
+    duration: number
+  }
+}
+
+interface VideoProps {
+  file: MultipartFile
+  spaceId: string
+  branchId: string
+  title?: string | null
+  metadata: {
+    id: string
+    size: number
+    width: number
+    height: number
+    name: string
+    mime: string
+    duration: number
+  }
+  thumbnail: MultipartFile
+}
+
 export class UploadMediaService {
   async execute(data: InferInput<typeof uploadMediaValidator>) {
-    const { spaceId, branchId, files, filesMetadata, thumbnails } = data
+    const { spaceId, branchId, title, files, filesMetadata, thumbnails } = data
     const medias = []
 
     // validate the metadatas for each file
@@ -27,24 +60,26 @@ export class UploadMediaService {
     for (const [i, file] of files.entries()) {
       switch (file.type) {
         case 'image':
-          const [imageCell, imageMedia] = await this.#uploadImage(
+          const [imageCell, imageMedia] = await this.#uploadImage({
             file,
-            spaceId,
+            metadata: metadatas[i],
+            title,
             branchId,
-            metadatas[i]
-          )
+            spaceId,
+          })
           medias.push({ ...imageCell, media: imageMedia })
           break
         case 'video':
           if (!thumbnails || thumbnails.length <= 0) throw new MissingThumbnailException()
 
-          const [videoCell, videoMedia] = await this.#uploadVideo(
+          const [videoCell, videoMedia] = await this.#uploadVideo({
             file,
-            spaceId,
+            metadata: metadatas[i],
+            thumbnail: thumbnails[i],
             branchId,
-            metadatas[i],
-            thumbnails[i]
-          )
+            spaceId,
+            title,
+          })
           medias.push({ ...videoCell, media: videoMedia })
           break
         default:
@@ -55,20 +90,7 @@ export class UploadMediaService {
     return medias
   }
 
-  async #uploadImage(
-    file: MultipartFile,
-    spaceId: string,
-    branchId: string,
-    metadata: {
-      id: string
-      size: number
-      width: number
-      height: number
-      name: string
-      mime: string
-      duration: number
-    }
-  ) {
+  async #uploadImage({ file, metadata, title, branchId, spaceId }: ImageProps) {
     const key = cuid()
     const originalKey = `${key}.${file.extname}`
     const optimKey = `${key}.webp`
@@ -79,6 +101,7 @@ export class UploadMediaService {
 
     const cell = new Cell()
     cell.id = metadata.id
+    if (title) cell.title = title
     cell.branchId = Number.parseInt(branchId)
     cell.type = metadata.mime
     cell.tags = ''
@@ -110,21 +133,7 @@ export class UploadMediaService {
     return [savedCell.toJSON(), media.toJSON()]
   }
 
-  async #uploadVideo(
-    file: MultipartFile,
-    spaceId: string,
-    branchId: string,
-    metadata: {
-      id: string
-      size: number
-      width: number
-      height: number
-      name: string
-      mime: string
-      duration: number
-    },
-    thumbnail: MultipartFile
-  ) {
+  async #uploadVideo({ file, branchId, spaceId, title, metadata, thumbnail }: VideoProps) {
     const key = cuid()
     const originalKey = `${key}.${file.extname}`
     const thumbnailKey = `${key}.webp`
@@ -135,6 +144,7 @@ export class UploadMediaService {
 
     const cell = new Cell()
     cell.id = metadata.id
+    if (title) cell.title = title
     cell.branchId = Number.parseInt(branchId)
     cell.type = metadata.mime
     cell.tags = ''

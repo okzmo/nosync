@@ -11,6 +11,11 @@ import { mainStore, GUTTER } from './mainStore.svelte';
 import { space } from './space.svelte';
 import { auth } from './auth.svelte';
 import type { ApiCell } from '$lib/types/api';
+import { cell } from './cell.svelte';
+import { formatDate } from '$lib/utils/date';
+import { panel } from './panel.svelte';
+import { backdrop } from './backdrop.svelte';
+import { uploadMedia } from '$lib/utils/media';
 
 class Branch {
 	cells = $state<ApiCell[] | undefined>();
@@ -112,6 +117,63 @@ class Branch {
 		await space.goto(space.currentSpace!, data);
 		this.changingBranch = false;
 		this.cells = undefined;
+	}
+
+	async createNote(title?: string) {
+		cell.active = {
+			type: 'note',
+			title: title || '',
+			content: undefined,
+			createdAt: formatDate(new Date().toString())
+		};
+		cell.activeIdx = branch.cells!.length;
+		panel.open();
+
+		const { data, error } = await tuyau.v1.cell.create_note.$post({
+			title: title,
+			branchId: space.currentBranch?.id
+		});
+
+		if (error) {
+			console.error(error);
+			if (branch.cells) {
+				branch.cells.pop();
+			}
+			backdrop.close();
+			panel.close();
+			return;
+		}
+
+		if (branch.cells) {
+			branch.cells.push(data);
+		} else {
+			branch.cells = [data];
+		}
+		cell.active = {
+			...data,
+			createdAt: formatDate(data.createdAt)
+		};
+	}
+
+	async uploadFile(title?: string) {
+		const el = document.createElement('input');
+		el.style.display = 'none';
+		el.type = 'file';
+
+		if (!title) {
+			el.multiple = true;
+		}
+
+		document.body.appendChild(el);
+		el.click();
+
+		el.onchange = async (e) => {
+			const target = e.target as HTMLInputElement;
+
+			await uploadMedia(undefined, target.files, title);
+		};
+
+		document.body.removeChild(el);
 	}
 }
 

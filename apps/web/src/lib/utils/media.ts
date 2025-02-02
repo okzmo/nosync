@@ -1,4 +1,7 @@
-import { decode } from 'blurhash';
+import { generateFakeCell } from './gallery';
+import { branch } from '$lib/stores/branch.svelte';
+import { tuyau } from '$lib/api';
+import { space } from '$lib/stores/space.svelte';
 
 export type FileMetadata = {
 	id: string;
@@ -101,18 +104,6 @@ const generateThumbnail = async (video: HTMLVideoElement) => {
 	});
 };
 
-export function blurhashToDataURL(blurhash: string, width = 32, height = 32) {
-	const pixels = decode(blurhash, width, height);
-	const canvas = document.createElement('canvas');
-	canvas.width = width;
-	canvas.height = height;
-	const ctx = canvas.getContext('2d');
-	const imageData = ctx!.createImageData(width, height);
-	imageData.data.set(pixels);
-	ctx!.putImageData(imageData, 0, 0);
-	return canvas.toDataURL();
-}
-
 export function generateMaximizedSize(originalHeight: number, originalWidth: number) {
 	const vHeight = window.innerHeight * 0.8;
 	const vWidth = window.innerWidth * 0.8;
@@ -133,4 +124,63 @@ export function generateMaximizedSize(originalHeight: number, originalWidth: num
 	}
 
 	return { height: newHeight, width: newWidth };
+}
+
+export async function uploadMedia(
+	items?: DataTransferItemList,
+	files?: FileList | null,
+	title?: string
+) {
+	const formData = new FormData();
+
+	const filesToUpload = [];
+	let filesMetadata: FileMetadata[] = [];
+
+	if (items) {
+		const processedFiles: Promise<FileMetadata>[] = [];
+		const allItems = [...items].filter((item) => item.kind === 'file');
+
+		allItems.forEach((item) => {
+			const file = item.getAsFile();
+			processedFiles.push(getMediaMetadata(file!));
+			filesToUpload.push(file);
+		});
+
+		filesMetadata = await Promise.all(processedFiles);
+	} else if (files) {
+		const filesPromises = [...files].map((file) => getMediaMetadata(file));
+
+		const processedFiles = await Promise.all(filesPromises);
+		filesMetadata = processedFiles;
+		filesToUpload.push(...files);
+	}
+
+	formData.append('spaceId', '' + space.currentSpace!.id);
+	formData.append('branchId', '' + space.currentBranch!.id);
+	if (title) {
+		formData.append('title', '' + title);
+	}
+
+	const fakeCells = [];
+	for (let i = 0; i < filesToUpload.length; ++i) {
+		const file = filesToUpload[i];
+		const metadata = filesMetadata[i];
+
+		fakeCells.push(await generateFakeCell(file, metadata));
+
+		formData.append(`files[]`, file);
+		formData.append(`filesMetadata[]`, JSON.stringify(metadata));
+		if (metadata.firstFrame) {
+			formData.append(`thumbnails[]`, metadata.firstFrame, `thumbnail_${file.name}.jpg`);
+		}
+	}
+	branch.addCells(fakeCells);
+
+	const { data, error } = await tuyau.v1.branch.upload.$post(formData);
+
+	if (error) {
+		console.error(error);
+	}
+
+	branch.updateCells(data);
 }

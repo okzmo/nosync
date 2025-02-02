@@ -8,7 +8,7 @@
 	import { twJoin } from 'tailwind-merge';
 	import { panel } from '$lib/stores/panel.svelte';
 
-	let content = $state<{ id: string; content?: Content } | null>();
+	let content = $state<{ id: string; content?: Content } | undefined>();
 	let title = $state('');
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();

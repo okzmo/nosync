@@ -8,7 +8,8 @@
 	import Navigation from 'ui/layout/navigation.svelte';
 	import Noise from 'ui/layout/noise.svelte';
 	import Search from 'ui/layout/search.svelte';
-	// import Panel from 'ui/panel/panel.svelte';
+	import Settings from 'ui/settings/settings.svelte';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 
@@ -22,6 +23,8 @@
 			e.preventDefault();
 		});
 	});
+
+	$inspect(page.state);
 </script>
 
 <Navigation />
@@ -31,6 +34,10 @@
 <!-- <Panel /> -->
 <Backdrop />
 <Noise />
+
+{#if page.state.showSettings}
+	<Settings />
+{/if}
 
 <div
 	class="pointer-events-none fixed left-0 top-0 z-[999] h-screen w-screen transition"

@@ -5,3 +5,16 @@
 .progressive-blur {
 	@apply fixed h-[400px] w-full bg-zinc-950/75 backdrop-blur-3xl;
 }
+
+body {
+	@apply bg-zinc-950 text-zinc-50;
+}
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+* {
+	scrollbar-width: none;
+}
+

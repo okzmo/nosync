@@ -104,7 +104,7 @@
 					bind:value={title}
 					onblur={() => cell.saveTitle(title)}
 				/>
-				<Editor {content} bind:typing />
+				<Editor {content} />
 			</div>
 		</Drawer.Content>
 	</Drawer.Portal>

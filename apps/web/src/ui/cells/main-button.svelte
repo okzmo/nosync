@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SolarAddCircleBoldDuotone from '~icons/solar/add-circle-bold-duotone';
-	import { cell } from '$lib/stores/cell.svelte';
+	import { branch } from '$lib/stores/branch.svelte';
 
 	let { main } = $props();
 </script>
@@ -9,7 +9,7 @@
 	aria-label="Create a cell"
 	class="group absolute flex items-center justify-center bg-zinc-925 shadow-xl transition-colors hover:bg-zinc-900"
 	style="height: {main.height}px; width: {main.width}px; transform: translate({main.x}px, {main.y}px);"
-	onclick={() => cell.createNote()}
+	onclick={() => branch.createNote()}
 >
 	<SolarAddCircleBoldDuotone
 		height={96}

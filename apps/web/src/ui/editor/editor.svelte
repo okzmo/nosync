@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
+	import { panel } from '$lib/stores/panel.svelte';
 	import { Editor, type Content } from '@tiptap/core';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import TaskItem from '@tiptap/extension-task-item';
@@ -8,7 +9,6 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	let element = $state<Element | undefined>();
-	let editor = $state<Editor | undefined>();
 
 	type Props = {
 		content?: {
@@ -20,12 +20,13 @@
 	let { content }: Props = $props();
 
 	function onBlur() {
-		if (!editor) return;
-		cell.saveContent(editor.getJSON());
+		if (!panel.editor) return;
+		cell.saveContent(panel.editor.getJSON());
+		panel.close();
 	}
 
 	onMount(() => {
-		editor = new Editor({
+		panel.editor = new Editor({
 			element: element,
 			onBlur: onBlur,
 			content: content?.content,
@@ -44,19 +45,19 @@
 				})
 			],
 			onTransaction: () => {
-				editor = editor;
+				panel.editor = panel.editor;
 			}
 		});
 	});
 
 	onDestroy(() => {
-		if (editor) {
-			editor.destroy();
+		if (panel.editor) {
+			panel.editor.destroy();
 		}
 	});
 
 	$effect(() => {
-		editor?.commands.setContent(content?.content || null);
+		panel.editor?.commands.setContent(content?.content || null);
 	});
 </script>
 
@@ -126,12 +127,12 @@
 
 		:global(label input[type='checkbox']:checked::before) {
 			content: '';
-			@apply scale-100 bg-sky-400;
+			@apply scale-100 bg-[#F29C51];
 		}
 
 		:global(label input[type='checkbox']:checked) {
 			background-image: none;
-			@apply border-2 border-sky-400 bg-transparent;
+			@apply border-2 border-[#F29C51] bg-transparent;
 		}
 
 		:global(div) {

@@ -6,6 +6,7 @@
 	import { fade } from 'svelte/transition';
 	import { fly } from 'svelte/transition';
 	import { search } from '$lib/stores/search.svelte';
+	import { panel } from '$lib/stores/panel.svelte';
 
 	let input = $state<HTMLInputElement | null>(null);
 	let inputValue = $state('');
@@ -36,10 +37,6 @@
 	async function handleKeydown(e: KeyboardEvent) {
 		if (!input || input !== document.activeElement) return;
 
-		if (e.key === 'Escape') {
-			e.preventDefault();
-		}
-
 		if (e.key === 'Backspace') {
 			if (inputValue === '' && search.activeCommand) {
 				e.preventDefault();
@@ -51,7 +48,7 @@
 			e.preventDefault();
 
 			if (search.isCommand(inputValue.toLowerCase())) {
-				search.executeEffect();
+				search.launchEffect();
 				inputValue = '';
 			}
 
@@ -65,6 +62,18 @@
 			}
 
 			branch.cells = data;
+		}
+
+		if (e.key === 'Enter') {
+			e.preventDefault();
+
+			if (search.activeCommand) {
+				search.executeCommand(inputValue);
+				search.resetCommand();
+				menu.closeMenu();
+				panel.focusEditor();
+				inputValue = '';
+			}
 		}
 	}
 
@@ -93,17 +102,12 @@
 			<input
 				bind:this={input}
 				bind:value={inputValue}
-				onblur={(e) => {
-					e.preventDefault();
-					e.stopPropagation();
-					menu.closeMenu();
-				}}
 				oninput={() => debounce(handleInput)}
 				onkeydown={handleKeydown}
 				autocomplete="off"
 				spellcheck="false"
 				type="text"
-				placeholder="Search"
+				placeholder={search.placeholder}
 				class="relative z-[1] w-full border-none bg-transparent font-serif text-5xl italic leading-none text-zinc-50 placeholder:text-zinc-50/30 focus:outline-none focus:ring-0"
 				transition:fade={{ duration: 45 }}
 			/>
