@@ -1,6 +1,4 @@
 import { Job } from '@rlanz/bull-queue'
-import { generateText } from 'ai'
-import { openai } from '@ai-sdk/openai'
 import Cell from '#cell/models/cell'
 import drive from '@adonisjs/drive/services/main'
 import Media from '#media/models/media'
