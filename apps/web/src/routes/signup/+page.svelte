@@ -26,12 +26,17 @@
 			if (form.valid) {
 				const { data, error } = await tuyau.v1.auth.register.$post(form.data);
 				if (error) {
-					globalError = error.value.errors[0].message;
-					setTimeout(() => email_input?.focus(), 5);
+					globalError = error.value.message;
+					setTimeout(() => {
+						globalError = '';
+					}, 3000);
 					return;
 				}
 
 				globalMessage = data;
+				setTimeout(() => {
+					globalMessage = '';
+				}, 3000);
 			}
 		}
 	});

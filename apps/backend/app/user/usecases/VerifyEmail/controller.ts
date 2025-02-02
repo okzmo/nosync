@@ -2,8 +2,9 @@ import { type HttpContext } from '@adonisjs/core/http'
 import { verifyEmailSendValidator } from './validator.js'
 import User from '#user/models/user'
 import mail from '@adonisjs/mail/services/main'
-import PasswordResetNotification from '#mails/password_reset_notification'
 import Token from '#user/models/token'
+import env from '#start/env'
+import VerifyENotification from '#mails/verify_e_notification'
 
 export default class VerifyEmailController {
   async send({ response, request }: HttpContext) {
@@ -15,10 +16,10 @@ export default class VerifyEmailController {
       relation: 'verifyEmailTokens',
       type: 'VERIFY_EMAIL',
     })
-    const resetLink = `http://localhost:5173/verify/email/${token}`
+    const resetLink = `${env.get('FRONTEND_URL')}/verify/email/${token}`
 
     if (user) {
-      await mail.sendLater(new PasswordResetNotification(user, resetLink))
+      await mail.sendLater(new VerifyENotification(user, resetLink))
     }
 
     return response.ok('An email has been sent to the provided email.')

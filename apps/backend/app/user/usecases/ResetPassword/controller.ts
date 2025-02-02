@@ -4,6 +4,7 @@ import User from '#user/models/user'
 import mail from '@adonisjs/mail/services/main'
 import PasswordResetNotification from '#mails/password_reset_notification'
 import Token from '#user/models/token'
+import env from '#start/env'
 
 export default class ResetPasswordController {
   async send({ response, request }: HttpContext) {
@@ -15,7 +16,7 @@ export default class ResetPasswordController {
       relation: 'passwordResetTokens',
       type: 'PASSWORD_RESET',
     })
-    const resetLink = `http://localhost:5173/recovery/password/${token}`
+    const resetLink = `${env.get('FRONTEND_URL')}/recovery/password/${token}`
 
     if (user) {
       await mail.sendLater(new PasswordResetNotification(user, resetLink))

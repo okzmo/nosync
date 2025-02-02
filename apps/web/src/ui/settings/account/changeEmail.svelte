@@ -25,6 +25,7 @@
 				}
 
 				successMessage = data;
+				auth.user!.email = form.data.email;
 				setTimeout(() => {
 					successMessage = '';
 				}, 3000);
