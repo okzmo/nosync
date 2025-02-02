@@ -1,11 +1,8 @@
 import { tuyau } from '$lib/api';
-import type { TNote, TPhoto, TVideo } from '$lib/types/space';
+import type { TNote, TPDF, TPhoto, TVideo } from '$lib/types/space';
 import type { JSONContent } from '@tiptap/core';
-import { backdrop } from './backdrop.svelte';
 import { branch } from './branch.svelte';
-import { panel } from './panel.svelte';
 import { space } from './space.svelte';
-import { formatDate } from '$lib/utils/date';
 import type {
 	TransmitUpdateOriginal,
 	TransmitUpdateResizedImage,
@@ -14,7 +11,7 @@ import type {
 } from '$lib/types/api';
 
 class Cell {
-	active = $state<TPhoto | TNote | TVideo | undefined>();
+	active = $state<TPhoto | TNote | TVideo | TPDF | undefined>();
 	activeIdx = $state(-1);
 	maximized = $state<TPhoto | TVideo | undefined>();
 

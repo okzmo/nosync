@@ -1,8 +1,9 @@
 import { tuyau } from '$lib/api';
-import type { TDefault, TNote, TPhoto, TVideo } from '$lib/types/space';
+import type { TDefault, TNote, TPDF, TPhoto, TVideo } from '$lib/types/space';
 import {
 	calculateCellPosition,
 	calculateNoteSize,
+	calculatePdfSize,
 	calculatePhotoSize,
 	calculateVideoSize
 } from '$lib/utils/gallery';
@@ -49,7 +50,7 @@ class Branch {
 		}
 	}
 
-	processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TVideo | TDefault> {
+	processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TVideo | TPDF | TDefault> {
 		if (!cells) return [];
 		mainStore.columnHeights.fill(0);
 		const processedCells = [];
@@ -78,6 +79,10 @@ class Branch {
 				const note_size = calculateNoteSize(cell);
 				const note_pos = calculateCellPosition(note_size);
 				processedCells.push(note_pos);
+			} else if (cell.type === 'application/pdf') {
+				const pdf_size = calculatePdfSize(cell);
+				const pdf_pos = calculateCellPosition(pdf_size);
+				processedCells.push(pdf_pos);
 			}
 		}
 

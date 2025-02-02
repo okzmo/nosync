@@ -6,10 +6,7 @@
 	let successMessage = $state('');
 
 	async function onLogout() {
-		const { error } = await tuyau.v1.auth.logout.$post();
-		if (error) {
-			console.error(error);
-		}
+		await tuyau.v1.auth.logout.$post();
 		goto('/signin');
 	}
 </script>

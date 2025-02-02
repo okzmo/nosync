@@ -23,8 +23,6 @@
 			e.preventDefault();
 		});
 	});
-
-	$inspect(page.state);
 </script>
 
 <Navigation />

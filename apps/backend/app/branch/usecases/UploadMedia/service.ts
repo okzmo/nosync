@@ -12,6 +12,7 @@ import { UnprocessableMediaException } from '#branch/exceptions/unprocessable_me
 import ProcessVideoJob from '#jobs/process_video_job'
 import { MissingThumbnailException } from '#branch/exceptions/missing_thumbnail.exception'
 import env from '#start/env'
+import ProcessFileJob from '#jobs/process_file_job'
 
 interface ImageProps {
   file: MultipartFile
@@ -46,6 +47,19 @@ interface VideoProps {
   thumbnail: MultipartFile
 }
 
+interface FileProps {
+  file: MultipartFile
+  spaceId: string
+  branchId: string
+  title?: string | null
+  metadata: {
+    id: string
+    size: number
+    name: string
+    mime: string
+  }
+}
+
 export class UploadMediaService {
   async execute(data: InferInput<typeof uploadMediaValidator>) {
     const { spaceId, branchId, title, files, filesMetadata, thumbnails } = data
@@ -58,6 +72,7 @@ export class UploadMediaService {
 
     // create a cell and a media object in DB for each file
     for (const [i, file] of files.entries()) {
+      console.log(file.type)
       switch (file.type) {
         case 'image':
           const [imageCell, imageMedia] = await this.#uploadImage({
@@ -81,6 +96,16 @@ export class UploadMediaService {
             title,
           })
           medias.push({ ...videoCell, media: videoMedia })
+          break
+        case 'application':
+          const [fileCell, fileMedia] = await this.#uploadFile({
+            file,
+            metadata: metadatas[i],
+            branchId,
+            spaceId,
+            title,
+          })
+          medias.push({ ...fileCell, media: fileMedia })
           break
         default:
           throw new UnprocessableMediaException()
@@ -171,6 +196,42 @@ export class UploadMediaService {
       branchId,
       originKey: originalKey,
       thumbnailKey: thumbnailKey,
+      cellId: savedCell.id,
+    })
+
+    return [savedCell.toJSON(), media.toJSON()]
+  }
+
+  async #uploadFile({ file, branchId, spaceId, title, metadata }: FileProps) {
+    const key = cuid()
+    const originalKey = `${key}.${file.extname}`
+
+    const cell = new Cell()
+    cell.id = metadata.id
+    if (title) cell.title = title
+    cell.branchId = Number.parseInt(branchId)
+    cell.type = metadata.mime
+    cell.tags = ''
+    const savedCell = await cell.save()
+
+    const media = new Media()
+    media.cellId = savedCell.id
+    media.originalUrl = ''
+    media.resizedUrl = ''
+    media.width = 0
+    media.height = 0
+    media.fileSize = metadata.size
+    media.mime = metadata.mime
+    media.thumbnailUrl = ''
+    media.duration = 0
+    media.save()
+
+    // process the image in the queue for tagging with openai and save to bucket
+    await file.moveToDisk(originalKey, 'fs')
+    queue.dispatch(ProcessFileJob, {
+      spaceId,
+      branchId,
+      originKey: originalKey,
       cellId: savedCell.id,
     })
 

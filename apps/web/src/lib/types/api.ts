@@ -39,7 +39,10 @@ export interface TransmitUpdateResizedImage {
 }
 
 export interface TransmitUpdateOriginal {
-	type: 'branch:finishOriginalImageUpload' | 'branch:finishOriginalVideoUpload';
+	type:
+		| 'branch:finishOriginalImageUpload'
+		| 'branch:finishOriginalVideoUpload'
+		| 'branch:finishOriginalFileUpload';
 	cellId: string;
 	originalUrl: string;
 }

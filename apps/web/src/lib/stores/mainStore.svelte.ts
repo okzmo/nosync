@@ -82,6 +82,9 @@ class MainStore {
 				case 'branch:finishOriginalVideoUpload':
 					cell.updateOriginalUrl(data);
 					break;
+				case 'branch:finishOriginalFileUpload':
+					cell.updateOriginalUrl(data);
+					break;
 			}
 		});
 	}

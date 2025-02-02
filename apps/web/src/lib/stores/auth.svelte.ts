@@ -12,7 +12,6 @@ class Auth {
 			throw redirect(303, '/signin');
 		}
 
-		console.log(data);
 		this.user = {
 			...data.user,
 			spaces: data.spaces

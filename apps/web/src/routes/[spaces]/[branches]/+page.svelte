@@ -10,6 +10,7 @@
 	import MaximizeZone from 'ui/branch/maximize-zone.svelte';
 	import MainButton from 'ui/cells/main-button.svelte';
 	import Note from 'ui/cells/note.svelte';
+	import Pdf from 'ui/cells/pdf.svelte';
 	import Photo from 'ui/cells/photo.svelte';
 	import Video from 'ui/cells/video.svelte';
 	import Sidebar from 'ui/sidebar/sidebar.svelte';
@@ -62,6 +63,8 @@
 						<Video video={cell} i={i - 1} />
 					{:else if cell.type === 'note'}
 						<Note note={cell} i={i - 1} />
+					{:else if cell.type === 'pdf'}
+						<Pdf pdf={cell} i={i - 1} />
 					{:else if cell.type === 'default'}
 						<MainButton main={cell} />
 					{/if}

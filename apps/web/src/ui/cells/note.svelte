@@ -82,6 +82,9 @@
 	.note-block {
 		pointer-events: none;
 		user-select: none;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
 
 		:global(*) {
 			pointer-events: none;

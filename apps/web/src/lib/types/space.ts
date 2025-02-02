@@ -67,6 +67,23 @@ export type TVideo = {
 	createdAt: string;
 };
 
+export type TPDF = {
+	id: string;
+	type: 'pdf';
+	title: string;
+	content: JSONContent | undefined;
+	originalUrl: string;
+	blurUrl: string;
+	mime: string;
+	width: number;
+	height: number;
+	tags: string;
+	x: number;
+	y: number;
+	aspectRatio: number;
+	createdAt: string;
+};
+
 export type TNote = {
 	id: string;
 	type: 'note';

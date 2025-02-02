@@ -1,11 +1,11 @@
 import { mainStore, GUTTER } from '$lib/stores/mainStore.svelte';
 import { space } from '$lib/stores/space.svelte';
 import type { ApiCell } from '$lib/types/api';
-import type { TNote, TPhoto, TVideo } from '$lib/types/space';
+import type { TNote, TPDF, TPhoto, TVideo } from '$lib/types/space';
 import { formatDate } from './date';
 import { generateMaximizedSize, uniqueId, type FileMetadata } from './media';
 
-export function calculateCellPosition(cell: TPhoto | TVideo | TNote) {
+export function calculateCellPosition(cell: TPhoto | TVideo | TNote | TPDF) {
 	const columns = mainStore.nbColumns;
 	const columnWidth = mainStore.colWidth;
 	const columnHeights = mainStore.columnHeights;
@@ -108,6 +108,32 @@ export function calculateVideoSize(cell: ApiCell) {
 		y: 0,
 		aspectRatio: aspectRatio,
 		duration: video.duration,
+		createdAt: formatDate(cell.createdAt)
+	};
+
+	return p;
+}
+
+export function calculatePdfSize(cell: ApiCell) {
+	const pdf = cell.media;
+	const colWidth = mainStore.colWidth;
+	const aspectRatio = colWidth / (colWidth + 100);
+	const picHeight = colWidth / aspectRatio;
+
+	const p: TPDF = {
+		id: cell.id,
+		type: 'pdf',
+		title: cell.title,
+		content: cell.content,
+		mime: pdf.mime,
+		tags: '',
+		blurUrl: pdf.blurUrl,
+		originalUrl: pdf.originalUrl,
+		width: Math.floor(colWidth),
+		height: Math.floor(picHeight),
+		x: 0,
+		y: 0,
+		aspectRatio: aspectRatio,
 		createdAt: formatDate(cell.createdAt)
 	};
 

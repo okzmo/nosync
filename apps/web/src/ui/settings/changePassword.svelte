@@ -17,7 +17,6 @@
 			if (form.valid) {
 				const { data, error } = await tuyau.v1.auth.password.reset_with_current.$post(form.data);
 				if (error) {
-					console.log(error.message);
 					errorCurrentPass = error.message;
 					setTimeout(() => {
 						errorCurrentPass = '';
