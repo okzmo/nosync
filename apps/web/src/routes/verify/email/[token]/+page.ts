@@ -12,8 +12,8 @@ export const load: PageLoad = async ({ params }) => {
 		throw redirect(302, `/${first_space}/${first_branch}`);
 	}
 
-	const { data: dataEmail, error: isInvalid } = await tuyau.v1.auth.verify
-		.email({ token: params.token })
+	const { data: dataEmail, error: isInvalid } = await tuyau.v1.auth.email
+		.verify({ token: params.token })
 		.$post();
 
 	return {

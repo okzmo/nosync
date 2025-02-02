@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { tuyau } from '$lib/api';
-	import { auth } from '$lib/stores/auth.svelte';
+	import ChangeEmail from './changeEmail.svelte';
+
+	let successMessage = $state('');
 
 	async function onLogout() {
 		const { error } = await tuyau.v1.auth.logout.$post();
@@ -12,20 +14,16 @@
 	}
 </script>
 
+{#if successMessage !== ''}
+	<span
+		class="mt-4 flex w-full items-center justify-center border border-green-500 py-2 text-green-500"
+	>
+		{successMessage}
+	</span>
+{/if}
+
 <div class="flex flex-col gap-y-6">
-	<form class="mt-4">
-		<div class="flex justify-between border-t border-t-zinc-50/20 pt-4">
-			<div class="flex w-1/2 flex-col">
-				<p class="text-lg leading-none">Email</p>
-			</div>
-			<input
-				type="text"
-				placeholder="email"
-				value={auth.user!.email}
-				class="w-1/2 border border-zinc-50/20 bg-transparent placeholder:text-zinc-50/40"
-			/>
-		</div>
-	</form>
+	<ChangeEmail bind:successMessage />
 	<div class="flex justify-between border-t border-t-zinc-50/20 pt-4">
 		<div class="flex w-1/2 flex-col">
 			<p class="text-lg leading-none">Logout</p>

@@ -1,5 +1,6 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
+const ChangeEmailController = () => import('#user/usecases/ChangeEmail/controller')
 const ResetPasswordWithCurrentController = () =>
   import('#user/usecases/ResetPasswordWithCurrent/controller')
 const VerifyEmailController = () => import('#user/usecases/VerifyEmail/controller')
@@ -16,7 +17,8 @@ export function registerUserRoutes() {
       router.post('/login', [LoginController, 'handle']).as('login')
       router.get('/valid', [CheckUserController, 'handle']).as('check.user')
       router.post('/logout', [LogoutController, 'handle']).as('logout').use(middleware.auth())
-      router.post('/verify/email/:token', [VerifyEmailController, 'handle']).as('verifyEmail')
+      router.post('/email/verify/:token', [VerifyEmailController, 'handle']).as('verifyEmail')
+      router.post('/email/change', [ChangeEmailController, 'handle']).as('changeEmail')
       router.post('/check_token', [ResetPasswordController, 'checkToken']).as('checkToken')
       router.post('/password/reset', [ResetPasswordController, 'send']).as('passwordReset')
       router

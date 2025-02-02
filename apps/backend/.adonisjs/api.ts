@@ -22,9 +22,13 @@ type V1AuthLogoutPost = {
   request: unknown
   response: MakeTuyauResponse<import('../app/user/usecases/Logout/controller.ts').default['handle'], false>
 }
-type V1AuthVerifyEmailIdPost = {
+type V1AuthEmailVerifyIdPost = {
   request: unknown
   response: MakeTuyauResponse<import('../app/user/usecases/VerifyEmail/controller.ts').default['handle'], false>
+}
+type V1AuthEmailChangePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ChangeEmail/validator.ts')['changeEmailValidator']>>
+  response: MakeTuyauResponse<import('../app/user/usecases/ChangeEmail/controller.ts').default['handle'], true>
 }
 type V1AuthChecktokenPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/user/usecases/ResetPassword/validator.ts')['checkToken']>>
@@ -102,13 +106,18 @@ export interface ApiDefinition {
         };
         '$post': V1AuthLogoutPost;
       };
-      'verify': {
-        'email': {
+      'email': {
+        'verify': {
           ':token': {
             '$url': {
             };
-            '$post': V1AuthVerifyEmailIdPost;
+            '$post': V1AuthEmailVerifyIdPost;
           };
+        };
+        'change': {
+          '$url': {
+          };
+          '$post': V1AuthEmailChangePost;
         };
       };
       'check_token': {
@@ -226,9 +235,16 @@ const routes = [
   {
     params: ["token"],
     name: 'verifyEmail',
-    path: '/v1/auth/verify/email/:token',
+    path: '/v1/auth/email/verify/:token',
     method: ["POST"],
-    types: {} as V1AuthVerifyEmailIdPost,
+    types: {} as V1AuthEmailVerifyIdPost,
+  },
+  {
+    params: [],
+    name: 'changeEmail',
+    path: '/v1/auth/email/change',
+    method: ["POST"],
+    types: {} as V1AuthEmailChangePost,
   },
   {
     params: [],

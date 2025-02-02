@@ -5,4 +5,7 @@ export type TUser = {
 	email: string;
 	firstTime: boolean;
 	spaces: TSpace[];
+	isEmailVerified: boolean;
+	updatedAt: string;
+	createdAt: string;
 };

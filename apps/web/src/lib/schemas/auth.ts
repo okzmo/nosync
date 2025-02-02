@@ -35,3 +35,7 @@ export const passwordSchema = z
 		path: ['confirm']
 	});
 export type PasswordForm = z.infer<typeof passwordSchema>;
+
+export const emailSchema = z.object({
+	email: z.string().email('Not a valid email')
+});

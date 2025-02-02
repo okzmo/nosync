@@ -49,7 +49,7 @@
 		>
 			<h3 class="w-[10rem] shrink-0 truncate text-left text-xl font-semibold">{note.title}</h3>
 			{#if note.content && !isEmpty}
-				<div class="note-block mt-2">
+				<div class="note-block mt-2" tabindex="-1" aria-readonly="true" contenteditable="false">
 					{@html content}
 				</div>
 			{:else}
@@ -80,6 +80,15 @@
 
 <style lang="postcss">
 	.note-block {
+		pointer-events: none;
+		user-select: none;
+
+		:global(*) {
+			pointer-events: none;
+			user-select: none;
+			outline: none;
+		}
+
 		:global(h1, h2, h3, h4, h5, h6) {
 			margin-top: 0.5rem;
 			text-align: left;
@@ -96,6 +105,7 @@
 
 		:global(.editor--task-item) {
 			margin-top: 0.2rem;
+			pointer-events: none;
 		}
 	}
 </style>

@@ -48,7 +48,7 @@ export default class Token extends BaseModel {
     await Token.expireTokens(user, relation)
     const record = await user.related('tokens').create({
       type: type,
-      expiresAt: DateTime.now().plus({ minutes: 10 }),
+      expiresAt: DateTime.now().plus({ minutes: 15 }),
       token,
     })
 
