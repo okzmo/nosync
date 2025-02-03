@@ -8,12 +8,21 @@
 	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
 	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 	import SolarMaximizeBold from '~icons/solar/maximize-bold';
+	import { getPDFFirstPage } from '$lib/utils/media';
+	import { onMount } from 'svelte';
+
+	let pdfUrl = $state('');
 
 	type Props = {
 		pdf: TPDF;
 		i: number;
 	};
 	let { pdf, i }: Props = $props();
+
+	onMount(async () => {
+		const url = await getPDFFirstPage({ pdfURL: pdf.originalUrl });
+		pdfUrl = url === '' ? pdf.blurUrl : url;
+	});
 </script>
 
 <ContextMenu.Root>
@@ -33,7 +42,7 @@
 					panel.open();
 				}
 			}}
-			class="group absolute overflow-hidden bg-zinc-800 shadow-xl before:absolute before:inset-0 before:content-normal before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
+			class="group absolute overflow-hidden bg-zinc-925 shadow-xl before:absolute before:inset-0 before:content-normal before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
 			style="height: {pdf.height}px; width: {pdf.width}px; transform: translate({pdf.x}px, {pdf.y}px);"
 		>
 			{#if pdf.title}
@@ -43,7 +52,8 @@
 					{pdf.title}
 				</h3>
 			{/if}
-			<embed src={pdf.originalUrl} height={pdf.height} width={pdf.width} />
+
+			<img src={pdfUrl} alt="" />
 
 			{#if pdf.content?.content?.[0]?.content}
 				<SolarPenNewSquareBoldDuotone
@@ -53,18 +63,18 @@
 				/>
 			{/if}
 
-			<!-- <button -->
-			<!-- 	aria-label="Maximize the picture" -->
-			<!-- 	tabindex="-1" -->
-			<!-- 	onclick={(e) => { -->
-			<!-- 		e.stopPropagation(); -->
-			<!-- 		cell.maximized = pdf; -->
-			<!-- 		backdrop.open(); -->
-			<!-- 	}} -->
-			<!-- 	class="absolute left-2 top-2 bg-zinc-950 p-2 text-zinc-50/30 opacity-100 transition-all duration-75 hover:text-zinc-50 active:text-zinc-50/90 group-hover:opacity-100 lg:opacity-0" -->
-			<!-- > -->
-			<!-- 	<SolarMaximizeBold height={16} width={16} /> -->
-			<!-- </button> -->
+			<button
+				aria-label="Maximize the picture"
+				tabindex="-1"
+				onclick={(e) => {
+					e.stopPropagation();
+					cell.maximized = pdf;
+					backdrop.open();
+				}}
+				class="absolute left-2 top-2 bg-zinc-950 p-2 text-zinc-50/30 opacity-100 transition-all duration-75 hover:text-zinc-50 active:text-zinc-50/90 group-hover:opacity-100 lg:opacity-0"
+			>
+				<SolarMaximizeBold height={16} width={16} />
+			</button>
 		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>

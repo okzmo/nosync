@@ -17,6 +17,7 @@
 		mainStore.init();
 		menu.init();
 		mainStore.initializeTransmit();
+		mainStore.setupPDFWorker();
 		mainStore.subscribeTo(space.currentSpace!.id, space.currentBranch!.id);
 
 		window.addEventListener('contextmenu', (e) => {

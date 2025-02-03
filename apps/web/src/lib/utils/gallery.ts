@@ -3,7 +3,7 @@ import { space } from '$lib/stores/space.svelte';
 import type { ApiCell } from '$lib/types/api';
 import type { TNote, TPDF, TPhoto, TVideo } from '$lib/types/space';
 import { formatDate } from './date';
-import { generateMaximizedSize, uniqueId, type FileMetadata } from './media';
+import { generateMaximizedSize, getPDFFirstPage, uniqueId, type FileMetadata } from './media';
 
 export function calculateCellPosition(cell: TPhoto | TVideo | TNote | TPDF) {
 	const columns = mainStore.nbColumns;
@@ -117,7 +117,7 @@ export function calculateVideoSize(cell: ApiCell) {
 export function calculatePdfSize(cell: ApiCell) {
 	const pdf = cell.media;
 	const colWidth = mainStore.colWidth;
-	const aspectRatio = colWidth / (colWidth + 100);
+	const aspectRatio = colWidth / (colWidth + 75);
 	const picHeight = colWidth / aspectRatio;
 
 	const p: TPDF = {
@@ -154,6 +154,7 @@ function loadImage(url: string): Promise<HTMLImageElement> {
  **/
 export async function generateFakeCell(file: File, metadata: FileMetadata) {
 	let blurredPic = '';
+
 	if (metadata.mime.includes('image')) {
 		const imageData = await file.arrayBuffer();
 		const blobUrl = URL.createObjectURL(new Blob([imageData]));
@@ -193,6 +194,10 @@ export async function generateFakeCell(file: File, metadata: FileMetadata) {
 			blurredPic = URL.createObjectURL(blob);
 		}
 		URL.revokeObjectURL(blobUrl);
+	}
+
+	if (metadata.mime === 'application/pdf') {
+		blurredPic = await getPDFFirstPage({ file });
 	}
 
 	const fakeCell: ApiCell = {

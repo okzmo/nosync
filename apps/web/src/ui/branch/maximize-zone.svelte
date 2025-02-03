@@ -6,14 +6,14 @@
 	let width = $state(0);
 
 	function calculateResponsiveMediaWidth() {
-		if (cell.maximized) {
+		if (cell.maximized && cell.maximized.type !== 'pdf') {
 			const res = (cell.maximized.originalWidth / window.innerWidth) * 100;
 			width = res > 85 ? 85 : res;
 		}
 	}
 
 	$effect(() => {
-		if (cell.maximized) {
+		if (cell.maximized && cell.maximized.type !== 'pdf') {
 			const res = (cell.maximized.originalWidth / window.innerWidth) * 100;
 			width = res > 85 ? 85 : res;
 		}
@@ -51,5 +51,12 @@
 		</figure>
 	{:else if cell.maximized.type === 'video'}
 		<VideoPlayer video={cell.maximized} bind:width />
+	{:else if cell.maximized.type === 'pdf'}
+		<embed
+			src={cell.maximized.originalUrl}
+			width={800}
+			height={1000}
+			class="fixed left-1/2 top-1/2 z-[998] -translate-x-1/2 -translate-y-1/2 overflow-hidden border border-black before:absolute before:left-0 before:top-0 before:z-[11] before:h-full before:w-full before:content-normal before:border before:border-zinc-50/15"
+		/>
 	{/if}
 {/if}

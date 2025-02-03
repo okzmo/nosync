@@ -13,7 +13,7 @@ import type {
 class Cell {
 	active = $state<TPhoto | TNote | TVideo | TPDF | undefined>();
 	activeIdx = $state(-1);
-	maximized = $state<TPhoto | TVideo | undefined>();
+	maximized = $state<TPhoto | TVideo | TPDF | undefined>();
 
 	updateResizedImage(data: TransmitUpdateResizedImage) {
 		if (!branch.cells) return;

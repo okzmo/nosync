@@ -3,6 +3,8 @@ import { branch } from './branch.svelte';
 import type { TransmitMessages } from '$lib/types/api';
 import { auth } from './auth.svelte';
 import { cell } from './cell.svelte';
+import * as pdfjsLib from 'pdfjs-dist';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs?worker';
 
 export const PADDING = 16;
 export const GUTTER = 14;
@@ -54,6 +56,10 @@ class MainStore {
 			baseUrl: import.meta.env.VITE_API_URL
 		});
 		this.transmit = transmitConn;
+	}
+
+	setupPDFWorker() {
+		pdfjsLib.GlobalWorkerOptions.workerPort = new pdfjsWorker();
 	}
 
 	async subscribeTo(spaceId: number, branchId: number) {

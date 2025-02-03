@@ -58,6 +58,7 @@
 		"backend": "workspace:*",
 		"bits-ui": "1.0.0-next.74",
 		"formsnap": "^2.0.0",
+		"pdfjs-dist": "^4.10.38",
 		"set-cookie-parser": "^2.7.1",
 		"svelte-bricks": "^0.2.1",
 		"sveltekit-superforms": "^2.23.1",

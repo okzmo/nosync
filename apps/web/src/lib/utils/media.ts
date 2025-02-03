@@ -2,6 +2,8 @@ import { generateFakeCell } from './gallery';
 import { branch } from '$lib/stores/branch.svelte';
 import { tuyau } from '$lib/api';
 import { space } from '$lib/stores/space.svelte';
+import * as pdfjsLib from 'pdfjs-dist';
+import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 
 export type FileMetadata = {
 	id: string;
@@ -124,6 +126,35 @@ export function generateMaximizedSize(originalHeight: number, originalWidth: num
 	}
 
 	return { height: newHeight, width: newWidth };
+}
+
+export async function getPDFFirstPage({ pdfURL, file }: { pdfURL?: string; file?: File }) {
+	let pdf: PDFDocumentProxy;
+	if (file) {
+		const buffer = await file.arrayBuffer();
+		pdf = await pdfjsLib.getDocument(buffer).promise;
+	} else if (pdfURL) {
+		pdf = await pdfjsLib.getDocument({ url: pdfURL, withCredentials: true }).promise;
+	} else {
+		return '';
+	}
+	const page = await pdf.getPage(1);
+
+	const viewport = page.getViewport({ scale: 1 });
+	const canvas = document.createElement('canvas');
+	const ctx = canvas.getContext('2d');
+
+	canvas.width = viewport.width;
+	canvas.height = viewport.height;
+
+	if (!ctx) return '';
+
+	await page.render({
+		canvasContext: ctx,
+		viewport: viewport
+	}).promise;
+
+	return canvas.toDataURL();
 }
 
 export async function uploadMedia(
