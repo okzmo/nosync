@@ -1,5 +1,6 @@
 import { branch } from './branch.svelte';
 import { COMMANDS } from '$lib/constants/commands';
+import { space } from './space.svelte';
 
 class Search {
 	activeCommand = $state<(typeof COMMANDS)[number]>();
@@ -32,7 +33,11 @@ class Search {
 
 	executeCommand(input?: string) {
 		switch (this.activeCommand?.type) {
-			case 'flashCard':
+			case 'space':
+				space.create(input!);
+				break;
+			case 'branch':
+				branch.create(input!);
 				break;
 			case 'note':
 				branch.createNote(input);

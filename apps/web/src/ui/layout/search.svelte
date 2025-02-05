@@ -85,7 +85,7 @@
 				<div
 					transition:fly={{ x: -5, duration: 45 }}
 					class="z-10 flex flex-shrink-0 items-center gap-x-2 rounded-[0.95rem] py-[0.4rem] pl-2 pr-3"
-					style="background-color: {search.activeCommand.color}; color: {search.activeCommand
+					style="background-color: {search.activeCommand.bgColor}; color: {search.activeCommand
 						.textColor}; box-shadow: {search.activeCommand.boxShadow}"
 				>
 					<Icon className="[&>path]:mix-blend-overlay" height={24} width={24} />

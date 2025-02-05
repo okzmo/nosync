@@ -144,12 +144,12 @@
 
 		:global(label input[type='checkbox']:checked::before) {
 			content: '';
-			@apply scale-100 bg-[#F29C51];
+			@apply scale-100 bg-accent;
 		}
 
 		:global(label input[type='checkbox']:checked) {
 			background-image: none;
-			@apply border-2 border-[#F29C51] bg-transparent;
+			@apply border-2 border-accent bg-transparent;
 		}
 
 		:global(div) {

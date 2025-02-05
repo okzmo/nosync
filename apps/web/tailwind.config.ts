@@ -13,7 +13,7 @@ export default {
 				code: ['Chivo Mono', 'sans-serif']
 			},
 			colors: {
-				accent: '#19E292',
+				accent: '#EC5A5A',
 				zinc: {
 					950: '#0A0A0A',
 					925: '#131314',
