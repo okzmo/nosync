@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
 	import { panel } from '$lib/stores/panel.svelte';
+	import { debounce } from '$lib/utils/debounce';
 	import { Editor, type Content } from '@tiptap/core';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import TaskItem from '@tiptap/extension-task-item';
@@ -15,9 +16,10 @@
 			id: string;
 			content?: Content;
 		};
+		saving: string;
 	};
 
-	let { content }: Props = $props();
+	let { content, saving = $bindable() }: Props = $props();
 
 	function onBlur() {
 		if (!panel.editor) return;
@@ -25,10 +27,25 @@
 		panel.close();
 	}
 
+	function onUpdate() {
+		saving = 'saving';
+		debounce(saveOnUpdate, 1000);
+	}
+
+	async function saveOnUpdate() {
+		if (!panel.editor) return;
+		await cell.saveContent(panel.editor.getJSON());
+		saving = 'saved';
+		setTimeout(() => {
+			saving = 'onhold';
+		}, 2000);
+	}
+
 	onMount(() => {
 		panel.editor = new Editor({
 			element: element,
 			onBlur: onBlur,
+			onUpdate: onUpdate,
 			content: content?.content,
 			extensions: [
 				StarterKit.configure({

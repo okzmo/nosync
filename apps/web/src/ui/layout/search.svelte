@@ -7,17 +7,10 @@
 	import { fly } from 'svelte/transition';
 	import { search } from '$lib/stores/search.svelte';
 	import { panel } from '$lib/stores/panel.svelte';
+	import { debounce } from '$lib/utils/debounce';
 
 	let input = $state<HTMLInputElement | null>(null);
 	let inputValue = $state('');
-	let timer: ReturnType<typeof setTimeout>;
-
-	const debounce = (f: () => void) => {
-		clearTimeout(timer);
-		timer = setTimeout(() => {
-			f();
-		}, 50);
-	};
 
 	async function handleInput() {
 		if (search.activeCommand) return;
@@ -52,16 +45,16 @@
 				inputValue = '';
 			}
 
-			const { data, error } = await tuyau.v1.branch.search_cells.$post({
-				branchId: space.currentBranch!.id,
-				query: ''
-			});
-
-			if (error) {
-				console.error(error);
-			}
-
-			branch.cells = data;
+			// const { data, error } = await tuyau.v1.branch.search_cells.$post({
+			// 	branchId: space.currentBranch!.id,
+			// 	query: ''
+			// });
+			//
+			// if (error) {
+			// 	console.error(error);
+			// }
+			//
+			// branch.cells = data;
 		}
 
 		if (e.key === 'Enter') {
@@ -102,7 +95,7 @@
 			<input
 				bind:this={input}
 				bind:value={inputValue}
-				oninput={() => debounce(handleInput)}
+				oninput={() => debounce(handleInput, 150)}
 				onkeydown={handleKeydown}
 				autocomplete="off"
 				spellcheck="false"

@@ -4,6 +4,7 @@
 	import SolarTrashBin2BoldDuotone from '~icons/solar/trash-bin-2-bold-duotone';
 	import MaterialSymbolsCloseRounded from '~icons/material-symbols/close-rounded';
 	import MaterialSymbolsCheckRounded from '~icons/material-symbols/check-rounded';
+	import EosIconsThreeDotsLoading from '~icons/eos-icons/three-dots-loading';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { twJoin } from 'tailwind-merge';
 	import { panel } from '$lib/stores/panel.svelte';
@@ -12,6 +13,7 @@
 	let title = $state('');
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();
+	let saving = $state('onhold');
 
 	function deleteActiveCell() {
 		if (!cell.active) return;
@@ -107,9 +109,15 @@
 		<p class="select-none text-lg font-bold uppercase">Date:</p>
 		<date class="select-none">{cell.active?.createdAt}</date>
 	</div>
-	<Editor {content} />
+	<Editor {content} bind:saving />
 	<div class="flex w-full items-center justify-between gap-x-3">
-		<div class="h-[3rem] flex-1 bg-zinc-925"></div>
+		<div class="flex h-[3rem] flex-1 items-center justify-center bg-zinc-925">
+			{#if saving === 'saving'}
+				<EosIconsThreeDotsLoading height={42} width={42} class="text-zinc-50/50" />
+			{:else if saving === 'saved'}
+				<p class="font-medium">Saved!</p>
+			{/if}
+		</div>
 		<button
 			aria-label="Delete"
 			onclick={deleteActiveCell}
