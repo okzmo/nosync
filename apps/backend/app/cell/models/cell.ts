@@ -22,6 +22,9 @@ export default class Cell extends BaseModel {
   @column()
   declare tags: string
 
+  @column()
+  declare sourceUrl: string
+
   @hasOne(() => Media)
   declare media: HasOne<typeof Media>
 

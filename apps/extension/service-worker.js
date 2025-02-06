@@ -11,23 +11,40 @@ function onClickExtensionSavePage(tab) {
 
 chrome.contextMenus.onClicked.addListener(genericOnClick);
 
+const SPECIAL_CASES = ["cosmos.so"];
+
 async function genericOnClick(info) {
   const body = {
     spaceId: info.parentMenuItemId.split("-")[1],
     branchId: info.menuItemId.split("-")[1],
-    mediaUrl: info.srcUrl,
-    fromUrl: info.linkUrl,
+    mediaUrl: info.srcUrl || "",
+    fromUrl: info.linkUrl || info.pageUrl,
   };
 
-  const res = await fetch("http://localhost:3333/v1/branch/extension/add", {
+  // SPECIAL_CASES.forEach((website) => {
+  //   if (info.pageUrl.includes(website) || info.linkUrl.includes(website)) {
+  //     const url = specialCase(website);
+  //     body.mediaUrl = url;
+  //   }
+  // });
+
+  console.log(body);
+
+  await fetch("http://localhost:3333/v1/branch/extension/add", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
   });
-  console.log(res);
 }
+
+// function specialCase(website) {
+//   switch (website) {
+//     case "cosmos.so":
+//       break;
+//   }
+// }
 
 chrome.runtime.onInstalled.addListener(async function () {
   const res = await fetch("http://localhost:3333/v1/auth/valid");
@@ -44,7 +61,7 @@ chrome.runtime.onInstalled.addListener(async function () {
     let space = spaces[i];
     chrome.contextMenus.create({
       title: space.name,
-      contexts: ["link"],
+      contexts: ["link", "image", "selection"],
       id: "space-" + space.id,
     });
   }
@@ -53,7 +70,7 @@ chrome.runtime.onInstalled.addListener(async function () {
     let branch = branches[i];
     chrome.contextMenus.create({
       title: branch.name,
-      contexts: ["link"],
+      contexts: ["link", "image", "selection"],
       id: "branch-" + branch.id,
       parentId: "space-" + branch.spaceId,
     });

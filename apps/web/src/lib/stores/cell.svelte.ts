@@ -4,6 +4,7 @@ import type { JSONContent } from '@tiptap/core';
 import { branch } from './branch.svelte';
 import { space } from './space.svelte';
 import type {
+	TransmitAddCellFromExtension,
 	TransmitUpdateOriginal,
 	TransmitUpdateResizedImage,
 	TransmitUpdateTags,
@@ -29,6 +30,11 @@ class Cell {
 		if (idx !== -1) {
 			branch.cells[idx].media.originalUrl = data.originalUrl;
 		}
+	}
+
+	addCellFromExtension(data: TransmitAddCellFromExtension) {
+		if (!branch.cells) return;
+		branch.cells.push(data.cell);
 	}
 
 	updateTags(data: TransmitUpdateTags) {

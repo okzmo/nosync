@@ -30,12 +30,18 @@ export type TransmitMessages =
 	| TransmitUpdateResizedImage
 	| TransmitUpdateOriginal
 	| TransmitUpdateTags
-	| TransmitUpdateThumbnail;
+	| TransmitUpdateThumbnail
+	| TransmitAddCellFromExtension;
 
 export interface TransmitUpdateResizedImage {
 	type: 'branch:finishResizedImageUpload';
 	cellId: string;
 	resizedUrl: string;
+}
+
+export interface TransmitAddCellFromExtension {
+	type: 'branch:cellFromExtensionCreated';
+	cell: ApiCell;
 }
 
 export interface TransmitUpdateOriginal {

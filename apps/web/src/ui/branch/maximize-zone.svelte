@@ -17,7 +17,6 @@
 	}
 
 	$effect(() => {
-		console.log(cell.maximized);
 		if (cell.maximized && cell.maximized.type !== 'pdf') {
 			const res = (cell.maximized.originalWidth / window.innerWidth) * 100;
 			width = res > 85 ? 85 : res;

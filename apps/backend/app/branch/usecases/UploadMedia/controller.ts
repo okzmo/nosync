@@ -9,7 +9,7 @@ import { uploadMediaValidator } from './validators.js'
 export default class UploadMediaController {
   constructor(private uploadMedia: UploadMediaService) {}
 
-  async handle({ bouncer, request, response, auth }: HttpContext) {
+  async handle({ bouncer, request, response }: HttpContext) {
     const data = await request.validateUsing(uploadMediaValidator)
 
     const branch = await Branch.findByOrFail('id', data.branchId)

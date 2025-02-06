@@ -91,6 +91,9 @@ class MainStore {
 				case 'branch:finishOriginalFileUpload':
 					cell.updateOriginalUrl(data);
 					break;
+				case 'branch:cellFromExtensionCreated':
+					cell.addCellFromExtension(data);
+					break;
 			}
 		});
 	}
