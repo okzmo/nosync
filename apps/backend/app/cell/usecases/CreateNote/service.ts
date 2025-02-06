@@ -9,6 +9,7 @@ export class CreateNoteService {
     cell.title = data.title || ''
     cell.branchId = data.branchId
     cell.type = 'note'
+    cell.tags = 'notes'
     const newNote = cell.save()
 
     return newNote
