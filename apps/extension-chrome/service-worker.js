@@ -28,9 +28,7 @@ async function genericOnClick(info) {
   //   }
   // });
 
-  console.log(body);
-
-  await fetch("http://localhost:3333/v1/branch/extension/add", {
+  await fetch("https://api.nosync.app/v1/branch/extension/add", {
     method: "post",
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +45,7 @@ async function genericOnClick(info) {
 // }
 
 chrome.runtime.onInstalled.addListener(async function () {
-  const res = await fetch("http://localhost:3333/v1/auth/valid");
+  const res = await fetch("https://api.nosync.app/v1/auth/valid");
   const data = await res.json();
   let spaces = [];
   let branches = [];

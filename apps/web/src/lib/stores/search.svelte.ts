@@ -11,7 +11,7 @@ class Search {
 		const command = COMMANDS.find((c) => c.type.startsWith(query));
 		if (command) {
 			this.activeCommand = command;
-			this.placeholder = 'Title';
+			this.placeholder = command.placeholder;
 
 			return true;
 		}

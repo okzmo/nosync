@@ -40,5 +40,7 @@
 
 <div
 	class="pointer-events-none fixed left-0 top-0 z-[999] h-screen w-screen transition"
-	style="box-shadow: inset 0px 0px 50px {search.effect ? search.activeCommand?.color : '#ffffff00'}"
+	style="box-shadow: inset 0px 0px 50px {search.effect
+		? search.activeCommand?.bgColor
+		: '#ffffff00'}"
 ></div>

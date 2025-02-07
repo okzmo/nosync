@@ -9,5 +9,9 @@
   },
   "action": {},
   "permissions": ["scripting", "contextMenus", "cookies"],
-  "host_permissions": ["http://localhost:3333/*", "http://localhost/*"]
+  "host_permissions": [
+    "http://localhost:3333/*",
+    "http://localhost/*",
+    "https://*.nosync.app/*"
+  ]
 }
