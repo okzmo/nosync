@@ -130,7 +130,8 @@
 <figure
 	onmousemove={handleScrubber}
 	onmouseup={handleMouseupScrubber}
-	onclick={() => {
+	onclick={(e) => {
+		e.stopPropagation();
 		if (paused) {
 			videoEl?.play();
 		} else {

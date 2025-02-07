@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "Nosync - Companion app",
+  "version": "0.0.1",
+  "description": "Nosync's companion app",
+  "background": {
+    "scripts": ["service-worker.js"]
+  },
+  "browser_action": {},
+  "permissions": ["scripting", "contextMenus", "cookies"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "your-extension-id@nosync.app",
+      "strict_min_version": "48.0"
+    }
+  }
+}
