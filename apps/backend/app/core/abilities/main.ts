@@ -34,3 +34,11 @@ export const canDeleteSpace = Bouncer.ability(async (user: User, space: Space) =
 
   return userSpaces[0].id !== space.id
 })
+
+export const canDeleteBranch = Bouncer.ability(async (_: User, branch: Branch) => {
+  const userBranches = await Branch.query()
+    .where('space_id', branch.spaceId)
+    .orderBy('created_at', 'asc')
+
+  return userBranches[0].id !== branch.id
+})

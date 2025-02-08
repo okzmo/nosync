@@ -43,8 +43,8 @@ class Space {
 			(space) => space.name.toLowerCase() === spaceName.toLowerCase()
 		);
 		if (existingSpace) {
-			//TODO: Add toast error for already existing space
-			space.changingSpace = false;
+			//TODO: Add toast error for already existing space with the same name
+			this.changingSpace = false;
 			return;
 		}
 

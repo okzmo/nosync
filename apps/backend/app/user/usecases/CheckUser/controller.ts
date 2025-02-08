@@ -6,8 +6,10 @@ export default class CheckUserController {
     const spaces = await user
       .related('spaces')
       .query()
-      .orderBy('created_at', 'asc')
-      .preload('branches')
+      .orderBy('createdAt', 'asc')
+      .preload('branches', (branchesQuery) => {
+        branchesQuery.orderBy('created_at', 'asc')
+      })
 
     return response.ok({ user, spaces })
   }

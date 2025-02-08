@@ -124,6 +124,64 @@ class Branch {
 		this.cells = undefined;
 	}
 
+	async rename(branchName: string) {
+		if (!space.currentSpace || !space.currentBranch) return;
+
+		const existingBranch = space.currentSpace!.branches.find(
+			(branch) => branch.name.toLowerCase() === branchName.toLowerCase()
+		);
+		if (existingBranch) {
+			//TODO: toast error: can't use the name of an existing branch
+			this.changingBranch = false;
+			return;
+		}
+
+		const oldName = space.currentBranch!.name;
+		const spaceIdx = auth.user!.spaces.findIndex((s) => s.id === space.currentSpace!.id);
+		const branchIdx = auth.user!.spaces[spaceIdx].branches.findIndex(
+			(b) => b.id === space.currentBranch!.id
+		);
+
+		if (spaceIdx > -1 && branchIdx > -1) {
+			auth.user!.spaces[spaceIdx].branches[branchIdx].name = branchName;
+		}
+
+		const { error } = await tuyau.v1.branch.rename.$post({
+			branchId: space.currentBranch!.id,
+			name: branchName
+		});
+
+		if (error) {
+			//TODO: Add toast error to explain why it got renamed back to original
+			console.error(error);
+			auth.user!.spaces[spaceIdx].branches[branchIdx].name = oldName;
+		}
+
+		await space.goto(auth.user!.spaces[spaceIdx], auth.user!.spaces[spaceIdx].branches[branchIdx]);
+		this.changingBranch = false;
+	}
+
+	async delete() {
+		if (!space.currentSpace || !space.currentBranch) return;
+
+		if (space.currentBranch.id === auth.user!.spaces[0].branches[0].id) {
+			//TODO: Add toast error to explain you can't delete your first ever created space
+			return;
+		}
+
+		const { error } = await tuyau.v1.branch.delete.$post({ branchId: space.currentBranch.id });
+
+		if (error) {
+			//TODO: Add toast error to explain why the deletion wasn't successful
+			console.error(error);
+		}
+
+		console.log(auth.user);
+		await space.goto(auth.user!.spaces[0], auth.user!.spaces[0].branches[0]);
+		this.changingBranch = false;
+		branch.cells = undefined;
+	}
+
 	async createNote(title?: string) {
 		cell.active = {
 			type: 'note',

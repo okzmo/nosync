@@ -78,6 +78,14 @@ type V1BranchCreatePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/CreateBranch/validator.ts')['createBranchValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/CreateBranch/controller.ts').default['handle'], true>
 }
+type V1BranchRenamePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/RenameBranch/validator.ts')['renameBranchValidator']>>
+  response: MakeTuyauResponse<import('../app/branch/usecases/RenameBranch/controller.ts').default['handle'], true>
+}
+type V1BranchDeletePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/DeleteBranch/validator.ts')['deleteBranchValidator']>>
+  response: MakeTuyauResponse<import('../app/branch/usecases/DeleteBranch/controller.ts').default['handle'], true>
+}
 type V1BranchExtensionAddPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/AddMediaFromExtension/validators.ts')['addMediaFromExtensionValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/AddMediaFromExtension/controller.ts').default['handle'], true>
@@ -204,6 +212,16 @@ export interface ApiDefinition {
         '$url': {
         };
         '$post': V1BranchCreatePost;
+      };
+      'rename': {
+        '$url': {
+        };
+        '$post': V1BranchRenamePost;
+      };
+      'delete': {
+        '$url': {
+        };
+        '$post': V1BranchDeletePost;
       };
       'extension': {
         'add': {
@@ -358,6 +376,20 @@ const routes = [
     path: '/v1/branch/create',
     method: ["POST"],
     types: {} as V1BranchCreatePost,
+  },
+  {
+    params: [],
+    name: 'branch.rename',
+    path: '/v1/branch/rename',
+    method: ["POST"],
+    types: {} as V1BranchRenamePost,
+  },
+  {
+    params: [],
+    name: 'branch.delete',
+    path: '/v1/branch/delete',
+    method: ["POST"],
+    types: {} as V1BranchDeletePost,
   },
   {
     params: [],
