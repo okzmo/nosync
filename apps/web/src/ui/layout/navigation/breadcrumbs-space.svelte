@@ -5,7 +5,6 @@
 	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
 	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 
-	let { spaceEl = $bindable() } = $props();
 	let spaceInput = $state<HTMLInputElement | undefined>();
 	let action = $state<'create' | 'rename'>('create');
 
@@ -36,7 +35,7 @@
 
 <ContextMenu.Root>
 	<ContextMenu.Trigger>
-		<li bind:this={spaceEl}>
+		<li>
 			{#if space.changingSpace}
 				<form onsubmit={action === 'create' ? handleCreateSpace : handleRenameSpace}>
 					<input

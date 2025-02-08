@@ -6,7 +6,6 @@
 	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
 	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 
-	let { separatorEl = $bindable(), branchEl = $bindable(), separatorPos, branchPos } = $props();
 	let branchInput = $state<HTMLInputElement | undefined>();
 	let action = $state<'create' | 'rename'>('create');
 
@@ -38,18 +37,8 @@
 {#if !space.changingSpace}
 	<ContextMenu.Root>
 		<ContextMenu.Trigger>
-			<span
-				class="absolute top-[0.025rem] text-zinc-50/50"
-				bind:this={separatorEl}
-				transition:fade={{ duration: 75 }}
-				style="left: {separatorPos}px">/</span
-			>
-			<li
-				transition:fade={{ duration: 75 }}
-				class="absolute -top-[0.05rem]"
-				bind:this={branchEl}
-				style="left: {branchPos}px"
-			>
+			<span class="text-zinc-50/50" transition:fade={{ duration: 75 }}>/</span>
+			<li transition:fade={{ duration: 75 }} class="absolute -top-[0.04rem] ml-[1rem]">
 				{#if branch.changingBranch}
 					<form
 						transition:fade={{ duration: 75 }}
