@@ -36,6 +36,62 @@ class Space {
 		branch.cells = undefined;
 	}
 
+	async rename(spaceName: string) {
+		if (!this.currentSpace) return;
+
+		const existingSpace = auth.user?.spaces.find(
+			(space) => space.name.toLowerCase() === spaceName.toLowerCase()
+		);
+		if (existingSpace) {
+			//TODO: Add toast error for already existing space
+			space.changingSpace = false;
+			return;
+		}
+
+		const oldName = this.currentSpace.name;
+		const spaceToChange = auth.user!.spaces.findIndex(
+			(space) => space.id === this.currentSpace!.id
+		);
+
+		if (spaceToChange > -1) {
+			auth.user!.spaces[spaceToChange].name = spaceName;
+		}
+
+		const { error } = await tuyau.v1.space.rename.$post({
+			spaceId: this.currentSpace.id,
+			name: spaceName
+		});
+
+		if (error) {
+			//TODO: Add toast error to explain why it got renamed back to original
+			console.error(error);
+			auth.user!.spaces[spaceToChange].name = oldName;
+		}
+
+		await space.goto(auth.user!.spaces[spaceToChange]);
+		space.changingSpace = false;
+	}
+
+	async delete() {
+		if (!this.currentSpace) return;
+
+		if (this.currentSpace.id === auth.user!.spaces[0].id) {
+			//TODO: Add toast error to explain you can't delete your first ever created space
+			return;
+		}
+
+		const { error } = await tuyau.v1.space.delete.$post({ spaceId: this.currentSpace.id });
+
+		if (error) {
+			//TODO: Add toast error to explain why the deletion wasn't successful
+			console.error(error);
+		}
+
+		await space.goto(auth.user!.spaces[0]);
+		space.changingSpace = false;
+		branch.cells = undefined;
+	}
+
 	async goto_first_space() {
 		const first_space = auth.user?.spaces[0];
 		const first_branch = first_space?.branches[0];

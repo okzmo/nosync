@@ -1,55 +1,31 @@
 <script lang="ts">
 	import { space } from '$lib/stores/space.svelte';
-	import { branch } from '$lib/stores/branch.svelte';
 	import { fade } from 'svelte/transition';
+	import BreadcrumbsSpace from './breadcrumbs-space.svelte';
+	import BreadcrumbsBranch from './breadcrumbs-branch.svelte';
 
-	let spaceInput = $state<HTMLInputElement | undefined>();
-	let branchInput = $state<HTMLInputElement | undefined>();
+	let branchEl = $state<HTMLElement | undefined>();
 	let spaceEl = $state<HTMLElement | undefined>();
 	let separatorEl = $state<HTMLElement | undefined>();
-	let branchEl = $state<HTMLElement | undefined>();
 
-	function activateSpaceChange() {
-		if (branch.changingBranch) branch.changingBranch = false;
-
-		space.changingSpace = true;
-		setTimeout(() => {
-			if (spaceInput) spaceInput.focus();
-		}, 0);
-	}
-
-	function activateBranchChange() {
-		if (space.changingSpace) space.changingSpace = false;
-
-		branch.changingBranch = true;
-		setTimeout(() => {
-			if (branchInput) branchInput.focus();
-		}, 0);
-	}
-
-	async function handleCreateSpace(e: SubmitEvent) {
-		if (!spaceInput) return;
-		e.preventDefault();
-
-		space.create(spaceInput!.value);
-	}
-
-	async function handleCreateBranch(e: SubmitEvent) {
-		if (!branchInput) return;
-		e.preventDefault();
-
-		branch.create(branchInput!.value);
-	}
-
-	$effect(() => {
-		if (!space.changingSpace) {
-			const spaceSize = spaceEl?.getBoundingClientRect();
-			const separatorSize = separatorEl?.getBoundingClientRect();
-			if (spaceSize && separatorSize && separatorEl && branchEl) {
-				separatorEl.style.left = `${spaceSize.width + 10}px`;
-				branchEl.style.left = `${spaceSize.width + separatorSize.width + 20}px`;
-			}
+	let spaceDimensions = $derived.by(() => {
+		if (space.currentSpace) {
+			return spaceEl?.getBoundingClientRect();
 		}
+	});
+	let separatorDimensions = $derived.by(() => {
+		if (space.currentSpace) {
+			return separatorEl?.getBoundingClientRect();
+		}
+	});
+
+	let branchPosition = $derived.by(() => {
+		if (!spaceDimensions || !separatorDimensions) return 0;
+		return spaceDimensions.width + separatorDimensions.width + 20;
+	});
+	let separatorPosition = $derived.by(() => {
+		if (!spaceDimensions) return 0;
+		return spaceDimensions.width + 10;
 	});
 </script>
 
@@ -57,47 +33,11 @@
 	class="relative z-[1] flex gap-x-3 font-serif text-lg italic"
 	transition:fade={{ duration: 45 }}
 >
-	<li bind:this={spaceEl}>
-		{#if space.changingSpace}
-			<form onsubmit={handleCreateSpace}>
-				<input
-					type="text"
-					placeholder={space.currentSpace?.name}
-					class="w-fit border-none bg-transparent p-0 text-lg italic text-zinc-50 placeholder:text-zinc-50/50 focus:outline-none focus:ring-0"
-					bind:this={spaceInput}
-				/>
-			</form>
-		{:else}
-			<button class="italic text-zinc-50/50" onclick={activateSpaceChange}
-				>{space.currentSpace?.name}</button
-			>
-		{/if}
-	</li>
-	{#if !space.changingSpace}
-		<span
-			class="absolute top-[0.025rem] text-zinc-50/50"
-			bind:this={separatorEl}
-			transition:fade={{ duration: 75 }}>/</span
-		>
-		<li transition:fade={{ duration: 75 }} class="absolute -top-[0.05rem]" bind:this={branchEl}>
-			{#if branch.changingBranch}
-				<form transition:fade={{ duration: 75 }} onsubmit={handleCreateBranch}>
-					<input
-						type="text"
-						placeholder={space.currentBranch?.name}
-						class="w-fit border-none bg-transparent p-0 text-lg italic text-zinc-50 placeholder:text-zinc-50/50 focus:outline-none focus:ring-0"
-						bind:this={branchInput}
-					/>
-				</form>
-			{:else}
-				<button
-					class="absolute top-0 italic text-zinc-50"
-					onclick={activateBranchChange}
-					transition:fade={{ duration: 75 }}
-				>
-					{space.currentBranch?.name}
-				</button>
-			{/if}
-		</li>
-	{/if}
+	<BreadcrumbsSpace bind:spaceEl />
+	<BreadcrumbsBranch
+		bind:separatorEl
+		bind:branchEl
+		separatorPos={separatorPosition}
+		branchPos={branchPosition}
+	/>
 </ul>

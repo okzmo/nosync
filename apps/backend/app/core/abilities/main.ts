@@ -17,10 +17,20 @@ import Space from '#space/models/space'
 import User from '#user/models/user'
 import Branch from '#branch/models/branch'
 
-export const ownSpace = Bouncer.ability(async (user: User, branch: Branch) => {
+export const ownSpace = Bouncer.ability(async (user: User, space: Space) => {
+  return await Space.query().where('id', space.id).where('owner_id', user.id).then(Boolean)
+})
+
+export const ownBranch = Bouncer.ability(async (user: User, branch: Branch) => {
   return await Space.query().where('id', branch.spaceId).where('owner_id', user.id).then(Boolean)
 })
 
 export const canCreateBranch = Bouncer.ability(async (user: User, space: Space) => {
   return await Space.query().where('id', space.id).where('owner_id', user.id).then(Boolean)
+})
+
+export const canDeleteSpace = Bouncer.ability(async (user: User, space: Space) => {
+  const userSpaces = await Space.query().where('owner_id', user.id).orderBy('created_at', 'asc')
+
+  return userSpaces[0].id !== space.id
 })

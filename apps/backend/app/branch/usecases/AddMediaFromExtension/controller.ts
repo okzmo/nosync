@@ -1,4 +1,4 @@
-import { ownSpace } from '#abilities/main'
+import { ownBranch } from '#abilities/main'
 import Branch from '#branch/models/branch'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -13,7 +13,7 @@ export default class AddMediaFromExtensionController {
     const data = await request.validateUsing(addMediaFromExtensionValidator)
 
     const branch = await Branch.findByOrFail('id', data.branchId)
-    if (await bouncer.denies(ownSpace, branch)) {
+    if (await bouncer.denies(ownBranch, branch)) {
       return response.forbidden('You cannot upload a file to this branch')
     }
 

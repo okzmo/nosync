@@ -1,4 +1,4 @@
-import { ownSpace } from '#abilities/main'
+import { ownBranch } from '#abilities/main'
 import Branch from '#branch/models/branch'
 import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -13,7 +13,7 @@ export default class SearchCellsController {
     const data = await request.validateUsing(searchCellsValidator)
 
     const branch = await Branch.findOrFail(data.branchId)
-    if (await bouncer.denies(ownSpace, branch)) {
+    if (await bouncer.denies(ownBranch, branch)) {
       return response.forbidden("You're not the owner of this branch")
     }
 

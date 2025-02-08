@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import Branch from '#branch/models/branch'
-import { ownSpace } from '#abilities/main'
+import { ownBranch } from '#abilities/main'
 import { DeleteCellService } from './service.js'
 import { deleteCellValidator } from './validator.js'
 
@@ -13,7 +13,7 @@ export default class DeleteCellController {
     const data = await request.validateUsing(deleteCellValidator)
 
     const branch = await Branch.findOrFail(data.branchId)
-    if (await bouncer.denies(ownSpace, branch)) {
+    if (await bouncer.denies(ownBranch, branch)) {
       return response.forbidden("You're not the owner of this branch")
     }
 

@@ -87,6 +87,12 @@
 				class="flex h-10 max-h-[35px] select-none items-center gap-x-2 rounded-lg pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
 			>
 				<SolarShareBoldDuotone height={16} width={16} />
+				<div class="flex items-center">Move to</div>
+			</ContextMenu.Item>
+			<ContextMenu.Item
+				class="flex h-10 max-h-[35px] select-none items-center gap-x-2 rounded-lg pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
+			>
+				<SolarShareBoldDuotone height={16} width={16} />
 				<div class="flex items-center">Share</div>
 			</ContextMenu.Item>
 			<ContextMenu.Item

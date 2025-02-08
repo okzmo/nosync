@@ -1,7 +1,7 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import Branch from '#branch/models/branch'
-import { ownSpace } from '#abilities/main'
+import { ownBranch } from '#abilities/main'
 import { InvalidCellIdException } from '#cell/exceptions/invalid_cell.exception'
 import { SaveContentService } from './service.js'
 import { saveContentValidator } from './validator.js'
@@ -14,7 +14,7 @@ export default class SaveContentController {
     const data = await request.validateUsing(saveContentValidator)
 
     const branch = await Branch.findOrFail(data.branchId)
-    if (await bouncer.denies(ownSpace, branch)) {
+    if (await bouncer.denies(ownBranch, branch)) {
       return response.forbidden("You're not the owner of this branch")
     }
 

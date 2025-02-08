@@ -78,9 +78,21 @@ type V1BranchCreatePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/CreateBranch/validator.ts')['createBranchValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/CreateBranch/controller.ts').default['handle'], true>
 }
+type V1BranchExtensionAddPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/AddMediaFromExtension/validators.ts')['addMediaFromExtensionValidator']>>
+  response: MakeTuyauResponse<import('../app/branch/usecases/AddMediaFromExtension/controller.ts').default['handle'], true>
+}
 type V1SpaceCreatePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/CreateSpace/validator.ts')['createSpaceValidator']>>
   response: MakeTuyauResponse<import('../app/space/usecases/CreateSpace/controller.ts').default['handle'], true>
+}
+type V1SpaceRenamePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/RenameSpace/validator.ts')['renameSpaceValidator']>>
+  response: MakeTuyauResponse<import('../app/space/usecases/RenameSpace/controller.ts').default['handle'], true>
+}
+type V1SpaceDeletePost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/DeleteSpace/validator.ts')['deleteSpaceValidator']>>
+  response: MakeTuyauResponse<import('../app/space/usecases/DeleteSpace/controller.ts').default['handle'], true>
 }
 export interface ApiDefinition {
   'v1': {
@@ -193,12 +205,29 @@ export interface ApiDefinition {
         };
         '$post': V1BranchCreatePost;
       };
+      'extension': {
+        'add': {
+          '$url': {
+          };
+          '$post': V1BranchExtensionAddPost;
+        };
+      };
     };
     'space': {
       'create': {
         '$url': {
         };
         '$post': V1SpaceCreatePost;
+      };
+      'rename': {
+        '$url': {
+        };
+        '$post': V1SpaceRenamePost;
+      };
+      'delete': {
+        '$url': {
+        };
+        '$post': V1SpaceDeletePost;
       };
     };
   };
@@ -332,10 +361,31 @@ const routes = [
   },
   {
     params: [],
+    name: 'branch.addMediaFromExtension',
+    path: '/v1/branch/extension/add',
+    method: ["POST"],
+    types: {} as V1BranchExtensionAddPost,
+  },
+  {
+    params: [],
     name: 'space.create',
     path: '/v1/space/create',
     method: ["POST"],
     types: {} as V1SpaceCreatePost,
+  },
+  {
+    params: [],
+    name: 'space.rename',
+    path: '/v1/space/rename',
+    method: ["POST"],
+    types: {} as V1SpaceRenamePost,
+  },
+  {
+    params: [],
+    name: 'space.delete',
+    path: '/v1/space/delete',
+    method: ["POST"],
+    types: {} as V1SpaceDeletePost,
   },
 ] as const;
 export const api = {
