@@ -7,7 +7,12 @@
     "scripts": ["service-worker.js"]
   },
   "browser_action": {},
-  "permissions": ["scripting", "contextMenus", "cookies"],
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "cookies",
+    "https://api.nosync.app/*"
+  ],
   "browser_specific_settings": {
     "gecko": {
       "id": "your-extension-id@nosync.app",

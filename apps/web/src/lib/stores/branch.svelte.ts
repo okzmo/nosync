@@ -95,7 +95,7 @@ class Branch {
 
 	async create(branchName: string) {
 		const existingBranch = space.currentSpace!.branches.find(
-			(branch) => branch.name === branchName
+			(branch) => branch.name.toLowerCase() === branchName.toLowerCase()
 		);
 		if (existingBranch) {
 			await space.goto(space.currentSpace!, existingBranch);

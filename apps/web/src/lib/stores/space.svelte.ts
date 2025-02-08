@@ -11,7 +11,9 @@ class Space {
 	currentBranch = $state<TBranch | undefined>();
 
 	async create(spaceName: string) {
-		const existingSpace = auth.user?.spaces.find((space) => space.name === spaceName);
+		const existingSpace = auth.user?.spaces.find(
+			(space) => space.name.toLowerCase() === spaceName.toLowerCase()
+		);
 		if (existingSpace) {
 			await space.goto(existingSpace);
 			space.changingSpace = false;

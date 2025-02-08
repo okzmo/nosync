@@ -1,22 +1,21 @@
-chrome.action.onClicked.addListener(onClickExtensionSavePage);
+browser.browserAction.onClicked.addListener(onClickExtensionSavePage);
 
 function onClickExtensionSavePage(tab) {
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    func: () => {
-      console.log("NOT IMPLEMENTED YET");
-    },
+  browser.tabs.executeScript(tab.id, {
+    code: 'console.log("NOT IMPLEMENTED YET");',
   });
 }
 
-chrome.contextMenus.onClicked.addListener(genericOnClick);
+browser.contextMenus.onClicked.addListener(genericOnClick);
 
 const SPECIAL_CASES = ["cosmos.so"];
 
 async function genericOnClick(info) {
+  const [space, branch] = info.menuItemId.split(":");
+
   const body = {
-    spaceId: info.parentMenuItemId.split("-")[1],
-    branchId: info.menuItemId.split("-")[1],
+    spaceId: space,
+    branchId: branch,
     mediaUrl: info.srcUrl || "",
     fromUrl: info.linkUrl || info.pageUrl,
   };
@@ -44,33 +43,35 @@ async function genericOnClick(info) {
 //   }
 // }
 
-chrome.runtime.onInstalled.addListener(async function () {
+browser.runtime.onInstalled.addListener(async () => {
   const res = await fetch("https://api.nosync.app/v1/auth/valid");
   const data = await res.json();
-  let spaces = [];
-  let branches = [];
+  const firstSpace = data.spaces[0];
+  const firstBranch = firstSpace.branches[0];
 
-  for (const space of data.spaces) {
-    spaces.push(space);
-    branches.push(...space.branches);
-  }
+  browser.contextMenus.create({
+    title: "Save to Nosync",
+    contexts: ["link", "image", "selection"],
+    id: `${firstSpace.id}:${firstBranch.id}`,
+  });
 
-  for (let i = 0; i < spaces.length; i++) {
-    let space = spaces[i];
-    chrome.contextMenus.create({
-      title: space.name,
-      contexts: ["link", "image", "selection"],
-      id: "space-" + space.id,
-    });
-  }
-
-  for (let i = 0; i < branches.length; i++) {
-    let branch = branches[i];
-    chrome.contextMenus.create({
-      title: branch.name,
-      contexts: ["link", "image", "selection"],
-      id: "branch-" + branch.id,
-      parentId: "space-" + branch.spaceId,
-    });
-  }
+  // TODO: Make this dynamic in the future, for now we'll
+  // use only one button that send to the first ever created branch
+  //
+  // for (const space of data.spaces) {
+  //   browser.contextMenus.create({
+  //     title: space.name,
+  //     contexts: ["link", "image", "selection"],
+  //     id: "space-" + space.id,
+  //   });
+  //
+  //   for (const branch of space.branches) {
+  //     browser.contextMenus.create({
+  //       title: branch.name,
+  //       contexts: ["link", "image", "selection"],
+  //       id: "branch-" + branch.id,
+  //       parentId: "space-" + branch.spaceId,
+  //     });
+  //   }
+  // }
 });
