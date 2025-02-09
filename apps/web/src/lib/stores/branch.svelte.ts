@@ -176,7 +176,6 @@ class Branch {
 			console.error(error);
 		}
 
-		console.log(auth.user);
 		await space.goto(auth.user!.spaces[0], auth.user!.spaces[0].branches[0]);
 		this.changingBranch = false;
 		branch.cells = undefined;

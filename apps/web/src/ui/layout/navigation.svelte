@@ -24,7 +24,6 @@
 				<li><a href="/" class="text-zinc-50">home</a></li>
 				<li><span class="transition-colors hover:cursor-not-allowed">mail</span></li>
 				<li><span class="transition-colors hover:cursor-not-allowed">calendar</span></li>
-				<li><span class="transition-colors hover:cursor-not-allowed">profile</span></li>
 			</ul>
 		</nav>
 

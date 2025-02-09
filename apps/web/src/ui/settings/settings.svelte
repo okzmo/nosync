@@ -47,9 +47,7 @@
 					</li>
 				{/each}
 			</ul>
-			{#if tab === 'profile'}
-				<p>profile</p>
-			{:else if tab === 'account'}
+			{#if tab === 'account'}
 				<Account />
 			{:else if tab === 'password'}
 				<ChangePassword />

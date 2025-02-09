@@ -10,6 +10,7 @@
 	import SolarMaximizeBold from '~icons/solar/maximize-bold';
 	import { getPDFFirstPage } from '$lib/utils/media';
 	import { onMount } from 'svelte';
+	import ContextMenuCell from './context-menu-cell.svelte';
 
 	let pdfUrl = $state('');
 
@@ -78,22 +79,6 @@
 		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
-		<ContextMenu.Content
-			class="z-50 w-full min-w-[150px] rounded-xl border border-zinc-50/10 bg-zinc-800/70 p-1 outline-none backdrop-blur-xl"
-		>
-			<ContextMenu.Item
-				class="flex h-10 max-h-[35px] select-none items-center gap-x-2 rounded-lg pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
-			>
-				<SolarShareBoldDuotone height={16} width={16} />
-				<div class="flex items-center">Share</div>
-			</ContextMenu.Item>
-			<ContextMenu.Item
-				class="flex h-10 max-h-[35px] select-none items-center gap-x-2 rounded-lg pl-2 pr-3 font-medium text-red-500 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-red-500"
-				onclick={() => cell.delete(pdf.id, i)}
-			>
-				<SolarTrashBinMinimalistic2BoldDuotone height={16} width={16} />
-				<div class="flex items-center">Delete</div>
-			</ContextMenu.Item>
-		</ContextMenu.Content>
+		<ContextMenuCell elementId={pdf.id} idx={i} />
 	</ContextMenu.Portal>
 </ContextMenu.Root>

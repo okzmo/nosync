@@ -72,7 +72,6 @@ export class UploadMediaService {
 
     // create a cell and a media object in DB for each file
     for (const [i, file] of files.entries()) {
-      console.log(file.type)
       switch (file.type) {
         case 'image':
           const [imageCell, imageMedia] = await this.#uploadImage({

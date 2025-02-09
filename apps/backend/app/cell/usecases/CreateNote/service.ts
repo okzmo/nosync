@@ -3,7 +3,6 @@ import { cuid } from '@adonisjs/core/helpers'
 
 export class CreateNoteService {
   async execute(data: { branchId: number; title?: string }) {
-    console.log(data)
     const cell = new Cell()
     cell.id = cuid()
     cell.title = data.title || ''
