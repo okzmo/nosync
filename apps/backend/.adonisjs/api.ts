@@ -62,6 +62,10 @@ type V1CellDeletecellDelete = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/DeleteCell/validator.ts')['deleteCellValidator']>>
   response: MakeTuyauResponse<import('../app/cell/usecases/DeleteCell/controller.ts').default['handle'], true>
 }
+type V1CellMovecellPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/cell/usecases/MoveCell/validator.ts')['moveCellValidator']>>
+  response: MakeTuyauResponse<import('../app/cell/usecases/MoveCell/controller.ts').default['handle'], true>
+}
 type V1BranchCellsIdGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/branch/usecases/GetCells/controller.ts').default['handle'], false>
@@ -187,6 +191,11 @@ export interface ApiDefinition {
         '$url': {
         };
         '$delete': V1CellDeletecellDelete;
+      };
+      'move_cell': {
+        '$url': {
+        };
+        '$post': V1CellMovecellPost;
       };
     };
     'branch': {
@@ -348,6 +357,13 @@ const routes = [
     path: '/v1/cell/delete_cell',
     method: ["DELETE"],
     types: {} as V1CellDeletecellDelete,
+  },
+  {
+    params: [],
+    name: 'branch.move.cell',
+    path: '/v1/cell/move_cell',
+    method: ["POST"],
+    types: {} as V1CellMovecellPost,
   },
   {
     params: ["branchId"],

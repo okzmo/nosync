@@ -98,6 +98,22 @@ class Cell {
 			return;
 		}
 	}
+
+	async moveTo(cellId: string, cellIdx: number, branchId: number) {
+		const moved = branch.cells!.splice(cellIdx, 1);
+
+		const { error } = await tuyau.v1.cell.move_cell.$post({
+			id: cellId,
+			branchId
+		});
+
+		// TODO: Add toast error if move impossible
+		if (error) {
+			branch.cells!.splice(cellIdx, 0, moved[0]);
+			console.error(error);
+			return;
+		}
+	}
 }
 
 export const cell = new Cell();
