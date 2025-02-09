@@ -14,9 +14,11 @@ chrome.contextMenus.onClicked.addListener(genericOnClick);
 const SPECIAL_CASES = ["cosmos.so"];
 
 async function genericOnClick(info) {
+  const [space, branch] = info.menuItemId.split(":");
+
   const body = {
-    spaceId: info.parentMenuItemId.split("-")[1],
-    branchId: info.menuItemId.split("-")[1],
+    spaceId: space,
+    branchId: branch,
     mediaUrl: info.srcUrl || "",
     fromUrl: info.linkUrl || info.pageUrl,
   };
@@ -47,30 +49,29 @@ async function genericOnClick(info) {
 chrome.runtime.onInstalled.addListener(async function () {
   const res = await fetch("https://api.nosync.app/v1/auth/valid");
   const data = await res.json();
-  let spaces = [];
-  let branches = [];
+  const firstSpace = data.spaces[0];
+  const firstBranch = firstSpace.branches[0];
 
-  for (const space of data.spaces) {
-    spaces.push(space);
-    branches.push(...space.branches);
-  }
+  chrome.contextMenus.create({
+    title: "Save to Nosync",
+    contexts: ["link", "image", "selection"],
+    id: `${firstSpace.id}:${firstBranch.id}`,
+  });
 
-  for (let i = 0; i < spaces.length; i++) {
-    let space = spaces[i];
-    chrome.contextMenus.create({
-      title: space.name,
-      contexts: ["link", "image", "selection"],
-      id: "space-" + space.id,
-    });
-  }
-
-  for (let i = 0; i < branches.length; i++) {
-    let branch = branches[i];
-    chrome.contextMenus.create({
-      title: branch.name,
-      contexts: ["link", "image", "selection"],
-      id: "branch-" + branch.id,
-      parentId: "space-" + branch.spaceId,
-    });
-  }
+  // for (const space of data.spaces) {
+  //   chrome.contextMenus.create({
+  //     title: space.name,
+  //     contexts: ["link", "image", "selection"],
+  //     id: "space-" + space.id,
+  //   });
+  //
+  //   for (const branch of space.branches) {
+  //     chrome.contextMenus.create({
+  //       title: branch.name,
+  //       contexts: ["link", "image", "selection"],
+  //       id: "branch-" + branch.id,
+  //       parentId: "space-" + branch.spaceId,
+  //     });
+  //   }
+  // }
 });
