@@ -86,10 +86,16 @@ export class UploadMediaService {
         case 'video':
           if (!thumbnails || thumbnails.length <= 0) throw new MissingThumbnailException()
 
+          const thumbnail = thumbnails.find((t) =>
+            t.clientName?.split('_')[1].includes(file.clientName)
+          )
+
+          if (!thumbnail) throw new MissingThumbnailException()
+
           const [videoCell, videoMedia] = await this.#uploadVideo({
             file,
             metadata: metadatas[i],
-            thumbnail: thumbnails[i],
+            thumbnail,
             branchId,
             spaceId,
             title,
@@ -162,6 +168,7 @@ export class UploadMediaService {
     const originalKey = `${key}.${file.extname}`
     const thumbnailKey = `${key}.webp`
 
+    console.log(thumbnail)
     // blur the first frame of the video and upload
     const blurredPic = await sharp(thumbnail.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
     await drive.use('s3').put(`${key}_blur.webp`, blurredPic)

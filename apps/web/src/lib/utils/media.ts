@@ -206,6 +206,7 @@ export async function uploadMedia(
 		}
 	}
 	branch.addCells(fakeCells);
+	console.log(formData);
 
 	const { data, error } = await tuyau.v1.branch.upload.$post(formData);
 
