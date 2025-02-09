@@ -20,7 +20,7 @@ export default class ProcessFileJob extends Job {
   async handle({ originKey, cellId, spaceId, branchId }: ProcessFileJobPayload) {
     const file = await drive.use('fs').getBytes(originKey)
 
-    await drive.use('s3').put(originKey, file)
+    await drive.use('s3').put(originKey, file, { contentDisposition: 'attachment' })
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalFileUpload',
       cellId: cellId,
@@ -34,8 +34,8 @@ export default class ProcessFileJob extends Job {
     await media.save()
 
     //TODO: use claude to analyze pdfs/files in general
-    //NOTE: It seems openai doesn't support attaching pdf and
-    // analyze it so i'll probably have to use anthropic. You can
+    //NOTE: It seems gpt doesn't support attaching pdf and
+    // analyze it so i'll probably have to use claude. You can
     // technically transform the pdf to a base64 and send that but
     // it seems clunky.
 

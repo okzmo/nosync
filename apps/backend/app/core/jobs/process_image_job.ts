@@ -42,7 +42,7 @@ export default class ProcessImageJob extends Job {
       resizedUrl: `${env.get('AWS_CDN_URL')}/${optimKey}`,
     })
 
-    await drive.use('s3').put(originKey, file)
+    await drive.use('s3').put(originKey, file, { contentDisposition: 'attachment' })
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalImageUpload',
       cellId: cellId,

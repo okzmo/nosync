@@ -39,7 +39,7 @@ export default class ProcessVideoJob extends Job {
       thumbnailUrl: `${env.get('AWS_CDN_URL')}/${thumbnailKey}`,
     })
 
-    await drive.use('s3').put(originKey, video)
+    await drive.use('s3').put(originKey, video, { contentDisposition: 'attachment' })
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishOriginalVideoUpload',
       cellId: cellId,
