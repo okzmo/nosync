@@ -5,8 +5,6 @@
 	import type { TPDF } from '$lib/types/space';
 	import { ContextMenu } from 'bits-ui';
 	import SolarPenNewSquareBoldDuotone from '~icons/solar/pen-new-square-bold-duotone';
-	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
-	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 	import SolarMaximizeBold from '~icons/solar/maximize-bold';
 	import { getPDFFirstPage } from '$lib/utils/media';
 	import { onMount } from 'svelte';
@@ -79,6 +77,6 @@
 		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
-		<ContextMenuCell elementId={pdf.id} idx={i} />
+		<ContextMenuCell elementId={pdf.id} originalUrl={pdf.originalUrl} idx={i} />
 	</ContextMenu.Portal>
 </ContextMenu.Root>

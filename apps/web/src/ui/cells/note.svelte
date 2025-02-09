@@ -6,8 +6,6 @@
 	import TaskItem from '@tiptap/extension-task-item';
 	import TaskList from '@tiptap/extension-task-list';
 	import StarterKit from '@tiptap/starter-kit';
-	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
-	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 	import { panel } from '$lib/stores/panel.svelte';
 	import ContextMenuCell from './context-menu-cell.svelte';
 

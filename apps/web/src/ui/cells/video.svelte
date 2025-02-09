@@ -5,11 +5,7 @@
 	import type { TVideo } from '$lib/types/space';
 	import { ContextMenu } from 'bits-ui';
 	import SolarPenNewSquareBoldDuotone from '~icons/solar/pen-new-square-bold-duotone';
-	import SolarShareBoldDuotone from '~icons/solar/share-bold-duotone';
-	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 	import SolarMaximizeBold from '~icons/solar/maximize-bold';
-	import SolarFileSendBoldDuotone from '~icons/solar/file-send-bold-duotone';
-	import SolarCloudDownloadBoldDuotone from '~icons/solar/cloud-download-bold-duotone';
 	import ContextMenuCell from './context-menu-cell.svelte';
 
 	type Props = {
@@ -80,6 +76,6 @@
 		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
-		<ContextMenuCell elementId={video.id} idx={i} />
+		<ContextMenuCell elementId={video.id} originalUrl={video.originalUrl} idx={i} />
 	</ContextMenu.Portal>
 </ContextMenu.Root>
