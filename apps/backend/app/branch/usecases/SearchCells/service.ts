@@ -1,6 +1,7 @@
 import { InferInput } from '@vinejs/vine/types'
 import { searchCellsValidator } from './validator.js'
 import client from '#meilisearch/client'
+import Cell from '#cell/models/cell'
 
 export class SearchCellsService {
   async execute(data: InferInput<typeof searchCellsValidator>) {
@@ -8,12 +9,19 @@ export class SearchCellsService {
 
     const searchQuery = query?.trim() || ''
 
-    const cells = await client.index('cells').search(searchQuery, {
+    const meiliCells = await client.index('cells').search(searchQuery, {
       filter: `branchId = ${branchId}`,
+      attributesToRetrieve: ['id', 'createdAt'],
       limit: 30,
       sort: ['createdAt:asc'],
     })
 
-    return cells.hits
+    const cellIds = meiliCells.hits.map((hit) => hit.id)
+    const cells: Cell[] = await Cell.query()
+      .whereIn('id', cellIds)
+      .preload('media')
+      .orderBy('createdAt', 'asc')
+
+    return cells
   }
 }

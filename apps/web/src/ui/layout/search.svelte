@@ -64,7 +64,6 @@
 				search.executeCommand(inputValue);
 				search.resetCommand();
 				menu.closeMenu();
-				panel.focusEditor();
 				inputValue = '';
 			}
 		}

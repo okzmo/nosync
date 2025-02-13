@@ -68,7 +68,7 @@ class Cell {
 		await tuyau.v1.cell.save_title.$post(body);
 	}
 
-	async saveContent(content: JSONContent) {
+	async saveContent(content: JSONContent, searchContent: string) {
 		if (!this.active || !branch.cells) return;
 		if (branch.cells[this.activeIdx].content === content) return;
 
@@ -77,7 +77,8 @@ class Cell {
 		const body = {
 			id: this.active.id,
 			branchId: space.currentBranch?.id,
-			content: content
+			content: content,
+			searchContent: searchContent
 		};
 
 		await tuyau.v1.cell.save_content.$post(body);

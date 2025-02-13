@@ -23,7 +23,7 @@
 
 	function onBlur() {
 		if (!panel.editor) return;
-		cell.saveContent(panel.editor.getJSON());
+		cell.saveContent(panel.editor.getJSON(), panel.editor.getText().replaceAll('\n', ' '));
 		panel.close();
 	}
 
@@ -34,7 +34,7 @@
 
 	async function saveOnUpdate() {
 		if (!panel.editor) return;
-		await cell.saveContent(panel.editor.getJSON());
+		await cell.saveContent(panel.editor.getJSON(), panel.editor.getText());
 		saving = 'saved';
 		setTimeout(() => {
 			saving = 'onhold';

@@ -190,6 +190,7 @@ class Branch {
 		};
 		cell.activeIdx = branch.cells!.length;
 		panel.open();
+		panel.focusEditor();
 
 		const { data, error } = await tuyau.v1.cell.create_note.$post({
 			title: title,
