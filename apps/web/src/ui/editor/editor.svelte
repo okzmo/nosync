@@ -34,7 +34,7 @@
 
 	async function saveOnUpdate() {
 		if (!panel.editor) return;
-		await cell.saveContent(panel.editor.getJSON(), panel.editor.getText());
+		await cell.saveContent(panel.editor.getJSON(), panel.editor.getText().replaceAll('\n', ' '));
 		saving = 'saved';
 		setTimeout(() => {
 			saving = 'onhold';
