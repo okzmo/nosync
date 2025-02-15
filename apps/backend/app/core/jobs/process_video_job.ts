@@ -11,47 +11,36 @@ import env from '#start/env'
 interface ProcessVideoJobPayload {
   spaceId: string
   branchId: string
-  originKey: string
   thumbnailKey: string
+  blurKey: string
   cellId: string
 }
-
-const RESIZED_SIZE = 600
 
 export default class ProcessVideoJob extends Job {
   static get $$filepath() {
     return import.meta.url
   }
 
-  async handle({ originKey, thumbnailKey, cellId, spaceId, branchId }: ProcessVideoJobPayload) {
-    const video = await drive.use('fs').getBytes(originKey)
-    const thumbnail = await drive.use('fs').getBytes(thumbnailKey)
+  async handle({ thumbnailKey, blurKey, cellId, spaceId, branchId }: ProcessVideoJobPayload) {
+    const thumbnail = await drive.use('s3').getBytes(thumbnailKey)
 
-    const optimizedThumbnail = await sharp(thumbnail)
-      .resize(RESIZED_SIZE)
-      .webp({ quality: 75, effort: 4 })
-      .toBuffer()
+    const blurredPic = await sharp(thumbnail).webp({ quality: 50 }).blur(24).toBuffer()
+    await drive.use('s3').put(blurKey, blurredPic)
+    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+      type: 'branch:finishBlurredThumbnailVideoUpload',
+      cellId: cellId,
+      blurUrl: `${env.get('AWS_CDN_URL')}/${blurKey}`,
+    })
 
-    await drive.use('s3').put(thumbnailKey, optimizedThumbnail)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishThumbnailVideoUpload',
       cellId: cellId,
       thumbnailUrl: `${env.get('AWS_CDN_URL')}/${thumbnailKey}`,
     })
 
-    await drive.use('s3').put(originKey, video, { contentDisposition: 'attachment' })
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
-      type: 'branch:finishOriginalVideoUpload',
-      cellId: cellId,
-      originalUrl: `${env.get('AWS_CDN_URL')}/${originKey}`,
-    })
-
-    await drive.use('fs').delete(originKey)
-    await drive.use('fs').delete(thumbnailKey)
-
     const media = await Media.findByOrFail('cell_id', cellId)
-    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originKey}`
     media.thumbnailUrl = `${env.get('AWS_CDN_URL')}/${thumbnailKey}`
+    media.blurUrl = `${env.get('AWS_CDN_URL')}/${blurKey}`
     await media.save()
 
     const result = await generateText({

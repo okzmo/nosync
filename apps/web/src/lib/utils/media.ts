@@ -4,6 +4,7 @@ import { tuyau } from '$lib/api';
 import { space } from '$lib/stores/space.svelte';
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
+import { cell } from '$lib/stores/cell.svelte';
 
 export type FileMetadata = {
 	id: string;
@@ -202,17 +203,30 @@ export async function uploadMedia(
 		formData.append(`files[]`, file);
 		formData.append(`filesMetadata[]`, JSON.stringify(metadata));
 		if (metadata.firstFrame) {
-			formData.append(`thumbnails[]`, metadata.firstFrame, `thumbnail_${file.name}.jpg`);
+			formData.append(`thumbnails[]`, metadata.firstFrame, `${removeFileExtension(file.name)}.jpg`);
 		}
 	}
 	branch.addCells(fakeCells);
-	console.log(formData);
 
-	const { data, error } = await tuyau.v1.branch.upload.$post(formData);
+	const { data, error } = await tuyau.v1.branch.upload.$post(formData, {
+		timeout: false
+	});
 
+	//TODO: add toast error to explain the validation error
 	if (error) {
-		console.error(error);
+		switch (error.status) {
+			case 400:
+				branch.rewind();
+				break;
+			default:
+				break;
+		}
 	}
 
 	branch.updateCells(data);
+}
+
+function removeFileExtension(fileName: string) {
+	const dotIdx = fileName.lastIndexOf('.');
+	return dotIdx === -1 ? fileName : fileName.substring(0, dotIdx);
 }

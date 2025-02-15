@@ -13,6 +13,7 @@ interface ProcessImageJobPayload {
   branchId: string
   originKey: string
   optimKey: string
+  blurKey: string
   cellId: string
 }
 
@@ -23,8 +24,15 @@ export default class ProcessImageJob extends Job {
     return import.meta.url
   }
 
-  async handle({ originKey, optimKey, cellId, spaceId, branchId }: ProcessImageJobPayload) {
-    const file = await drive.use('fs').getBytes(originKey)
+  async handle({
+    originKey,
+    optimKey,
+    blurKey,
+    cellId,
+    spaceId,
+    branchId,
+  }: ProcessImageJobPayload) {
+    const file = await drive.use('s3').getBytes(originKey)
 
     const isAnimated = originKey.includes('gif')
     const optimizedImage = await sharp(file, {
@@ -35,6 +43,14 @@ export default class ProcessImageJob extends Job {
       .webp({ quality: 75, force: true, effort: 4 })
       .toBuffer()
 
+    const blurredPic = await sharp(file).webp({ quality: 50 }).blur(24).toBuffer()
+    await drive.use('s3').put(blurKey, blurredPic)
+    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+      type: 'branch:finishBlurredImageUpload',
+      cellId: cellId,
+      blurUrl: `${env.get('AWS_CDN_URL')}/${blurKey}`,
+    })
+
     await drive.use('s3').put(optimKey, optimizedImage)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
       type: 'branch:finishResizedImageUpload',
@@ -42,18 +58,9 @@ export default class ProcessImageJob extends Job {
       resizedUrl: `${env.get('AWS_CDN_URL')}/${optimKey}`,
     })
 
-    await drive.use('s3').put(originKey, file, { contentDisposition: 'attachment' })
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
-      type: 'branch:finishOriginalImageUpload',
-      cellId: cellId,
-      originalUrl: `${env.get('AWS_CDN_URL')}/${originKey}`,
-    })
-
-    await drive.use('fs').delete(originKey)
-
     const media = await Media.findByOrFail('cell_id', cellId)
-    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originKey}`
     media.resizedUrl = `${env.get('AWS_CDN_URL')}/${optimKey}`
+    media.blurUrl = `${env.get('AWS_CDN_URL')}/${blurKey}`
     await media.save()
 
     const result = await generateText({

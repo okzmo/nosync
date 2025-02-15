@@ -41,13 +41,13 @@ const bodyParserConfig = defineConfig({
      */
     autoProcess: true,
     convertEmptyStringsToNull: true,
-    processManually: [],
+    processManually: ['/v1/upload/stream', '/v1/branch/upload'],
 
     /**
      * Maximum limit of data to parse including all files
      * and fields
      */
-    limit: '500mb',
+    limit: '1gb',
     types: ['multipart/form-data'],
   },
 })

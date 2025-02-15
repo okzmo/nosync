@@ -27,6 +27,7 @@ export interface ApiMedia {
 }
 
 export type TransmitMessages =
+	| TransmitUpdateBlurImage
 	| TransmitUpdateResizedImage
 	| TransmitUpdateOriginal
 	| TransmitUpdateTags
@@ -37,6 +38,12 @@ export interface TransmitUpdateResizedImage {
 	type: 'branch:finishResizedImageUpload';
 	cellId: string;
 	resizedUrl: string;
+}
+
+export interface TransmitUpdateBlurImage {
+	type: 'branch:finishBlurredImageUpload' | 'branch:finishBlurredThumbnailVideoUpload';
+	cellId: string;
+	blurUrl: string;
 }
 
 export interface TransmitAddCellFromExtension {

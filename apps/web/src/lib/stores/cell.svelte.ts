@@ -5,6 +5,7 @@ import { branch } from './branch.svelte';
 import { space } from './space.svelte';
 import type {
 	TransmitAddCellFromExtension,
+	TransmitUpdateBlurImage,
 	TransmitUpdateOriginal,
 	TransmitUpdateResizedImage,
 	TransmitUpdateTags,
@@ -15,6 +16,14 @@ class Cell {
 	active = $state<TPhoto | TNote | TVideo | TPDF | undefined>();
 	activeIdx = $state(-1);
 	maximized = $state<TPhoto | TVideo | TPDF | undefined>();
+
+	updateBlurImage(data: TransmitUpdateBlurImage) {
+		if (!branch.cells) return;
+		const idx = branch.cells.findIndex((c) => c.id === data.cellId);
+		if (idx !== -1) {
+			branch.cells[idx].media.blurUrl = data.blurUrl;
+		}
+	}
 
 	updateResizedImage(data: TransmitUpdateResizedImage) {
 		if (!branch.cells) return;

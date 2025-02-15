@@ -23,11 +23,19 @@ class Branch {
 	cellWrapper = $state<HTMLDivElement | null>();
 	branchChannel = $state<Subscription | undefined>();
 	changingBranch = $state(false);
+	latestNbOfAddedCells = $state(0);
 
 	addCells(cells: ApiCell[]) {
 		if (!this.cells) return;
 		if (!cells) return [];
+		this.latestNbOfAddedCells = cells.length;
 		this.cells.push(...cells);
+	}
+
+	rewind() {
+		if (!this.cells) return;
+		const rewindIdx = this.cells.length - this.latestNbOfAddedCells;
+		this.cells.splice(rewindIdx);
 	}
 
 	updateCells(cells: ApiCell[]) {
@@ -43,7 +51,7 @@ class Branch {
 					media: {
 						...cell.media,
 						resizedUrl: this.cells[cellToUpdate].media.resizedUrl,
-						originalUrl: this.cells[cellToUpdate].media.originalUrl
+						blurUrl: this.cells[cellToUpdate].media.blurUrl
 					}
 				};
 			}

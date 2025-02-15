@@ -76,6 +76,12 @@ class MainStore {
 				case 'branch:finishTagsCreation':
 					cell.updateTags(data);
 					break;
+				case 'branch:finishBlurredImageUpload':
+					cell.updateBlurImage(data);
+					break;
+				case 'branch:finishBlurredThumbnailVideoUpload':
+					cell.updateBlurImage(data);
+					break;
 				case 'branch:finishResizedImageUpload':
 					cell.updateResizedImage(data);
 					break;

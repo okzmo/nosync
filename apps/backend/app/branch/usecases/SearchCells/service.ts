@@ -1,7 +1,7 @@
 import { InferInput } from '@vinejs/vine/types'
 import { searchCellsValidator } from './validator.js'
-import client from '#meilisearch/client'
 import Cell from '#cell/models/cell'
+import client from '#services/meili_client'
 
 export class SearchCellsService {
   async execute(data: InferInput<typeof searchCellsValidator>) {

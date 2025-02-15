@@ -61,8 +61,12 @@ interface FileProps {
 }
 
 export class UploadMediaService {
-  async execute(data: InferInput<typeof uploadMediaValidator>) {
-    const { spaceId, branchId, title, files, filesMetadata, thumbnails } = data
+  async execute(
+    data: InferInput<typeof uploadMediaValidator>,
+    files: MultipartFile[],
+    thumbnails?: MultipartFile[]
+  ) {
+    const { spaceId, branchId, title, filesMetadata } = data
     const medias = []
 
     // validate the metadatas for each file
@@ -87,7 +91,7 @@ export class UploadMediaService {
           if (!thumbnails || thumbnails.length <= 0) throw new MissingThumbnailException()
 
           const thumbnail = thumbnails.find((t) =>
-            t.clientName?.split('_')[1].includes(file.clientName)
+            t.clientName.includes(this.#removeExtension(file.clientName))
           )
 
           if (!thumbnail) throw new MissingThumbnailException()
@@ -120,14 +124,16 @@ export class UploadMediaService {
     return medias
   }
 
-  async #uploadImage({ file, metadata, title, branchId, spaceId }: ImageProps) {
-    const key = cuid()
-    const originalKey = `${key}.${file.extname}`
-    const optimKey = `${key}.webp`
+  #removeExtension(fileName: string) {
+    const dotIndex = fileName.lastIndexOf('.')
+    return dotIndex === -1 ? fileName : fileName.substring(0, dotIndex)
+  }
 
-    // blur the image and upload
-    const blurredPic = await sharp(file.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
+  async #uploadImage({ file, metadata, title, branchId, spaceId }: ImageProps) {
+    const originalKey = file.meta.fileKey
+    const keyNoExt = this.#removeExtension(file.meta.fileKey)
+    const optimKey = `${keyNoExt}.webp`
+    const blurKey = `${keyNoExt}_blur.webp`
 
     const cell = new Cell()
     cell.id = metadata.id
@@ -139,9 +145,9 @@ export class UploadMediaService {
 
     const media = new Media()
     media.cellId = savedCell.id
-    media.originalUrl = ''
+    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originalKey}`
     media.resizedUrl = ''
-    media.blurUrl = `${env.get('AWS_CDN_URL')}/${key}_blur.webp`
+    media.blurUrl = ''
     media.width = metadata.width
     media.height = metadata.height
     media.fileSize = metadata.size
@@ -151,12 +157,13 @@ export class UploadMediaService {
     media.save()
 
     // process the image in the queue for tagging with openai and save to bucket
-    await file.moveToDisk(originalKey, 'fs')
+    // await file.moveToDisk(originalKey, 'fs')
     queue.dispatch(ProcessImageJob, {
       spaceId,
       branchId,
       originKey: originalKey,
       optimKey: optimKey,
+      blurKey: blurKey,
       cellId: savedCell.id,
     })
 
@@ -164,14 +171,10 @@ export class UploadMediaService {
   }
 
   async #uploadVideo({ file, branchId, spaceId, title, metadata, thumbnail }: VideoProps) {
-    const key = cuid()
-    const originalKey = `${key}.${file.extname}`
-    const thumbnailKey = `${key}.webp`
-
-    console.log(thumbnail)
-    // blur the first frame of the video and upload
-    const blurredPic = await sharp(thumbnail.tmpPath).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
+    const originalKey = file.meta.fileKey
+    const keyNoExt = this.#removeExtension(file.meta.fileKey)
+    const thumbnailKey = thumbnail.meta.fileKey
+    const blurKey = `${keyNoExt}_blur.webp`
 
     const cell = new Cell()
     cell.id = metadata.id
@@ -183,9 +186,9 @@ export class UploadMediaService {
 
     const media = new Media()
     media.cellId = savedCell.id
-    media.originalUrl = ''
+    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originalKey}`
     media.resizedUrl = ''
-    media.blurUrl = `${env.get('AWS_CDN_URL')}/${key}_blur.webp`
+    media.blurUrl = ''
     media.width = metadata.width
     media.height = metadata.height
     media.fileSize = metadata.size
@@ -195,13 +198,11 @@ export class UploadMediaService {
     media.save()
 
     // process the image in the queue for tagging with openai and save to bucket
-    await file.moveToDisk(originalKey, 'fs')
-    await thumbnail.moveToDisk(thumbnailKey, 'fs')
     queue.dispatch(ProcessVideoJob, {
       spaceId,
       branchId,
-      originKey: originalKey,
       thumbnailKey: thumbnailKey,
+      blurKey: blurKey,
       cellId: savedCell.id,
     })
 

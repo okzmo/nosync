@@ -12,6 +12,11 @@ export class DeleteCellService {
     ) {
       const originalKey = cellToDel.media.originalUrl.split('/').at(-1)
       drive.use('s3').deleteAll(originalKey?.split('.')[0])
+
+      const thumbnailKey = cellToDel.media.thumbnailUrl?.split('/').at(-1)
+      if (thumbnailKey) {
+        drive.use('s3').deleteAll(thumbnailKey?.split('.')[0])
+      }
     }
 
     await cellToDel?.delete()
