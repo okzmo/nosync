@@ -19,11 +19,12 @@ export class AddMediaFromExtensionService {
     const metadata = await sharp(buffer).metadata()
 
     const key = cuid()
-    const optimKey = `${key}.webp`
     const originalKey = `${key}.${metadata.format || 'webp'}`
+    const optimKey = `${key}.webp`
+    const blurKey = `${key}_blur.webp`
 
     const blurredPic = await sharp(buffer).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive.use('s3').put(`${key}_blur.webp`, blurredPic)
+    await drive.use('s3').put(blurKey, blurredPic)
 
     const cell = new Cell()
     cell.id = cuid()
@@ -35,9 +36,9 @@ export class AddMediaFromExtensionService {
 
     const media = new Media()
     media.cellId = savedCell.id
-    media.originalUrl = ''
+    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originalKey}`
     media.resizedUrl = ''
-    media.blurUrl = `${env.get('AWS_CDN_URL')}/${key}_blur.webp`
+    media.blurUrl = `${env.get('AWS_CDN_URL')}/${blurKey}`
     media.width = metadata.width || 0
     media.height = metadata.height || 0
     media.fileSize = metadata.size || 0
@@ -51,12 +52,15 @@ export class AddMediaFromExtensionService {
       cell: { ...savedCell.toJSON(), media: media.toJSON() },
     })
 
-    await drive.use('fs').put(originalKey, new Uint8Array(buffer))
+    await drive.use('s3').put(originalKey, new Uint8Array(buffer))
+
     queue.dispatch(ProcessImageJob, {
       spaceId,
       branchId,
       originKey: originalKey,
       optimKey: optimKey,
+      blurKey: blurKey,
+      ignoreBlur: true,
       cellId: savedCell.id,
     })
   }

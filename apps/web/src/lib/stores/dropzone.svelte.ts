@@ -1,5 +1,7 @@
-import { uploadMedia } from '$lib/utils/media';
+import { tuyau } from '$lib/api';
+import { uploadMedia, uploadMediaFromExt } from '$lib/utils/media';
 import { panel } from './panel.svelte';
+import { space } from './space.svelte';
 
 class DropZone {
 	isOpen = $state(false);
@@ -30,7 +32,25 @@ class DropZone {
 		this.dragCounter = 0;
 		this.isOpen = false;
 
-		await uploadMedia(e.dataTransfer?.items, e.dataTransfer?.files);
+		let uri =
+			e.dataTransfer?.getData('text/uri-list') ||
+			e.dataTransfer?.getData('text/plain') ||
+			e.dataTransfer?.getData('text/x-moz-url');
+
+		if (uri?.split('/').at(-1)?.lastIndexOf('.') === -1) {
+			const html = e.dataTransfer?.getData('text/html');
+			if (!html) return;
+			const parser = new DOMParser();
+			const doc = parser.parseFromString(html, 'text/html');
+			const img = doc.querySelector('img[src]') as HTMLImageElement;
+			uri = img.srcset.split(',').at(-1)?.trim().split(' ')?.[0] || img?.src;
+		}
+
+		if (uri) {
+			await uploadMediaFromExt(uri);
+		} else {
+			await uploadMedia(e.dataTransfer?.items, e.dataTransfer?.files);
+		}
 	};
 }
 

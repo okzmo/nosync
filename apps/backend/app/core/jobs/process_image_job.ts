@@ -14,6 +14,7 @@ interface ProcessImageJobPayload {
   originKey: string
   optimKey: string
   blurKey: string
+  ignoreBlur?: boolean
   cellId: string
 }
 
@@ -28,6 +29,7 @@ export default class ProcessImageJob extends Job {
     originKey,
     optimKey,
     blurKey,
+    ignoreBlur = false,
     cellId,
     spaceId,
     branchId,
@@ -43,13 +45,15 @@ export default class ProcessImageJob extends Job {
       .webp({ quality: 75, force: true, effort: 4 })
       .toBuffer()
 
-    const blurredPic = await sharp(file).webp({ quality: 50 }).blur(24).toBuffer()
-    await drive.use('s3').put(blurKey, blurredPic)
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
-      type: 'branch:finishBlurredImageUpload',
-      cellId: cellId,
-      blurUrl: `${env.get('AWS_CDN_URL')}/${blurKey}`,
-    })
+    if (!ignoreBlur) {
+      const blurredPic = await sharp(file).webp({ quality: 50 }).blur(24).toBuffer()
+      await drive.use('s3').put(blurKey, blurredPic)
+      transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+        type: 'branch:finishBlurredImageUpload',
+        cellId: cellId,
+        blurUrl: `${env.get('AWS_CDN_URL')}/${blurKey}`,
+      })
+    }
 
     await drive.use('s3').put(optimKey, optimizedImage)
     transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {

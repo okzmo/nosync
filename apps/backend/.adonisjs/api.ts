@@ -94,10 +94,6 @@ type V1BranchExtensionAddPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/AddMediaFromExtension/validators.ts')['addMediaFromExtensionValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/AddMediaFromExtension/controller.ts').default['handle'], true>
 }
-type V1UploadStreamPost = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/branch/usecases/UploadMedia/controller.ts').default['handleStream'], false>
-}
 type V1SpaceCreatePost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/space/usecases/CreateSpace/validator.ts')['createSpaceValidator']>>
   response: MakeTuyauResponse<import('../app/space/usecases/CreateSpace/controller.ts').default['handle'], true>
@@ -242,13 +238,6 @@ export interface ApiDefinition {
           };
           '$post': V1BranchExtensionAddPost;
         };
-      };
-    };
-    'upload': {
-      'stream': {
-        '$url': {
-        };
-        '$post': V1UploadStreamPost;
       };
     };
     'space': {
@@ -424,13 +413,6 @@ const routes = [
     path: '/v1/branch/extension/add',
     method: ["POST"],
     types: {} as V1BranchExtensionAddPost,
-  },
-  {
-    params: [],
-    name: 'branch.uploadMediaStream',
-    path: '/v1/upload/stream',
-    method: ["POST"],
-    types: {} as V1UploadStreamPost,
   },
   {
     params: [],

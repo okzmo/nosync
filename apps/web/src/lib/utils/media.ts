@@ -4,7 +4,6 @@ import { tuyau } from '$lib/api';
 import { space } from '$lib/stores/space.svelte';
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
-import { cell } from '$lib/stores/cell.svelte';
 
 export type FileMetadata = {
 	id: string;
@@ -156,6 +155,22 @@ export async function getPDFFirstPage({ pdfURL, file }: { pdfURL?: string; file?
 	}).promise;
 
 	return canvas.toDataURL();
+}
+
+export async function uploadMediaFromExt(uri: string) {
+	const payload = {
+		spaceId: space.currentSpace?.id.toString(),
+		branchId: space.currentBranch?.id.toString(),
+		fromUrl: uri,
+		mediaUrl: uri
+	};
+
+	const { error } = await tuyau.v1.branch.extension.add.$post(payload, {
+		timeout: false
+	});
+	if (error) {
+		console.error(error);
+	}
 }
 
 export async function uploadMedia(

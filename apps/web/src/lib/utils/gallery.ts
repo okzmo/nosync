@@ -140,7 +140,27 @@ export function calculatePdfSize(cell: ApiCell) {
 	return p;
 }
 
-function loadImage(url: string): Promise<HTMLImageElement> {
+export async function generateBlurredImage(image: HTMLImageElement) {
+	let blurredPic = '';
+
+	const canvas = document.createElement('canvas');
+	canvas.width = image.width;
+	canvas.height = image.height;
+	const ctx = canvas.getContext('2d')!;
+	ctx.filter = 'blur(24px)';
+	ctx.drawImage(image, 0, 0);
+
+	const blob = await new Promise<Blob | null>((resolve) =>
+		canvas.toBlob((b) => resolve(b), 'image/webp', 0.5)
+	);
+	if (blob) {
+		blurredPic = URL.createObjectURL(blob);
+	}
+
+	return blurredPic;
+}
+
+export function loadImage(url: string): Promise<HTMLImageElement> {
 	return new Promise((resolve, reject) => {
 		const img = new Image();
 		img.onload = () => resolve(img);
@@ -160,19 +180,8 @@ export async function generateFakeCell(file: File, metadata: FileMetadata) {
 		const blobUrl = URL.createObjectURL(new Blob([imageData]));
 		const image = await loadImage(blobUrl);
 
-		const canvas = document.createElement('canvas');
-		canvas.width = image.width;
-		canvas.height = image.height;
-		const ctx = canvas.getContext('2d')!;
-		ctx.filter = 'blur(24px)';
-		ctx.drawImage(image, 0, 0);
+		blurredPic = await generateBlurredImage(image);
 
-		const blob = await new Promise<Blob | null>((resolve) =>
-			canvas.toBlob((b) => resolve(b), 'image/webp', 0.5)
-		);
-		if (blob) {
-			blurredPic = URL.createObjectURL(blob);
-		}
 		URL.revokeObjectURL(blobUrl);
 	}
 
@@ -180,19 +189,8 @@ export async function generateFakeCell(file: File, metadata: FileMetadata) {
 		const blobUrl = URL.createObjectURL(metadata.firstFrame);
 		const image = await loadImage(blobUrl);
 
-		const canvas = document.createElement('canvas');
-		canvas.width = image.width;
-		canvas.height = image.height;
-		const ctx = canvas.getContext('2d')!;
-		ctx.filter = 'blur(24px)';
-		ctx.drawImage(image, 0, 0);
+		blurredPic = await generateBlurredImage(image);
 
-		const blob = await new Promise<Blob | null>((resolve) =>
-			canvas.toBlob((b) => resolve(b), 'image/webp', 0.5)
-		);
-		if (blob) {
-			blurredPic = URL.createObjectURL(blob);
-		}
 		URL.revokeObjectURL(blobUrl);
 	}
 
