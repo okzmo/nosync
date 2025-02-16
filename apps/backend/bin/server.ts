@@ -34,11 +34,6 @@ new Ignitor(APP_ROOT, { importer: IMPORTER })
     app.booting(async () => {
       await import('#start/env')
     })
-    app.ready(async () => {
-      console.log('SERVER UP')
-      const server = await app.container.make('server')
-      console.log(server.getNodeServer())
-    })
     app.listen('SIGTERM', () => app.terminate())
     app.listenIf(app.managedByPm2, 'SIGINT', () => app.terminate())
   })

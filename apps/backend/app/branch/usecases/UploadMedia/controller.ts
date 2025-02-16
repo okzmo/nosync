@@ -17,7 +17,7 @@ export default class UploadMediaController {
   async handle({ bouncer, request, response }: HttpContext) {
     request.multipart.onFile(
       '*',
-      { size: '1gb', extnames: ['mp4', 'jpg', 'png', 'jpeg'] },
+      { size: '1gb', extnames: ['mp4', 'jpg', 'png', 'jpeg', 'gif', 'pdf'] },
       async (part, reporter) => {
         part.pause()
         part.on('data', reporter)

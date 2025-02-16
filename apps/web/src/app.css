@@ -17,3 +17,9 @@ body {
 * {
 	scrollbar-width: none;
 }
+
+::-moz-selection {
+	/* Code for Firefox */
+	color: #ec5a5a;
+	background: #ec5a5a1f;
+}

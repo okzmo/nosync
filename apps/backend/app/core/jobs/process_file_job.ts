@@ -1,14 +1,7 @@
 import { Job } from '@rlanz/bull-queue'
 import Cell from '#cell/models/cell'
-import drive from '@adonisjs/drive/services/main'
-import Media from '#media/models/media'
-import transmit from '@adonisjs/transmit/services/main'
-import env from '#start/env'
 
 interface ProcessFileJobPayload {
-  spaceId: string
-  branchId: string
-  originKey: string
   cellId: string
 }
 
@@ -17,22 +10,7 @@ export default class ProcessFileJob extends Job {
     return import.meta.url
   }
 
-  async handle({ originKey, cellId, spaceId, branchId }: ProcessFileJobPayload) {
-    const file = await drive.use('fs').getBytes(originKey)
-
-    await drive.use('s3').put(originKey, file, { contentDisposition: 'attachment' })
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
-      type: 'branch:finishOriginalFileUpload',
-      cellId: cellId,
-      originalUrl: `${env.get('AWS_CDN_URL')}/${originKey}`,
-    })
-
-    await drive.use('fs').delete(originKey)
-
-    const media = await Media.findByOrFail('cell_id', cellId)
-    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originKey}`
-    await media.save()
-
+  async handle({ cellId }: ProcessFileJobPayload) {
     //TODO: use claude to analyze pdfs/files in general
     //NOTE: It seems gpt doesn't support attaching pdf and
     // analyze it so i'll probably have to use claude. You can

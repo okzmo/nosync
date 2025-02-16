@@ -156,8 +156,6 @@ export class UploadMediaService {
     media.duration = metadata.duration
     media.save()
 
-    // process the image in the queue for tagging with openai and save to bucket
-    // await file.moveToDisk(originalKey, 'fs')
     queue.dispatch(ProcessImageJob, {
       spaceId,
       branchId,
@@ -197,7 +195,6 @@ export class UploadMediaService {
     media.duration = metadata.duration
     media.save()
 
-    // process the image in the queue for tagging with openai and save to bucket
     queue.dispatch(ProcessVideoJob, {
       spaceId,
       branchId,
@@ -209,9 +206,8 @@ export class UploadMediaService {
     return [savedCell.toJSON(), media.toJSON()]
   }
 
-  async #uploadFile({ file, branchId, spaceId, title, metadata }: FileProps) {
-    const key = cuid()
-    const originalKey = `${key}.${file.extname}`
+  async #uploadFile({ file, branchId, title, metadata }: FileProps) {
+    const originalKey = file.meta.fileKey
 
     const cell = new Cell()
     cell.id = metadata.id
@@ -223,7 +219,7 @@ export class UploadMediaService {
 
     const media = new Media()
     media.cellId = savedCell.id
-    media.originalUrl = ''
+    media.originalUrl = `${env.get('AWS_CDN_URL')}/${originalKey}`
     media.resizedUrl = ''
     media.width = 0
     media.height = 0
@@ -233,12 +229,7 @@ export class UploadMediaService {
     media.duration = 0
     media.save()
 
-    // process the image in the queue for tagging with openai and save to bucket
-    await file.moveToDisk(originalKey, 'fs')
     queue.dispatch(ProcessFileJob, {
-      spaceId,
-      branchId,
-      originKey: originalKey,
       cellId: savedCell.id,
     })
 
