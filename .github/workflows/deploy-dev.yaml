@@ -1,0 +1,47 @@
+name: Deploy to dev env
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies step
+        run: |
+          npm ci
+
+      - name: Build step
+        run: |
+          npm run build
+          cd apps/backend/build
+          npm install --omit=dev
+
+      - name: Deploy binary using SCP
+        env:
+          USER: deploy
+          HOST: ${{ secrets.SSH_HOST }}
+          DIR: /home/deploy/releases
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 id_rsa
+
+          echo "Host *" > ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
+
+          ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
+          scp -P 222 -r -i ~/.ssh/id_rsa apps/web/build $USER@$HOST:$DIR/front-$GITHUB_SHA
+          scp -P 222 -r -i ~/.ssh/id_rsa apps/backend/build $USER@$HOST:$DIR/back-$GITHUB_SHA
+          # ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./deploy/deploy.sh
