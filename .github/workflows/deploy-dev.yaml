@@ -39,12 +39,7 @@ jobs:
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
           echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          ssh -vvv -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org $USER@$HOST echo "Test connection"
-
-          # tar czvf front-$GITHUB_SHA.tar.gz apps/web/build
-          # tar czvf back-$GITHUB_SHA.tar.gz apps/backend/build
-          #
-          # ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
-          # scp -P 222 -C -o ConnectTimeout=120 -o ServerAliveInterval=60 -i ~/.ssh/id_rsa front-$GITHUB_SHA.tar.gz $USER@$HOST:$DIR/
-          # scp -P 222 -C -o ConnectTimeout=120 -o ServerAliveInterval=60 -i ~/.ssh/id_rsa back-$GITHUB_SHA.tar.gz $USER@$HOST:$DIR/
+          ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
+          scp -P 222 -C -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa apps/backend/build $USER@$HOST:$DIR/front-$GITHUB_SHA
+          scp -P 222 -C -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa apps/web/build $USER@$HOST:$DIR/back-$GITHUB_SHA
           # ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./deploy/deploy.sh
