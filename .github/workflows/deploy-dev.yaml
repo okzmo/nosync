@@ -39,7 +39,7 @@ jobs:
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
           echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          ssh -vvv -p 222 -i ~/.ssh/id_rsa $USER@$HOST echo "Test connection"
+          ssh -vvv -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org $USER@$HOST echo "Test connection"
 
           # tar czvf front-$GITHUB_SHA.tar.gz apps/web/build
           # tar czvf back-$GITHUB_SHA.tar.gz apps/backend/build
