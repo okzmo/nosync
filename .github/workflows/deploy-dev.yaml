@@ -16,13 +16,13 @@ jobs:
 
       - name: Install dependencies step
         run: |
-          pnpm install
+          pnpm i
 
       - name: Build step
         run: |
           pnpm build
           cd apps/backend/build
-          pnpm install --omit=dev
+          pnpm i --prod
 
       - name: Deploy binary using SCP
         env:
