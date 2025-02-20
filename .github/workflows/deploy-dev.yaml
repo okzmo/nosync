@@ -39,7 +39,7 @@ jobs:
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
           echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
+          ssh -p 222 -i -o KexAlgorithms=curve25519-sha256@libssh.org ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
           scp -P 222 -C -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa apps/backend/build $USER@$HOST:$DIR/front-$GITHUB_SHA
           scp -P 222 -C -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa apps/web/build $USER@$HOST:$DIR/back-$GITHUB_SHA
           # ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./deploy/deploy.sh
