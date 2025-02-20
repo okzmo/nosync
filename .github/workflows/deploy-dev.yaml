@@ -39,10 +39,12 @@ jobs:
           echo "  StrictHostKeyChecking no" >> ~/.ssh/config
           echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
 
-          tar czvf front-$GITHUB_SHA.tar.gz apps/web/build
-          tar czvf back-$GITHUB_SHA.tar.gz apps/backend/build
+          ssh -vvv -p 222 -i ~/.ssh/id_rsa $USER@$HOST echo "Test connection"
 
-          ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
-          scp -P 222 -C -o ConnectTimeout=120 -o ServerAliveInterval=60 -i ~/.ssh/id_rsa front-$GITHUB_SHA.tar.gz $USER@$HOST:$DIR/
-          scp -P 222 -C -o ConnectTimeout=120 -o ServerAliveInterval=60 -i ~/.ssh/id_rsa back-$GITHUB_SHA.tar.gz $USER@$HOST:$DIR/
+          # tar czvf front-$GITHUB_SHA.tar.gz apps/web/build
+          # tar czvf back-$GITHUB_SHA.tar.gz apps/backend/build
+          #
+          # ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
+          # scp -P 222 -C -o ConnectTimeout=120 -o ServerAliveInterval=60 -i ~/.ssh/id_rsa front-$GITHUB_SHA.tar.gz $USER@$HOST:$DIR/
+          # scp -P 222 -C -o ConnectTimeout=120 -o ServerAliveInterval=60 -i ~/.ssh/id_rsa back-$GITHUB_SHA.tar.gz $USER@$HOST:$DIR/
           # ssh -p 222 -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./deploy/deploy.sh
