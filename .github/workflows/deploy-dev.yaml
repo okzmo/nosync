@@ -12,19 +12,17 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
+        uses: pnpm/action-setup@v4
 
       - name: Install dependencies step
         run: |
-          npm install
+          pnpm install
 
       - name: Build step
         run: |
-          npm run build
+          pnpm build
           cd apps/backend/build
-          npm install --omit=dev
+          pnpm install --omit=dev
 
       - name: Deploy binary using SCP
         env:
