@@ -8,6 +8,11 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      USER: deploy
+      HOST: ${{ secrets.SSH_HOST }}
+      DIR: /home/deploy/releases
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -23,11 +28,6 @@ jobs:
           pnpm build
 
       - name: Setup SSH
-        env:
-          USER: deploy
-          HOST: ${{ secrets.SSH_HOST }}
-          DIR: /home/deploy/releases
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
