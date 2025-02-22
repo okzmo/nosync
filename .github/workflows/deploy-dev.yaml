@@ -45,4 +45,4 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < /home/deploy/deploy.sh
+          ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./infra/scripts/deploy.sh $GITHUB_SHA
