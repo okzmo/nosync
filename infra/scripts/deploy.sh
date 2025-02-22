@@ -67,6 +67,9 @@ rollback_deploy() {
   echo "Rollback completed."
 }
 
+echo "Installing backend dependencies..."
+cd "${RELEASES_DIR}/${BACKEND}" && npm i --omit=dev
+
 echo "Changing backend symlink..."
 ln -sfn "${RELEASES_DIR}/${BACKEND}" "${PROD_BACKEND}"
 
