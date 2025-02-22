@@ -157,11 +157,11 @@ export async function getPDFFirstPage({ pdfURL, file }: { pdfURL?: string; file?
 	return canvas.toDataURL();
 }
 
-export async function uploadMediaFromExt(uri: string) {
+export async function uploadMediaFromExt(sourceUrl: string, uri: string) {
 	const payload = {
 		spaceId: space.currentSpace?.id.toString(),
 		branchId: space.currentBranch?.id.toString(),
-		fromUrl: uri,
+		fromUrl: sourceUrl,
 		mediaUrl: uri
 	};
 

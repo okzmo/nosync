@@ -8,6 +8,7 @@ export interface ApiCell {
 	content: JSONContent;
 	tags: string;
 	media: ApiMedia;
+	sourceUrl: string;
 	createdAt: string;
 	updatedAt: string;
 }

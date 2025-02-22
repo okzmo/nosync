@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { backdrop } from '$lib/stores/backdrop.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
 	import { cell } from '$lib/stores/cell.svelte';
@@ -34,12 +34,26 @@
 
 {#if cell.maximized}
 	<div
+		class="group peer fixed bottom-0 left-0 z-[999] flex h-[200px] w-screen items-end justify-center"
+		in:fly={{ duration: 350, y: 20, easing: expoOut, delay: 250 }}
+		out:fly={{ duration: 100, y: 20, easing: expoOut }}
+	>
+		<button
+			onclick={() => {
+				menu.closeMenu();
+				backdrop.close();
+			}}
+			class="transition-close -translate-y-8 font-serif text-2xl italic text-zinc-50/30 hover:text-zinc-50 group-hover:-translate-y-14"
+			>Close</button
+		>
+	</div>
+	<div
 		role="presentation"
 		onclick={() => {
 			menu.closeMenu();
 			backdrop.close();
 		}}
-		class="fixed left-0 top-0 z-[998] h-screen w-screen overflow-hidden"
+		class="custom-easing fixed left-0 top-0 z-[998] h-screen w-screen overflow-hidden transition-transform duration-300 peer-hover:-translate-y-8"
 		in:fly={{ duration: 350, y: 20, easing: expoOut, delay: 250 }}
 		out:fly={{ duration: 100, y: 20, easing: expoOut }}
 	>
@@ -77,3 +91,11 @@
 		{/if}
 	</div>
 {/if}
+
+<style>
+	.transition-close {
+		transition:
+			color 100ms ease-out,
+			transform 300ms cubic-bezier(0.625, 0.05, 0, 1);
+	}
+</style>

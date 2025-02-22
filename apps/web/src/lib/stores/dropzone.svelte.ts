@@ -1,7 +1,5 @@
-import { tuyau } from '$lib/api';
 import { uploadMedia, uploadMediaFromExt } from '$lib/utils/media';
 import { panel } from './panel.svelte';
-import { space } from './space.svelte';
 
 class DropZone {
 	isOpen = $state(false);
@@ -36,6 +34,7 @@ class DropZone {
 			e.dataTransfer?.getData('text/uri-list') ||
 			e.dataTransfer?.getData('text/plain') ||
 			e.dataTransfer?.getData('text/x-moz-url');
+		const sourceUrl = uri;
 
 		if (uri?.split('/').at(-1)?.lastIndexOf('.') === -1) {
 			const html = e.dataTransfer?.getData('text/html');
@@ -47,7 +46,7 @@ class DropZone {
 		}
 
 		if (uri) {
-			await uploadMediaFromExt(uri);
+			await uploadMediaFromExt(sourceUrl, uri);
 		} else {
 			await uploadMedia(e.dataTransfer?.items, e.dataTransfer?.files);
 		}

@@ -33,6 +33,7 @@ export type TPhoto = {
 	content: JSONContent | undefined;
 	blurUrl: string;
 	originalUrl: string;
+	sourceUrl: string | null;
 	resizedUrl: string;
 	width: number;
 	mime: string;

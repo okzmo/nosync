@@ -79,6 +79,11 @@
 		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
-		<ContextMenuCell elementId={photo.id} originalUrl={photo.originalUrl} idx={i} />
+		<ContextMenuCell
+			elementId={photo.id}
+			originalUrl={photo.originalUrl}
+			sourceUrl={photo.sourceUrl}
+			idx={i}
+		/>
 	</ContextMenu.Portal>
 </ContextMenu.Root>

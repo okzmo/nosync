@@ -23,3 +23,7 @@ body {
 	color: #ec5a5a;
 	background: #ec5a5a1f;
 }
+
+.custom-easing {
+	transition-timing-function: cubic-bezier(0.625, 0.05, 0, 1);
+}

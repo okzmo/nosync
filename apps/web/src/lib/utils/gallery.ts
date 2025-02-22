@@ -74,7 +74,8 @@ export function calculatePhotoSize(cell: ApiCell) {
 		x: 0,
 		y: 0,
 		aspectRatio: aspectRatio,
-		createdAt: formatDate(cell.createdAt)
+		createdAt: formatDate(cell.createdAt),
+		sourceUrl: cell.sourceUrl
 	};
 
 	return p;

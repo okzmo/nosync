@@ -31,6 +31,7 @@ class Menu {
 
 					this.closeMenu();
 					panel.close();
+					panel.isFullscreen = false;
 					cell.maximized = undefined;
 					setTimeout(() => {
 						cell.active = undefined;

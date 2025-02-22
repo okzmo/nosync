@@ -8,7 +8,8 @@
 	import type { ApiCell } from '$lib/types/api';
 	import { onDestroy, onMount } from 'svelte';
 	import Dropzone from 'ui/branch/dropzone.svelte';
-	import MaximizeZone from 'ui/branch/maximize-zone.svelte';
+	import MaximizeZone from 'ui/layout/maximize-zone.svelte';
+	import FocusMode from 'ui/layout/focus-mode.svelte';
 	import MainButton from 'ui/cells/main-button.svelte';
 	import Note from 'ui/cells/note.svelte';
 	import Pdf from 'ui/cells/pdf.svelte';
@@ -56,6 +57,7 @@
 
 <Dropzone />
 <MaximizeZone />
+<FocusMode />
 
 <div
 	class="transition-container flex h-screen w-[calc(100%+415px)] -translate-x-[415px]"

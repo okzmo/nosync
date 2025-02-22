@@ -5,6 +5,7 @@
 	import MaterialSymbolsCloseRounded from '~icons/material-symbols/close-rounded';
 	import MaterialSymbolsCheckRounded from '~icons/material-symbols/check-rounded';
 	import EosIconsThreeDotsLoading from '~icons/eos-icons/three-dots-loading';
+	import SolarEyeBoldDuotone from '~icons/solar/eye-bold-duotone';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { twJoin } from 'tailwind-merge';
 	import { panel } from '$lib/stores/panel.svelte';
@@ -118,6 +119,16 @@
 				<p class="font-medium">Saved!</p>
 			{/if}
 		</div>
+		<button
+			onclick={() => {
+				panel.close();
+				panel.toggleFullscreen();
+			}}
+			aria-label="Focus this cell"
+			class="flex h-[3rem] w-[3rem] items-center justify-center bg-zinc-925 text-zinc-50/50 transition-colors hover:text-zinc-50"
+		>
+			<SolarEyeBoldDuotone />
+		</button>
 		<button
 			aria-label="Delete this cell"
 			onclick={deleteActiveCell}

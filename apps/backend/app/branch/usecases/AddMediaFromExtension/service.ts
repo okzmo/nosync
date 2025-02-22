@@ -52,7 +52,9 @@ export class AddMediaFromExtensionService {
       cell: { ...savedCell.toJSON(), media: media.toJSON() },
     })
 
-    await drive.use('s3').put(originalKey, new Uint8Array(buffer))
+    await drive
+      .use('s3')
+      .put(originalKey, new Uint8Array(buffer), { contentDisposition: 'attachment' })
 
     queue.dispatch(ProcessImageJob, {
       spaceId,

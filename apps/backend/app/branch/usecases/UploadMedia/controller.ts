@@ -30,6 +30,7 @@ export default class UploadMediaController {
             Key: fileKey,
             Body: part,
             ContentType: part.headers['content-type'],
+            ContentDisposition: 'attachment',
             ChecksumAlgorithm: 'CRC32',
           },
           leavePartsOnError: false,

@@ -8,6 +8,7 @@
 	import TaskList from '@tiptap/extension-task-list';
 	import StarterKit from '@tiptap/starter-kit';
 	import { onDestroy, onMount } from 'svelte';
+	import { twJoin } from 'tailwind-merge';
 
 	let element = $state<Element | undefined>();
 
@@ -17,18 +18,22 @@
 			content?: Content;
 		};
 		saving: string;
+		transparent?: boolean;
+		typing?: boolean;
 	};
 
-	let { content, saving = $bindable() }: Props = $props();
+	let { content, transparent, saving = $bindable(), typing = $bindable() }: Props = $props();
 
 	function onBlur() {
 		if (!panel.editor) return;
 		cell.saveContent(panel.editor.getJSON(), panel.editor.getText().replaceAll('\n', ' '));
+		typing = false;
 		panel.close();
 	}
 
 	function onUpdate() {
 		saving = 'saving';
+		typing = true;
 		debounce(saveOnUpdate, 1000);
 	}
 
@@ -78,7 +83,10 @@
 	});
 </script>
 
-<div class="flex-1 overflow-y-auto" bind:this={element}></div>
+<div
+	class={twJoin('flex-1 overflow-y-auto', transparent && '[&>div]:!bg-transparent [&>div]:!p-0')}
+	bind:this={element}
+></div>
 
 <style lang="postcss">
 	:global(.tiptap) {
