@@ -79,7 +79,7 @@ echo "Changing frontend symlink..."
 ln -sfn "${RELEASES_DIR}/${FRONTEND}" "${PROD_FRONTEND}"
 
 restart_service() {
-  local SERVICE = $1
+  local SERVICE=$1
   echo "Restarting ${SERVICE}..."
 
   if ! sudo systemctl restart "$SERVICE"; then
