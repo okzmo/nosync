@@ -21,10 +21,8 @@ jobs:
       - name: Build step
         run: |
           pnpm build
-          cd apps/backend/build
-          pnpm i --prod
 
-      - name: Deploy binary using SCP
+      - name: Deploy binary using rsync
         env:
           USER: deploy
           HOST: ${{ secrets.SSH_HOST }}
@@ -42,4 +40,6 @@ jobs:
           ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
           rsync -azP --no-perms --no-owner --no-group -e 'ssh -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org' apps/web/build/ $USER@$HOST:$DIR/front-$GITHUB_SHA/
           rsync -azP --no-perms --no-owner --no-group -e 'ssh -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org' apps/backend/build/ $USER@$HOST:$DIR/back-$GITHUB_SHA/
+
+          ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST "cd $DIR/back-$GITHUB_SHA && npm i --omit=dev"
           ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./deploy.sh
