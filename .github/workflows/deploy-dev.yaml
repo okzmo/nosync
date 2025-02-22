@@ -39,11 +39,11 @@ jobs:
 
       - name: Send backend to VPS
         run: |
-          rsync -avvzP --whole-file --timeout=30 --no-perms --no-owner --no-group -e 'ssh -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org' apps/backend/build/ $USER@$HOST:$DIR/back-$GITHUB_SHA/
+          rsync -avvzP --whole-file --timeout=30 --no-perms --no-owner --no-group -e 'ssh -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR' apps/backend/build/ $USER@$HOST:$DIR/back-$GITHUB_SHA/
 
       - name: Send frontend to VPS
         run: |
-          rsync -avvzP --whole-file --timeout=30 --no-perms --no-owner --no-group -e 'ssh -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org' apps/web/build/ $USER@$HOST:$DIR/front-$GITHUB_SHA/
+          rsync -avvzP --whole-file --timeout=30 --no-perms --no-owner --no-group -e 'ssh -p 222 -i ~/.ssh/id_rsa -o KexAlgorithms=curve25519-sha256@libssh.org -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR' apps/web/build/ $USER@$HOST:$DIR/front-$GITHUB_SHA/
 
       - name: Deploy
         run: |
