@@ -5,7 +5,8 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".svelte-kit/**", "build/**", "dist/**"],
-      "env": ["VITE_API_URL"]
+      "env": ["VITE_API_URL"],
+      "inputs": ["$TURBO_DEFAULT$", ".env.local", ".env", ".env.production"]
     },
     "lint": {
       "dependsOn": ["^lint"]
