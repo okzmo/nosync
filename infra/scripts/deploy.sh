@@ -104,6 +104,7 @@ restart_service() {
 restart_service $BACKEND_SERVICE
 restart_service $BACKEND_QUEUE_SERVICE
 
+echo "Migration..."
 sudo systemctl start $BACKEND_MIGRATION_SERVICE
 
 echo "Deployment successful"
