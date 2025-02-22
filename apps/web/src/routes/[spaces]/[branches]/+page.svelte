@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { tuyau } from '$lib/api';
 	import { branch } from '$lib/stores/branch.svelte';
+	import { cell } from '$lib/stores/cell.svelte';
 	import { mainStore } from '$lib/stores/mainStore.svelte';
 	import { panel } from '$lib/stores/panel.svelte';
 	import { space } from '$lib/stores/space.svelte';
@@ -40,7 +41,18 @@
 	onDestroy(() => {
 		window.removeEventListener('resize', () => branch.processCells(branch.cells));
 	});
+
+	$effect(() => {
+		console.log(cell.active?.title);
+	});
 </script>
+
+<svelte:head>
+	<title
+		>{cell.active?.title ? `${cell.active?.title} | ` : ''}
+		{space.currentSpace?.name} / {space.currentBranch?.name}</title
+	>
+</svelte:head>
 
 <Dropzone />
 <MaximizeZone />

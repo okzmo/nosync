@@ -14,6 +14,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Email verification | Nosync</title>
+</svelte:head>
+
 {#if globalMessage}
 	<p
 		class="absolute left-[49.35%] top-[14rem] flex -translate-x-1/2 items-center gap-x-2 rounded-2xl text-center text-green-500"

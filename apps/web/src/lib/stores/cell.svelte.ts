@@ -66,6 +66,7 @@ class Cell {
 		if (!this.active || !branch.cells) return;
 		if (branch.cells[this.activeIdx].title === title) return;
 
+		if (cell.active) cell.active.title = title;
 		branch.cells[this.activeIdx].title = title;
 
 		const body = {

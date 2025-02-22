@@ -39,6 +39,10 @@
 	const { form: formData, enhance, errors } = form;
 </script>
 
+<svelte:head>
+	<title>Sign in | Nosync</title>
+</svelte:head>
+
 {#if globalError}
 	<p
 		class="absolute left-[49.35%] top-[14rem] flex -translate-x-1/2 items-center gap-x-2 rounded-2xl text-red-500"

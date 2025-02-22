@@ -3,7 +3,7 @@
 <style>
 	.noise {
 		background: transparent url('../../assets/noise.png');
-		opacity: 0.6;
+		opacity: 0.4;
 		filter: contrast(2);
 		visibility: visible;
 		animation: noise__animation 0.3s infinite;

@@ -32,6 +32,10 @@ class Menu {
 					this.closeMenu();
 					panel.close();
 					cell.maximized = undefined;
+					setTimeout(() => {
+						cell.active = undefined;
+						cell.activeIdx = -1;
+					}, 250);
 
 					break;
 			}

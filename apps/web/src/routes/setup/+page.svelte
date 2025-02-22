@@ -32,6 +32,10 @@
 	const { form: formData, enhance, errors } = form;
 </script>
 
+<svelte:head>
+	<title>Set up | Nosync</title>
+</svelte:head>
+
 <div class="absolute left-5 top-4 font-code uppercase">STATUS [CREATING SPACE]</div>
 
 <form

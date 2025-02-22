@@ -119,16 +119,20 @@
 			{/if}
 		</div>
 		<button
-			aria-label="Delete"
+			aria-label="Delete this cell"
 			onclick={deleteActiveCell}
 			class="flex h-[3rem] w-[3rem] items-center justify-center bg-zinc-925 text-zinc-50/50 transition-colors hover:bg-red-500 hover:text-zinc-50"
 		>
 			<SolarTrashBin2BoldDuotone />
 		</button>
 		<button
-			aria-label="Delete"
+			aria-label="Close this cell"
 			onclick={() => {
 				panel.close();
+				setTimeout(() => {
+					cell.active = undefined;
+					cell.activeIdx = -1;
+				}, 250);
 			}}
 			class="flex h-[3rem] w-[3rem] items-center justify-center bg-zinc-925 text-zinc-50/50 transition-colors hover:text-zinc-50"
 		>
