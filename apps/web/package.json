@@ -6,7 +6,7 @@
 	"scripts": {
 		"dev:web": "vite dev",
 		"dev": "tauri dev --runner cargo-xwin --target x86_64-pc-windows-msvc",
-		"build": "vite build",
+		"build": "export VITE_API_URL=https://api.nosync.app && vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
