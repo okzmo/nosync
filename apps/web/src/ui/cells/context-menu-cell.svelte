@@ -34,6 +34,20 @@
 		document.body.removeChild(a);
 	}
 
+	async function copyImageToClipboard() {
+		if (!originalUrl) return;
+
+		try {
+			navigator.clipboard.write([
+				new ClipboardItem({
+					'image/png': await fetch(originalUrl).then((r) => r.blob())
+				})
+			]);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
 	function handleGotoSource() {
 		if (!sourceUrl) return;
 		window.open(sourceUrl, '_blank');
@@ -44,6 +58,13 @@
 	class="z-50 w-full min-w-[185px] border border-zinc-50/10 bg-zinc-800/70 p-1 outline-none backdrop-blur-xl"
 >
 	{#if originalUrl}
+		<ContextMenu.Item
+			class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
+			onclick={copyImageToClipboard}
+		>
+			<SolarCloudDownloadBoldDuotone height={16} width={16} />
+			<div class="flex items-center">Copy image</div>
+		</ContextMenu.Item>
 		<ContextMenu.Item
 			class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
 			onclick={handleDownload}

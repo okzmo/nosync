@@ -43,10 +43,6 @@
 	onDestroy(() => {
 		window.removeEventListener('resize', () => branch.processCells(branch.cells));
 	});
-
-	$effect(() => {
-		console.log(cell.active?.title);
-	});
 </script>
 
 <svelte:head>
