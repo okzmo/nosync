@@ -55,7 +55,7 @@
 </script>
 
 <ContextMenu.Content
-	class="z-50 w-full min-w-[185px] border border-zinc-50/10 bg-zinc-800/70 p-1 outline-none backdrop-blur-xl"
+	class="blurred-bg z-50 w-full min-w-[185px] border border-zinc-50/10  p-1 outline-none"
 >
 	{#if originalUrl}
 		<ContextMenu.Item
@@ -96,6 +96,7 @@
 			<ContextMenu.SubContent
 				class="z-50 w-full min-w-[150px] border border-zinc-50/10 bg-zinc-800/70 p-1 outline-none backdrop-blur-xl"
 				sideOffset={10}
+				align="start"
 			>
 				{#each space.currentSpace?.branches.filter((b) => b.id !== space.currentBranch!.id) as branch}
 					<ContextMenu.Item
@@ -122,3 +123,17 @@
 		<div class="flex items-center">Delete</div>
 	</ContextMenu.Item>
 </ContextMenu.Content>
+
+<style lang="postcss">
+	:global(.blurred-bg::after) {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 0;
+		background-color: red;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		@apply bg-zinc-800/70 backdrop-blur-2xl;
+	}
+</style>
