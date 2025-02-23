@@ -76,7 +76,7 @@ export default class ProcessImageJob extends Job {
           content: [
             {
               type: 'text',
-              text: 'List only comma-separated single-word tags for this image. Start with the most important objects and characteristics. Never repeat a tag. Give me at least 16 tags and at most 32 tags.',
+              text: "Create a comma-separated list of single-word tags for this image, starting with the most salient elements, specifically including the artwork's title and artist's name where known (e.g., 'Starry Night,', 'Vincent VanGogh,', 'The Tower of Babel,', 'Pieter Bruegel'). Treat these proper nouns as single, complete tags. Ensure no tag is repeated, and provide between 16 and 32 tags.",
             },
             {
               type: 'image',
