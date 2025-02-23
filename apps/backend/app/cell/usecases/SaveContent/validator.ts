@@ -4,7 +4,7 @@ export const saveContentValidator = vine.compile(
   vine.object({
     id: vine.string(),
     branchId: vine.number(),
-    content: vine.any(),
-    searchContent: vine.string(),
+    content: vine.any().optional(),
+    searchContent: vine.string().optional(),
   })
 )

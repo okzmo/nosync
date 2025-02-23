@@ -20,7 +20,7 @@ export default class Cell extends BaseModel {
   declare content: string
 
   @column()
-  declare searchContent: string
+  declare searchContent: string | undefined
 
   @column()
   declare tags: string

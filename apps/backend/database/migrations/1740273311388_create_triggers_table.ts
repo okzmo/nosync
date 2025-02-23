@@ -21,28 +21,9 @@ export default class extends BaseSchema {
                 NEW.branch_id "branchId",
                 NEW.title,
                 NEW.type,
-                NEW.content,
+                NEW.search_content as "searchContent",
                 NEW.tags,
-                NEW.created_at as "createdAt",
-                (
-                SELECT row_to_json(media_json)
-                FROM (
-          SELECT
-            m.id,
-            m.cell_id as "cellId",
-            m.width,
-            m.height,
-            m.file_size as "fileSize",
-            m.mime,
-            m.original_url as "originalUrl",
-            m.resized_url as "resizedUrl",
-            m.blur_url as "blurUrl",
-            m.thumbnail_url as "thumbnailUrl",
-            m.duration
-          FROM media m
-          WHERE m.cell_id = NEW.id
-              ) media_json
-            ) as media
+                NEW.created_at as "createdAt"
             ) cell_data
           )
         ) INTO payload;
@@ -74,28 +55,9 @@ export default class extends BaseSchema {
                 OLD.branch_id as "branchId",
                 OLD.title,
                 OLD.type,
-                OLD.content,
+                OLD.search_content as "searchContent",
                 OLD.tags,
                 OLD.created_at as "createdAt",
-                (
-                SELECT row_to_json(media_json)
-                FROM (
-          SELECT
-            m.id,
-            m.cell_id as "cellId",
-            m.width,
-            m.height,
-            m.file_size as "fileSize",
-            m.mime,
-            m.original_url as "originalUrl",
-            m.resized_url as "resizedUrl",
-            m.blur_url as "blurUrl",
-            m.thumbnail_url as "thumbnailUrl",
-            m.duration
-          FROM media m
-          WHERE m.cell_id = OLD.id
-              ) media_json
-            ) as media
             ) cell_data
           )
         ) INTO payload;
