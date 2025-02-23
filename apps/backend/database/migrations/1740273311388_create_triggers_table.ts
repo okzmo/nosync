@@ -57,7 +57,7 @@ export default class extends BaseSchema {
                 OLD.type,
                 OLD.search_content as "searchContent",
                 OLD.tags,
-                OLD.created_at as "createdAt",
+                OLD.created_at as "createdAt"
             ) cell_data
           )
         ) INTO payload;
