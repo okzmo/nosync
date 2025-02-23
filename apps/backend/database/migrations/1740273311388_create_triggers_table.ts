@@ -73,7 +73,7 @@ export default class extends BaseSchema {
     await this.db
       .rawQuery(
         `
-      CREATE TRIGGER notify_cell_change_trigger
+      CREATE OR REPLACE TRIGGER notify_cell_change_trigger
         AFTER INSERT OR UPDATE ON cells
         FOR EACH ROW EXECUTE FUNCTION notify_cell_change();
     `
@@ -83,7 +83,7 @@ export default class extends BaseSchema {
     await this.db
       .rawQuery(
         `
-      CREATE TRIGGER notify_cell_deletion_trigger
+      CREATE OR REPLACE TRIGGER notify_cell_deletion_trigger
         AFTER DELETE ON cells
         FOR EACH ROW EXECUTE FUNCTION notify_cell_deletion();
     `
