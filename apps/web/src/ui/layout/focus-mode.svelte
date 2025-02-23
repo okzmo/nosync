@@ -3,7 +3,7 @@
 	import { panel } from '$lib/stores/panel.svelte';
 	import type { Content } from '@tiptap/core';
 	import { expoInOut } from 'svelte/easing';
-	import { fade } from 'svelte/transition';
+	import { fade, fly, scale } from 'svelte/transition';
 	import { twJoin } from 'tailwind-merge';
 	import Editor from 'ui/editor/editor.svelte';
 	import MaterialSymbolsArrowBackRounded from '~icons/material-symbols/arrow-back-rounded';
@@ -28,7 +28,8 @@
 {#if panel.isFullscreen && cell.active}
 	<div
 		class="fixed left-0 top-0 z-[998] flex h-screen w-screen bg-zinc-950"
-		transition:fade={{ duration: 300, easing: expoInOut }}
+		in:scale={{ delay: 350, duration: 300, start: 1.015, easing: expoInOut }}
+		out:scale={{ delay: 200, duration: 300, start: 1.035, easing: expoInOut }}
 	>
 		<button
 			onclick={() => panel.toggleFullscreen()}

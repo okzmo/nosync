@@ -16,6 +16,7 @@
 	import Photo from 'ui/cells/photo.svelte';
 	import Video from 'ui/cells/video.svelte';
 	import Sidebar from 'ui/sidebar/sidebar.svelte';
+	import { twJoin } from 'tailwind-merge';
 
 	const shownCells = $derived.by(async () => {
 		if (!mainStore.ready) return [];
@@ -67,7 +68,12 @@
 	<div class="relative h-full w-[415px] pt-4">
 		<Sidebar />
 	</div>
-	<div class="relative h-full w-screen p-4">
+	<div
+		class={twJoin(
+			'relative h-full w-screen p-4 transition-transform delay-300 duration-300',
+			panel.isFullscreen ? 'scale-95' : 'scale-100'
+		)}
+	>
 		{#await shownCells then cells}
 			{#if cells.length > 0}
 				{#each cells as cell, i}
