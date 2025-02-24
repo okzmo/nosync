@@ -6,17 +6,19 @@
 	import SolarCloudDownloadBoldDuotone from '~icons/solar/cloud-download-bold-duotone';
 	import SolarAltArrowRightLineDuotone from '~icons/solar/alt-arrow-right-line-duotone';
 	import SolarGlobalBoldDuotone from '~icons/solar/global-bold-duotone';
+	import SolarCopyBoldDuotone from '~icons/solar/copy-bold-duotone';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { space } from '$lib/stores/space.svelte';
 
 	interface ContextMenuProps {
 		elementId: string;
 		originalUrl?: string;
+		mimeType?: string;
 		sourceUrl: string | null;
 		idx: number;
 	}
 
-	let { elementId, originalUrl, sourceUrl, idx }: ContextMenuProps = $props();
+	let { elementId, originalUrl, mimeType, sourceUrl, idx }: ContextMenuProps = $props();
 
 	function handleMoveTo(branchId: number) {
 		cell.moveTo(elementId, idx, branchId);
@@ -37,10 +39,29 @@
 	async function copyImageToClipboard() {
 		if (!originalUrl) return;
 
+		const img = new Image();
+		img.crossOrigin = 'anonymous';
+		const canvas = document.createElement('canvas');
+		const ctx = canvas.getContext('2d');
+
+		await new Promise((resolve: (value: void) => void) => {
+			img.onload = () => {
+				canvas.width = img.naturalWidth;
+				canvas.height = img.naturalHeight;
+				ctx?.drawImage(img, 0, 0);
+				resolve();
+			};
+			img.src = originalUrl;
+		});
+
+		const blob = (await new Promise((resolve) =>
+			canvas.toBlob((b) => resolve(b), 'image/png')
+		)) as Blob | null;
+
 		try {
 			navigator.clipboard.write([
 				new ClipboardItem({
-					'image/png': await fetch(originalUrl).then((r) => r.blob())
+					'image/png': blob ? blob : ''
 				})
 			]);
 		} catch (err) {
@@ -58,13 +79,15 @@
 	class="blurred-bg z-50 w-full min-w-[185px] border border-zinc-50/10  p-1 outline-none"
 >
 	{#if originalUrl}
-		<ContextMenu.Item
-			class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
-			onclick={copyImageToClipboard}
-		>
-			<SolarCloudDownloadBoldDuotone height={16} width={16} />
-			<div class="flex items-center">Copy image</div>
-		</ContextMenu.Item>
+		{#if mimeType === 'image/png' || mimeType === 'image/jpeg' || mimeType === 'image/jpg'}
+			<ContextMenu.Item
+				class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
+				onclick={copyImageToClipboard}
+			>
+				<SolarCopyBoldDuotone height={16} width={16} />
+				<div class="flex items-center">Copy image</div>
+			</ContextMenu.Item>
+		{/if}
 		<ContextMenu.Item
 			class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
 			onclick={handleDownload}

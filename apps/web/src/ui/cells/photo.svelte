@@ -82,6 +82,7 @@
 		<ContextMenuCell
 			elementId={photo.id}
 			originalUrl={photo.originalUrl}
+			mimeType={photo.mime}
 			sourceUrl={photo.sourceUrl}
 			idx={i}
 		/>
