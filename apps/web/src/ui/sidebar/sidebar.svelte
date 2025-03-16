@@ -19,6 +19,7 @@
 	function deleteActiveCell() {
 		if (!cell.active) return;
 		cell.delete(cell.active.id, cell.activeIdx);
+		editTitle = false;
 		panel.close();
 		cell.active = undefined;
 		cell.activeIdx = -1;
@@ -121,6 +122,7 @@
 		</div>
 		<button
 			onclick={() => {
+				editTitle = false;
 				panel.close();
 				panel.toggleFullscreen();
 			}}
@@ -139,6 +141,7 @@
 		<button
 			aria-label="Close this cell"
 			onclick={() => {
+				editTitle = false;
 				panel.close();
 				setTimeout(() => {
 					cell.active = undefined;

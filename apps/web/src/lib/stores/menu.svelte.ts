@@ -14,6 +14,7 @@ class Menu {
 			switch (key) {
 				case (ctrlKey || metaKey) && 'k':
 					e.preventDefault();
+					panel.close();
 					this.toggleMenu();
 					break;
 				case 'Escape':

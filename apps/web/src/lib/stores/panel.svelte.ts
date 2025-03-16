@@ -4,6 +4,7 @@ class Panel {
 	isOpen = $state(false);
 	isFullscreen = $state(false);
 	editor = $state<Editor | undefined>();
+	editorFocusmode = $state<Editor | undefined>();
 
 	open = () => {
 		this.isOpen = true;

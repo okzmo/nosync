@@ -14,7 +14,7 @@
 		elementId: string;
 		originalUrl?: string;
 		mimeType?: string;
-		sourceUrl: string | null;
+		sourceUrl?: string | null;
 		idx: number;
 	}
 

@@ -3,14 +3,13 @@
 	import { panel } from '$lib/stores/panel.svelte';
 	import type { Content } from '@tiptap/core';
 	import { expoInOut } from 'svelte/easing';
-	import { fade, fly, scale } from 'svelte/transition';
+	import { scale } from 'svelte/transition';
 	import { twJoin } from 'tailwind-merge';
-	import Editor from 'ui/editor/editor.svelte';
+	import EditorFocus from 'ui/editor/editor-focus.svelte';
 	import MaterialSymbolsArrowBackRounded from '~icons/material-symbols/arrow-back-rounded';
 
 	let title = $state('');
 	let content = $state<{ id: string; content?: Content } | undefined>();
-	let saving = $state('onhold');
 	let typing = $state(false);
 
 	function handleBlur() {
@@ -32,7 +31,9 @@
 		out:scale={{ delay: 200, duration: 300, start: 1.035, easing: expoInOut }}
 	>
 		<button
-			onclick={() => panel.toggleFullscreen()}
+			onclick={() => {
+				panel.toggleFullscreen();
+			}}
 			class={twJoin(
 				'custom-easing group fixed left-8 top-8 z-[999] flex -translate-x-4 items-center gap-x-2 rounded-md px-2 py-1 font-serif text-xl italic text-zinc-50/40 transition duration-500  hover:translate-x-0 hover:text-zinc-50 hover:!opacity-100',
 				typing ? 'opacity-20' : 'opacity-100'
@@ -72,7 +73,7 @@
 				bind:value={title}
 				onblur={handleBlur}
 			/>
-			<Editor transparent {content} bind:saving bind:typing />
+			<EditorFocus {content} bind:typing />
 		</div>
 	</div>
 {/if}

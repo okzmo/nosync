@@ -195,7 +195,7 @@ class Branch {
 			title: title || '',
 			content: undefined,
 			createdAt: formatDate(new Date().toString())
-		};
+		} as TNote;
 		cell.activeIdx = branch.cells!.length;
 		panel.open();
 		panel.focusEditor();

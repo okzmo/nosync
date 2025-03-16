@@ -23,12 +23,12 @@
 	};
 
 	let { content, transparent, saving = $bindable(), typing = $bindable() }: Props = $props();
+	$inspect(content);
 
 	function onBlur() {
 		if (!panel.editor) return;
 		cell.saveContent(panel.editor.getJSON(), panel.editor.getText().replaceAll('\n', ' '));
 		typing = false;
-		panel.close();
 	}
 
 	function onUpdate() {
