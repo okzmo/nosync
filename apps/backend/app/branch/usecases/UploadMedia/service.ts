@@ -25,6 +25,7 @@ interface ImageProps {
     mime: string
     duration: number
   }
+  userId: number
 }
 
 interface VideoProps {
@@ -42,6 +43,7 @@ interface VideoProps {
     duration: number
   }
   thumbnail: MultipartFile
+  userId: number
 }
 
 interface FileProps {
@@ -55,12 +57,14 @@ interface FileProps {
     name: string
     mime: string
   }
+  userId: number
 }
 
 export class UploadMediaService {
   async execute(
     data: InferInput<typeof uploadMediaValidator>,
     files: MultipartFile[],
+    userId: number,
     thumbnails?: MultipartFile[]
   ) {
     const { spaceId, branchId, title, filesMetadata } = data
@@ -81,6 +85,7 @@ export class UploadMediaService {
             title,
             branchId,
             spaceId,
+            userId,
           })
           medias.push({ ...imageCell, media: imageMedia })
           break
@@ -100,6 +105,7 @@ export class UploadMediaService {
             branchId,
             spaceId,
             title,
+            userId,
           })
           medias.push({ ...videoCell, media: videoMedia })
           break
@@ -110,6 +116,7 @@ export class UploadMediaService {
             branchId,
             spaceId,
             title,
+            userId,
           })
           medias.push({ ...fileCell, media: fileMedia })
           break
@@ -126,7 +133,7 @@ export class UploadMediaService {
     return dotIndex === -1 ? fileName : fileName.substring(0, dotIndex)
   }
 
-  async #uploadImage({ file, metadata, title, branchId, spaceId }: ImageProps) {
+  async #uploadImage({ file, metadata, title, branchId, spaceId, userId }: ImageProps) {
     const originalKey = file.meta.fileKey
     const keyNoExt = this.#removeExtension(file.meta.fileKey)
     const optimKey = `${keyNoExt}.webp`
@@ -160,12 +167,13 @@ export class UploadMediaService {
       optimKey: optimKey,
       blurKey: blurKey,
       cellId: savedCell.id,
+      userId,
     })
 
     return [savedCell.toJSON(), media.toJSON()]
   }
 
-  async #uploadVideo({ file, branchId, spaceId, title, metadata, thumbnail }: VideoProps) {
+  async #uploadVideo({ file, branchId, spaceId, title, metadata, thumbnail, userId }: VideoProps) {
     const originalKey = file.meta.fileKey
     const keyNoExt = this.#removeExtension(file.meta.fileKey)
     const thumbnailKey = thumbnail.meta.fileKey

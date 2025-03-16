@@ -22,6 +22,7 @@ class Branch {
 	cells = $state<ApiCell[] | undefined>();
 	cellWrapper = $state<HTMLDivElement | null>();
 	branchChannel = $state<Subscription | undefined>();
+	stopListeningToBranch = $state();
 	changingBranch = $state(false);
 	latestNbOfAddedCells = $state(0);
 

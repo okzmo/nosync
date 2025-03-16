@@ -2,7 +2,6 @@
 	import { mainStore } from '$lib/stores/mainStore.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
 	import { search } from '$lib/stores/search.svelte';
-	import { space } from '$lib/stores/space.svelte';
 	import { onMount } from 'svelte';
 	import Backdrop from 'ui/layout/backdrop.svelte';
 	import Navigation from 'ui/layout/navigation.svelte';
@@ -18,7 +17,6 @@
 		menu.init();
 		mainStore.initializeTransmit();
 		mainStore.setupPDFWorker();
-		mainStore.subscribeTo(space.currentSpace!.id, space.currentBranch!.id);
 
 		window.addEventListener('contextmenu', (e) => {
 			e.preventDefault();

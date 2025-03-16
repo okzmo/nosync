@@ -11,7 +11,7 @@ import env from '#start/env'
 import transmit from '@adonisjs/transmit/services/main'
 
 export class AddMediaFromExtensionService {
-  async execute(data: InferInput<typeof addMediaFromExtensionValidator>) {
+  async execute(data: InferInput<typeof addMediaFromExtensionValidator>, userId: number) {
     const { spaceId, branchId, fromUrl, mediaUrl } = data
 
     const res = await fetch(mediaUrl)
@@ -47,7 +47,7 @@ export class AddMediaFromExtensionService {
     media.duration = 0
     media.save()
 
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+    transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
       type: 'branch:cellFromExtensionCreated',
       cell: { ...savedCell.toJSON(), media: media.toJSON() },
     })
@@ -64,6 +64,7 @@ export class AddMediaFromExtensionService {
       blurKey: blurKey,
       ignoreBlur: true,
       cellId: savedCell.id,
+      userId,
     })
   }
 }

@@ -14,6 +14,7 @@ interface ProcessVideoJobPayload {
   thumbnailKey: string
   blurKey: string
   cellId: string
+  userId: number
 }
 
 export default class ProcessVideoJob extends Job {
@@ -21,18 +22,25 @@ export default class ProcessVideoJob extends Job {
     return import.meta.url
   }
 
-  async handle({ thumbnailKey, blurKey, cellId, spaceId, branchId }: ProcessVideoJobPayload) {
+  async handle({
+    thumbnailKey,
+    blurKey,
+    cellId,
+    spaceId,
+    branchId,
+    userId,
+  }: ProcessVideoJobPayload) {
     const thumbnail = await drive.use('s3').getBytes(thumbnailKey)
 
     const blurredPic = await sharp(thumbnail).webp({ quality: 50 }).blur(24).toBuffer()
     await drive.use('s3').put(blurKey, blurredPic)
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+    transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
       type: 'branch:finishBlurredThumbnailVideoUpload',
       cellId: cellId,
       blurUrl: `${env.get('AWS_CDN_URL')}/${blurKey}`,
     })
 
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+    transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
       type: 'branch:finishThumbnailVideoUpload',
       cellId: cellId,
       thumbnailUrl: `${env.get('AWS_CDN_URL')}/${thumbnailKey}`,
@@ -74,7 +82,8 @@ export default class ProcessVideoJob extends Job {
     cell.tags = result.steps[0].text
     await cell.save()
 
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+    console.log(`user/${userId}/space/${spaceId}/branch/${branchId}`)
+    transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
       type: 'branch:finishTagsCreation',
       cellId: cellId,
       tags: result.steps[0].text,

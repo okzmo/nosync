@@ -9,6 +9,7 @@ import sharp from 'sharp'
 import env from '#start/env'
 
 interface ProcessImageJobPayload {
+  userId: number
   spaceId: string
   branchId: string
   originKey: string
@@ -30,6 +31,7 @@ export default class ProcessImageJob extends Job {
     optimKey,
     blurKey,
     ignoreBlur = false,
+    userId,
     cellId,
     spaceId,
     branchId,
@@ -48,7 +50,7 @@ export default class ProcessImageJob extends Job {
     if (!ignoreBlur) {
       const blurredPic = await sharp(file).webp({ quality: 50 }).blur(24).toBuffer()
       await drive.use('s3').put(blurKey, blurredPic)
-      transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+      transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
         type: 'branch:finishBlurredImageUpload',
         cellId: cellId,
         blurUrl: `${env.get('AWS_CDN_URL')}/${blurKey}`,
@@ -56,7 +58,7 @@ export default class ProcessImageJob extends Job {
     }
 
     await drive.use('s3').put(optimKey, optimizedImage)
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+    transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
       type: 'branch:finishResizedImageUpload',
       cellId: cellId,
       resizedUrl: `${env.get('AWS_CDN_URL')}/${optimKey}`,
@@ -96,7 +98,8 @@ export default class ProcessImageJob extends Job {
     cell.tags = result.steps[0].text
     await cell.save()
 
-    transmit.broadcast(`space:${spaceId}:branch:${branchId}`, {
+    console.log(`user/${userId}/space/${spaceId}/branch/${branchId}`)
+    transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
       type: 'branch:finishTagsCreation',
       cellId: cellId,
       tags: result.steps[0].text,

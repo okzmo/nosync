@@ -34,7 +34,7 @@
 
 {#if cell.maximized}
 	<div
-		class="group peer fixed bottom-0 left-0 z-[999] flex h-[200px] w-screen items-end justify-center"
+		class="group peer fixed bottom-0 left-0 z-[999] flex h-[100px] w-screen items-end justify-center"
 		in:fly={{ duration: 350, y: 20, easing: expoOut, delay: 250 }}
 		out:fly={{ duration: 100, y: 20, easing: expoOut }}
 	>

@@ -9,7 +9,7 @@ import { addMediaFromExtensionValidator } from './validators.js'
 export default class AddMediaFromExtensionController {
   constructor(private addMediaFromExtension: AddMediaFromExtensionService) {}
 
-  async handle({ bouncer, request, response }: HttpContext) {
+  async handle({ bouncer, request, response, auth }: HttpContext) {
     const data = await request.validateUsing(addMediaFromExtensionValidator)
 
     const branch = await Branch.findByOrFail('id', data.branchId)
@@ -17,6 +17,8 @@ export default class AddMediaFromExtensionController {
       return response.forbidden('You cannot upload a file to this branch')
     }
 
-    await this.addMediaFromExtension.execute(data)
+    const user = await auth.authenticate()
+
+    await this.addMediaFromExtension.execute(data, user.id)
   }
 }

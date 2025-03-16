@@ -5,6 +5,7 @@ import { auth } from './auth.svelte';
 import { cell } from './cell.svelte';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.mjs?worker';
+import { space } from './space.svelte';
 
 export const PADDING = 16;
 export const GUTTER = 14;
@@ -56,6 +57,10 @@ class MainStore {
 			baseUrl: import.meta.env.VITE_API_URL
 		});
 		this.transmit = transmitConn;
+
+		if (space.currentBranch && space.currentSpace) {
+			mainStore.subscribeTo(space.currentSpace.id, space.currentBranch.id);
+		}
 	}
 
 	setupPDFWorker() {
@@ -65,13 +70,17 @@ class MainStore {
 	async subscribeTo(spaceId: number, branchId: number) {
 		if (!this.transmit) return;
 		if (branch.branchChannel) {
+			branch.stopListeningToBranch();
+			branch.stopListeningToBranch = undefined;
 			await branch.branchChannel.delete();
 		}
 
-		branch.branchChannel = this.transmit.subscription(`space:${spaceId}:branch:${branchId}`);
-		await branch.branchChannel?.create();
+		branch.branchChannel = this.transmit.subscription(
+			`user/${auth.user?.id}/space/${spaceId}/branch/${branchId}`
+		);
+		await branch.branchChannel.create();
 
-		branch.branchChannel.onMessage((data: TransmitMessages) => {
+		branch.stopListeningToBranch = branch.branchChannel.onMessage((data: TransmitMessages) => {
 			switch (data.type) {
 				case 'branch:finishTagsCreation':
 					cell.updateTags(data);
