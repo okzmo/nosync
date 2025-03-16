@@ -1,7 +1,7 @@
 import { backdrop } from './backdrop.svelte';
 import { branch } from './branch.svelte';
 import { cell } from './cell.svelte';
-import { panel } from './panel.svelte';
+import { sidebar } from './sidebar.svelte';
 import { space } from './space.svelte';
 
 class Menu {
@@ -14,7 +14,7 @@ class Menu {
 			switch (key) {
 				case (ctrlKey || metaKey) && 'k':
 					e.preventDefault();
-					panel.close();
+					sidebar.close();
 					this.toggleMenu();
 					break;
 				case 'Escape':
@@ -31,8 +31,8 @@ class Menu {
 					}
 
 					this.closeMenu();
-					panel.close();
-					panel.isFullscreen = false;
+					sidebar.close();
+					sidebar.isFocused = false;
 					cell.maximized = undefined;
 					setTimeout(() => {
 						cell.active = undefined;

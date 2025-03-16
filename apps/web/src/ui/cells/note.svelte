@@ -6,7 +6,7 @@
 	import TaskItem from '@tiptap/extension-task-item';
 	import TaskList from '@tiptap/extension-task-list';
 	import StarterKit from '@tiptap/starter-kit';
-	import { panel } from '$lib/stores/panel.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import ContextMenuCell from './context-menu-cell.svelte';
 
 	type Props = {
@@ -41,7 +41,7 @@
 			onclick={() => {
 				cell.activeIdx = i;
 				cell.active = note;
-				panel.open();
+				sidebar.open();
 			}}
 			class="group absolute flex flex-col items-start justify-start overflow-hidden bg-zinc-925 px-6 py-4 shadow-xl transition-colors after:absolute after:left-0 after:top-0 after:h-full after:w-full after:content-normal after:bg-gradient-to-t after:from-zinc-925 after:to-transparent hover:bg-zinc-900"
 			style="height: {note.height}px; width: {note.width}px; transform: translate({note.x}px, {note.y}px);"

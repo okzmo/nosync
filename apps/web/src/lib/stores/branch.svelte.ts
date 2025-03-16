@@ -14,7 +14,7 @@ import { auth } from './auth.svelte';
 import type { ApiCell } from '$lib/types/api';
 import { cell } from './cell.svelte';
 import { formatDate } from '$lib/utils/date';
-import { panel } from './panel.svelte';
+import { sidebar } from './sidebar.svelte';
 import { backdrop } from './backdrop.svelte';
 import { uploadMedia } from '$lib/utils/media';
 
@@ -197,8 +197,8 @@ class Branch {
 			createdAt: formatDate(new Date().toString())
 		} as TNote;
 		cell.activeIdx = branch.cells!.length;
-		panel.open();
-		panel.focusEditor();
+		sidebar.open();
+		sidebar.focusEditor();
 
 		const { data, error } = await tuyau.v1.cell.create_note.$post({
 			title: title,
@@ -211,7 +211,7 @@ class Branch {
 				branch.cells.pop();
 			}
 			backdrop.close();
-			panel.close();
+			sidebar.close();
 			return;
 		}
 

@@ -30,7 +30,6 @@
 {@render children()}
 <Search />
 
-<!-- <Panel /> -->
 <Backdrop />
 <Noise />
 

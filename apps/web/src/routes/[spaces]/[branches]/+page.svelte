@@ -3,7 +3,7 @@
 	import { branch } from '$lib/stores/branch.svelte';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { mainStore } from '$lib/stores/mainStore.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import { space } from '$lib/stores/space.svelte';
 	import type { ApiCell } from '$lib/types/api';
 	import { onDestroy, onMount } from 'svelte';
@@ -58,7 +58,7 @@
 
 <div
 	class="transition-container flex h-screen w-[calc(100%+415px)] -translate-x-[415px]"
-	class:translate-x-0={panel.isOpen}
+	class:translate-x-0={sidebar.isOpen}
 	bind:this={branch.cellWrapper}
 >
 	<div class="relative h-full w-[415px] pt-4">
@@ -67,7 +67,7 @@
 	<div
 		class={twJoin(
 			'relative h-full w-screen p-4 transition-transform delay-300 duration-300',
-			panel.isFullscreen ? 'scale-95' : 'scale-100'
+			sidebar.isFocused ? 'scale-95' : 'scale-100'
 		)}
 	>
 		{#await shownCells then cells}

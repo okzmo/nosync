@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import type { Content } from '@tiptap/core';
 	import { expoInOut } from 'svelte/easing';
 	import { scale } from 'svelte/transition';
@@ -24,7 +24,7 @@
 	});
 </script>
 
-{#if panel.isFullscreen && cell.active}
+{#if sidebar.isFocused && cell.active}
 	<div
 		class="fixed left-0 top-0 z-[998] flex h-screen w-screen bg-zinc-950"
 		in:scale={{ delay: 350, duration: 300, start: 1.015, easing: expoInOut }}
@@ -32,7 +32,7 @@
 	>
 		<button
 			onclick={() => {
-				panel.toggleFullscreen();
+				sidebar.toggleFocusMode();
 			}}
 			class={twJoin(
 				'custom-easing group fixed left-8 top-8 z-[999] flex -translate-x-4 items-center gap-x-2 rounded-md px-2 py-1 font-serif text-xl italic text-zinc-50/40 transition duration-500  hover:translate-x-0 hover:text-zinc-50 hover:!opacity-100',

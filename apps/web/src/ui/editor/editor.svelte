@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import { debounce } from '$lib/utils/debounce';
 	import { Editor, type Content } from '@tiptap/core';
 	import Placeholder from '@tiptap/extension-placeholder';
@@ -26,8 +26,8 @@
 	$inspect(content);
 
 	function onBlur() {
-		if (!panel.editor) return;
-		cell.saveContent(panel.editor.getJSON(), panel.editor.getText().replaceAll('\n', ' '));
+		if (!sidebar.editor) return;
+		cell.saveContent(sidebar.editor.getJSON(), sidebar.editor.getText().replaceAll('\n', ' '));
 		typing = false;
 	}
 
@@ -38,8 +38,11 @@
 	}
 
 	async function saveOnUpdate() {
-		if (!panel.editor) return;
-		await cell.saveContent(panel.editor.getJSON(), panel.editor.getText().replaceAll('\n', ' '));
+		if (!sidebar.editor) return;
+		await cell.saveContent(
+			sidebar.editor.getJSON(),
+			sidebar.editor.getText().replaceAll('\n', ' ')
+		);
 		saving = 'saved';
 		setTimeout(() => {
 			saving = 'onhold';
@@ -47,7 +50,7 @@
 	}
 
 	onMount(() => {
-		panel.editor = new Editor({
+		sidebar.editor = new Editor({
 			element: element,
 			onBlur: onBlur,
 			onUpdate: onUpdate,
@@ -67,19 +70,19 @@
 				})
 			],
 			onTransaction: () => {
-				panel.editor = panel.editor;
+				sidebar.editor = sidebar.editor;
 			}
 		});
 	});
 
 	onDestroy(() => {
-		if (panel.editor) {
-			panel.editor.destroy();
+		if (sidebar.editor) {
+			sidebar.editor.destroy();
 		}
 	});
 
 	$effect(() => {
-		panel.editor?.commands.setContent(content?.content || null);
+		sidebar.editor?.commands.setContent(content?.content || null);
 	});
 </script>
 

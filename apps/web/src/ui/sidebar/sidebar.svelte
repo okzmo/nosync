@@ -8,7 +8,7 @@
 	import SolarEyeBoldDuotone from '~icons/solar/eye-bold-duotone';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { twJoin } from 'tailwind-merge';
-	import { panel } from '$lib/stores/panel.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte';
 
 	let content = $state<{ id: string; content?: Content } | undefined>();
 	let title = $state('');
@@ -20,7 +20,7 @@
 		if (!cell.active) return;
 		cell.delete(cell.active.id, cell.activeIdx);
 		editTitle = false;
-		panel.close();
+		sidebar.close();
 		cell.active = undefined;
 		cell.activeIdx = -1;
 	}
@@ -123,8 +123,8 @@
 		<button
 			onclick={() => {
 				editTitle = false;
-				panel.close();
-				panel.toggleFullscreen();
+				sidebar.close();
+				sidebar.toggleFocusMode();
 			}}
 			aria-label="Focus this cell"
 			class="flex h-[3rem] w-[3rem] items-center justify-center bg-zinc-925 text-zinc-50/50 transition-colors hover:text-zinc-50"
@@ -142,7 +142,7 @@
 			aria-label="Close this cell"
 			onclick={() => {
 				editTitle = false;
-				panel.close();
+				sidebar.close();
 				setTimeout(() => {
 					cell.active = undefined;
 					cell.activeIdx = -1;

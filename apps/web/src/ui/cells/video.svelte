@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { backdrop } from '$lib/stores/backdrop.svelte';
 	import { cell } from '$lib/stores/cell.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import type { TVideo } from '$lib/types/space';
 	import { ContextMenu } from 'bits-ui';
 	import SolarPenNewSquareBoldDuotone from '~icons/solar/pen-new-square-bold-duotone';
@@ -23,13 +23,13 @@
 			onclick={() => {
 				cell.activeIdx = i;
 				cell.active = video;
-				panel.open();
+				sidebar.open();
 			}}
 			onkeydown={(e) => {
 				if (e.key === 'Enter') {
 					cell.activeIdx = i;
 					cell.active = video;
-					panel.open();
+					sidebar.open();
 				}
 			}}
 			class="group absolute overflow-hidden shadow-xl before:absolute before:inset-0 before:content-normal before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"

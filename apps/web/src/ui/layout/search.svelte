@@ -6,7 +6,6 @@
 	import { fade } from 'svelte/transition';
 	import { fly } from 'svelte/transition';
 	import { search } from '$lib/stores/search.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
 	import { debounce } from '$lib/utils/debounce';
 
 	let input = $state<HTMLInputElement | null>(null);

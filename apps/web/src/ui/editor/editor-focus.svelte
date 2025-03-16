@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
-	import { panel } from '$lib/stores/panel.svelte';
+	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import { debounce } from '$lib/utils/debounce';
 	import { Editor, type Content } from '@tiptap/core';
 	import Placeholder from '@tiptap/extension-placeholder';
@@ -24,10 +24,10 @@
 	$inspect(content);
 
 	function onBlur() {
-		if (!panel.editorFocusmode) return;
+		if (!sidebar.editorFocusmode) return;
 		cell.saveContent(
-			panel.editorFocusmode.getJSON(),
-			panel.editorFocusmode.getText().replaceAll('\n', ' ')
+			sidebar.editorFocusmode.getJSON(),
+			sidebar.editorFocusmode.getText().replaceAll('\n', ' ')
 		);
 		typing = false;
 	}
@@ -38,15 +38,15 @@
 	}
 
 	async function saveOnUpdate() {
-		if (!panel.editorFocusmode) return;
+		if (!sidebar.editorFocusmode) return;
 		await cell.saveContent(
-			panel.editorFocusmode.getJSON(),
-			panel.editorFocusmode.getText().replaceAll('\n', ' ')
+			sidebar.editorFocusmode.getJSON(),
+			sidebar.editorFocusmode.getText().replaceAll('\n', ' ')
 		);
 	}
 
 	onMount(() => {
-		panel.editorFocusmode = new Editor({
+		sidebar.editorFocusmode = new Editor({
 			element: element,
 			onBlur: onBlur,
 			onUpdate: onUpdate,
@@ -66,19 +66,19 @@
 				})
 			],
 			onTransaction: () => {
-				panel.editorFocusmode = panel.editorFocusmode;
+				sidebar.editorFocusmode = sidebar.editorFocusmode;
 			}
 		});
 	});
 
 	onDestroy(() => {
-		if (panel.editorFocusmode) {
-			panel.editorFocusmode.destroy();
+		if (sidebar.editorFocusmode) {
+			sidebar.editorFocusmode.destroy();
 		}
 	});
 
 	$effect(() => {
-		panel.editorFocusmode?.commands.setContent(content?.content || null);
+		sidebar.editorFocusmode?.commands.setContent(content?.content || null);
 	});
 </script>
 

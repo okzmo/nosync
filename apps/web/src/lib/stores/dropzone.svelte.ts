@@ -1,19 +1,19 @@
 import { uploadMedia, uploadMediaFromExt } from '$lib/utils/media';
-import { panel } from './panel.svelte';
+import { sidebar } from './sidebar.svelte';
 
 class DropZone {
 	isOpen = $state(false);
 	dragCounter = $state(0);
 
 	handleDragEnter = (e: DragEvent) => {
-		if (panel.isOpen) return;
+		if (sidebar.isOpen) return;
 		e.preventDefault();
 		this.dragCounter++;
 		this.isOpen = true;
 	};
 
 	handleDragOver = (e: DragEvent) => {
-		if (panel.isOpen) return;
+		if (sidebar.isOpen) return;
 		e.preventDefault();
 	};
 

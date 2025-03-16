@@ -1,8 +1,8 @@
 import { Editor } from '@tiptap/core';
 
-class Panel {
+class Sidebar {
 	isOpen = $state(false);
-	isFullscreen = $state(false);
+	isFocused = $state(false);
 	editor = $state<Editor | undefined>();
 	editorFocusmode = $state<Editor | undefined>();
 
@@ -14,12 +14,12 @@ class Panel {
 		this.isOpen = false;
 	};
 
-	toggleFullscreen = () => {
-		this.isFullscreen = !this.isFullscreen;
+	toggleFocusMode = () => {
+		this.isFocused = !this.isFocused;
 	};
 
 	shrink = () => {
-		this.isFullscreen = false;
+		this.isFocused = false;
 	};
 
 	focusEditor() {
@@ -27,4 +27,4 @@ class Panel {
 	}
 }
 
-export const panel = new Panel();
+export const sidebar = new Sidebar();
