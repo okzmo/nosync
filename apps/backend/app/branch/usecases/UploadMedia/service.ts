@@ -206,6 +206,7 @@ export class UploadMediaService {
       thumbnailKey: thumbnailKey,
       blurKey: blurKey,
       cellId: savedCell.id,
+      userId,
     })
 
     return [savedCell.toJSON(), media.toJSON()]

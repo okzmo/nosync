@@ -14,7 +14,7 @@ import { MultipartFile } from '@adonisjs/core/bodyparser'
 export default class UploadMediaController {
   constructor(private uploadMedia: UploadMediaService) {}
 
-  async handle({ bouncer, request, response }: HttpContext) {
+  async handle({ bouncer, request, response, auth }: HttpContext) {
     request.multipart.onFile(
       '*',
       { size: '1gb', extnames: ['mp4', 'jpg', 'png', 'jpeg', 'gif', 'pdf'] },
@@ -64,7 +64,8 @@ export default class UploadMediaController {
       return response.forbidden('You cannot upload a file to this branch')
     }
 
-    const medias = await this.uploadMedia.execute(data, files, thumbnails)
+    const user = await auth.authenticate()
+    const medias = await this.uploadMedia.execute(data, files, user.id, thumbnails)
 
     return response.ok(medias)
   }
