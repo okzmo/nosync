@@ -1,13 +1,14 @@
 name: Deploy to dev env
 
-# on:
-#   push:
-#     paths:
-#       - apps/web/**
-#       - apps/backend/**
-#     branches: [dev]
+on:
+  push:
+    paths:
+      - apps/web/**
+      - apps/backend/**
+    branches: [dev]
 
 jobs:
+  if: false
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
