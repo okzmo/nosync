@@ -2,7 +2,7 @@
 
 set -e
 
-export PATH="/usr/local/lib/nodejs/node-v22.13.1-linux-x64/bin:$PATH"
+export PATH="/usr/local/lib/nodejs/node-v22.14.0-linux-x64/bin:$PATH"
 
 if [[ -z "$1" ]]; then
   echo "Missing commit hash"

@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node bin/server.js",
     "build": "node ace build",
+    "build-dev": "node ace build",
     "dev:web": "node ace serve --hmr",
     "dev": "node ace serve --hmr",
     "db:migration": "node ace migration:fresh",

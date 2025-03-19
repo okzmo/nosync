@@ -6,6 +6,10 @@
       "dependsOn": ["^build"],
       "outputs": [".svelte-kit/**", "build/**", "dist/**"]
     },
+    "build-dev": {
+      "dependsOn": ["^build"],
+      "outputs": [".svelte-kit/**", "build/**", "dist/**"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },

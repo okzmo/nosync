@@ -1,0 +1,49 @@
+name: Deploy to dev env
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      USER: deploy
+      HOST: ${{ secrets.SSH_HOST }}
+      PORT: ${{ secrets.SSH_PORT }}
+      DIR: /home/deploy/releases
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: pnpm/action-setup@v4
+
+      - name: Install dependencies step
+        run: |
+          pnpm i
+
+      - name: Build step
+        run: |
+          pnpm build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p $PORT -H $HOST >> ~/.ssh/known_hosts
+          ssh -p $PORT -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
+
+      - name: Send backend to VPS
+        run: |
+          rsync -avz -e "ssh -p $PORT -i ~/.ssh/id_rsa" --progress apps/backend/build/ $USER@$HOST:$DIR/back-$GITHUB_SHA/
+
+      - name: Send frontend to VPS
+        run: |
+          rsync -avz -e "ssh -p $PORT -i ~/.ssh/id_rsa" --progress apps/web/build/ $USER@$HOST:$DIR/front-$GITHUB_SHA/
+
+      - name: Deploy
+        run: |
+          ssh -p $PORT -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./infra/scripts/deploy.sh $GITHUB_SHA
