@@ -5,10 +5,9 @@ on:
     paths:
       - apps/web/**
       - apps/backend/**
-    branches: [dev]
+    branches: []
 
 jobs:
-  if: false
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
