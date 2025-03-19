@@ -17,10 +17,13 @@ export default class UploadMediaController {
   async handle({ bouncer, request, response, auth }: HttpContext) {
     request.multipart.onFile(
       '*',
-      { size: '1gb', extnames: ['mp4', 'jpg', 'png', 'jpeg', 'gif', 'pdf'] },
+      { size: '1gb' },
       async (part, reporter) => {
         part.pause()
         part.on('data', reporter)
+        part.on('error', (err) => {
+          console.log("ERROR:", err)
+        })
 
         const fileKey = `${cuid()}_${part.file.clientName.toLowerCase().trim().replaceAll(' ', '-')}`
         const upload = new Upload({
