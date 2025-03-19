@@ -2,18 +2,20 @@ name: Deploy to dev env
 
 on:
   push:
-    branches:
-      - master
+    paths:
+      - apps/web/**
+      - apps/backend/**
+    branches: [master]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
       USER: deploy
-      HOST: ${{ secrets.SSH_HOST }}
-      PORT: ${{ secrets.SSH_PORT }}
+      HOST: ${{ secrets.PROD_SSH_HOST }}
+      PORT: ${{ secrets.PROD_SSH_PORT }}
       DIR: /home/deploy/releases
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PRIVATE_KEY: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v4
 
