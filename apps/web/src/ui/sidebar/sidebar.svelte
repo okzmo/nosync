@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { Content } from '@tiptap/core';
 	import Editor from 'ui/editor/editor.svelte';
 	import SolarTrashBin2BoldDuotone from '~icons/solar/trash-bin-2-bold-duotone';
 	import MaterialSymbolsCloseRounded from '~icons/material-symbols/close-rounded';
@@ -10,7 +9,6 @@
 	import { twJoin } from 'tailwind-merge';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
 
-	let content = $state<{ id: string; content?: Content } | undefined>();
 	let title = $state('');
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();
@@ -28,7 +26,6 @@
 	$effect(() => {
 		if (cell.active) {
 			title = cell.active.title;
-			content = { id: cell.active.id, content: cell.active.content };
 		}
 	});
 
@@ -64,18 +61,14 @@
 	<div
 		role="button"
 		tabindex="0"
-		onclick={(e) => {
-			if (e.detail === 2) {
-				editTitle = true;
-			}
-		}}
+		onclick={() => (editTitle = true)}
 		onkeydown={(e) => {
 			if (e.key === 'Enter') {
 				editTitle = true;
 			}
 		}}
 		class={twJoin(
-			'flex h-[3.25rem] w-full items-center justify-between bg-zinc-925 px-3 transition-colors',
+			'flex h-[3.25rem] w-full items-center justify-between bg-zinc-925 px-3 transition-colors hover:cursor-text',
 			!editTitle && ' hover:bg-zinc-900 active:bg-zinc-925'
 		)}
 	>
@@ -111,7 +104,7 @@
 		<p class="select-none text-lg font-bold uppercase">Date:</p>
 		<date class="select-none">{cell.active?.createdAt}</date>
 	</div>
-	<Editor {content} bind:saving />
+	<Editor content={cell.active?.content} bind:saving />
 	<div class="flex w-full items-center justify-between gap-x-3">
 		<div class="flex h-[3rem] flex-1 items-center justify-center bg-zinc-925">
 			{#if saving === 'saving'}

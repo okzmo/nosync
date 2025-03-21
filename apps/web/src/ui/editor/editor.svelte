@@ -2,7 +2,7 @@
 	import { cell } from '$lib/stores/cell.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import { debounce } from '$lib/utils/debounce';
-	import { Editor, type Content } from '@tiptap/core';
+	import { Editor, type JSONContent } from '@tiptap/core';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import TaskItem from '@tiptap/extension-task-item';
 	import TaskList from '@tiptap/extension-task-list';
@@ -13,17 +13,13 @@
 	let element = $state<Element | undefined>();
 
 	type Props = {
-		content?: {
-			id: string;
-			content?: Content;
-		};
+		content?: JSONContent;
 		saving: string;
 		transparent?: boolean;
 		typing?: boolean;
 	};
 
 	let { content, transparent, saving = $bindable(), typing = $bindable() }: Props = $props();
-	$inspect(content);
 
 	function onBlur() {
 		if (!sidebar.editor) return;
@@ -39,6 +35,7 @@
 
 	async function saveOnUpdate() {
 		if (!sidebar.editor) return;
+		if (cell.active?.content) cell.active.content = sidebar.editor.getJSON();
 		await cell.saveContent(
 			sidebar.editor.getJSON(),
 			sidebar.editor.getText().replaceAll('\n', ' ')

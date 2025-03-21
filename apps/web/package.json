@@ -43,6 +43,7 @@
 	},
 	"dependencies": {
 		"@adonisjs/transmit-client": "^1.0.0",
+		"@eslint/js": "^9.22.0",
 		"@fontsource/chivo-mono": "^5.1.1",
 		"@fontsource/rethink-sans": "^5.1.1",
 		"@fontsource/vollkorn": "^5.1.2",
