@@ -57,7 +57,7 @@
 		</button>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
-		<ContextMenuCell elementId={note.id} idx={i} />
+		<ContextMenuCell elementId={note.id} idx={i} type="note" />
 	</ContextMenu.Portal>
 </ContextMenu.Root>
 

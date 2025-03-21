@@ -80,9 +80,9 @@
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
 		<ContextMenuCell
+			type="photo"
 			elementId={photo.id}
 			originalUrl={photo.originalUrl}
-			mimeType={photo.mime}
 			sourceUrl={photo.sourceUrl}
 			idx={i}
 		/>

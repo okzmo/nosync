@@ -77,6 +77,6 @@
 		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
-		<ContextMenuCell elementId={pdf.id} originalUrl={pdf.originalUrl} idx={i} />
+		<ContextMenuCell type="pdf" elementId={pdf.id} originalUrl={pdf.originalUrl} idx={i} />
 	</ContextMenu.Portal>
 </ContextMenu.Root>

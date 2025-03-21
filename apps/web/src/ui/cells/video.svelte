@@ -76,6 +76,6 @@
 		</div>
 	</ContextMenu.Trigger>
 	<ContextMenu.Portal>
-		<ContextMenuCell elementId={video.id} originalUrl={video.originalUrl} idx={i} />
+		<ContextMenuCell type="video" elementId={video.id} originalUrl={video.originalUrl} idx={i} />
 	</ContextMenu.Portal>
 </ContextMenu.Root>

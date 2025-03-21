@@ -11,14 +11,14 @@
 	import { space } from '$lib/stores/space.svelte';
 
 	interface ContextMenuProps {
+		type: 'photo' | 'video' | 'note' | 'pdf';
 		elementId: string;
 		originalUrl?: string;
-		mimeType?: string;
 		sourceUrl?: string | null;
 		idx: number;
 	}
 
-	let { elementId, originalUrl, mimeType, sourceUrl, idx }: ContextMenuProps = $props();
+	let { type, elementId, originalUrl, sourceUrl, idx }: ContextMenuProps = $props();
 
 	function handleMoveTo(branchId: number) {
 		cell.moveTo(elementId, idx, branchId);
@@ -79,7 +79,7 @@
 	class="blurred-bg z-50 w-full min-w-[185px] border border-zinc-50/10  p-1 outline-none"
 >
 	{#if originalUrl}
-		{#if mimeType === 'image/png' || mimeType === 'image/jpeg' || mimeType === 'image/jpg'}
+		{#if type === 'photo'}
 			<ContextMenu.Item
 				class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
 				onclick={copyImageToClipboard}
