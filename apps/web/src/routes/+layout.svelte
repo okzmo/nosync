@@ -6,6 +6,7 @@
 	import '@fontsource/vollkorn';
 	import '@fontsource/vollkorn/400-italic.css';
 	import '../app.css';
+	import '../code.css';
 
 	let { children } = $props();
 </script>

@@ -57,6 +57,14 @@ body {
 		@apply font-semibold;
 	}
 
+	code {
+		@apply border border-zinc-800 bg-zinc-900 px-3 py-2;
+	}
+
+	pre code {
+		@apply block;
+	}
+
 	.editor--bullet-item {
 		li {
 			width: 100%;

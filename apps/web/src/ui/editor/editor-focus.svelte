@@ -7,10 +7,13 @@
 	import TaskItem from '@tiptap/extension-task-item';
 	import TaskList from '@tiptap/extension-task-list';
 	import StarterKit from '@tiptap/starter-kit';
+	import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 	import { onDestroy, onMount } from 'svelte';
 	import { twJoin } from 'tailwind-merge';
+	import { createLowlight, all } from 'lowlight';
 
 	let element = $state<Element | undefined>();
+	const lowlight = createLowlight(all);
 
 	type Props = {
 		content?: {
@@ -63,6 +66,9 @@
 					HTMLAttributes: {
 						class: 'editor--task-item'
 					}
+				}),
+				CodeBlockLowlight.configure({
+					lowlight
 				})
 			],
 			onTransaction: () => {
