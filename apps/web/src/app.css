@@ -27,3 +27,107 @@ body {
 .custom-easing {
 	transition-timing-function: cubic-bezier(0.625, 0.05, 0, 1);
 }
+
+.tiptap {
+	@apply h-full overflow-y-auto bg-zinc-925 p-3;
+
+	scroll-padding-block: 16px;
+
+	& > * {
+		margin-top: 0.5rem;
+	}
+
+	h1 {
+		@apply text-4xl font-bold;
+	}
+
+	h2 {
+		@apply text-3xl font-bold;
+	}
+
+	h3 {
+		@apply text-2xl font-semibold;
+	}
+
+	h4 {
+		@apply text-xl font-semibold;
+	}
+
+	h5 {
+		@apply font-semibold;
+	}
+
+	.editor--bullet-item {
+		li {
+			width: 100%;
+			position: relative;
+			padding-left: 12px;
+		}
+
+		li::before {
+			position: absolute;
+			left: 0;
+			top: 0.65rem;
+			content: '';
+			height: 5px;
+			width: 5px;
+			background-color: #ec5a5a;
+			border-radius: 50%;
+		}
+	}
+
+	p.is-editor-empty:first-child::before {
+		content: attr(data-placeholder);
+		float: left;
+		height: 0;
+		pointer-events: none;
+		@apply text-zinc-50/30;
+	}
+
+	p.is-empty::before {
+		content: attr(data-placeholder);
+		float: left;
+		height: 0;
+		pointer-events: none;
+		@apply text-zinc-50/30;
+	}
+}
+
+.ProseMirror {
+	word-wrap: break-word;
+	white-space: break-spaces;
+}
+
+.ProseMirror-focused {
+	@apply outline-none;
+}
+
+.editor--task-item {
+	@apply mt-[0.5rem] flex gap-x-2;
+	label input[type='checkbox'] {
+		@apply relative rounded-[5px] border-2 border-zinc-50 bg-transparent hover:cursor-pointer;
+	}
+
+	label input[type='checkbox']::before {
+		content: '';
+		@apply absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 scale-0 rounded-[2px] bg-transparent transition-all duration-75;
+	}
+
+	label input[type='checkbox']:checked::before {
+		content: '';
+		@apply scale-100 bg-accent;
+	}
+
+	label input[type='checkbox']:checked {
+		background-image: none;
+		@apply border-2 border-accent bg-transparent;
+	}
+
+	div {
+		@apply min-w-[1px];
+	}
+
+	div p {
+		@apply mt-[1px];
+	}
+}

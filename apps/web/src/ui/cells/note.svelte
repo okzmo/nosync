@@ -85,6 +85,23 @@
 			text-align: left;
 		}
 
+		:global(li) {
+			width: 100%;
+			position: relative;
+			padding-left: 12px;
+		}
+
+		:global(li::before) {
+			position: absolute;
+			left: 0;
+			top: 0.65rem;
+			content: '';
+			height: 5px;
+			width: 5px;
+			background-color: #ec5a5a;
+			border-radius: 50%;
+		}
+
 		:global([data-type='taskList']) {
 			margin-top: 0.3rem;
 		}
