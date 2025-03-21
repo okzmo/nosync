@@ -23,7 +23,6 @@
 	};
 
 	let { content, typing = $bindable() }: Props = $props();
-	$inspect(content);
 
 	function onBlur() {
 		if (!sidebar.editorFocusmode) return;

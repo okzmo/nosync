@@ -158,12 +158,15 @@ importers:
       '@eslint/js':
         specifier: ^9.22.0
         version: 9.22.0
+      '@fontsource/be-vietnam-pro':
+        specifier: ^5.2.5
+        version: 5.2.5
       '@fontsource/chivo-mono':
         specifier: ^5.1.1
         version: 5.1.1
-      '@fontsource/rethink-sans':
-        specifier: ^5.1.1
-        version: 5.1.1
+      '@fontsource/instrument-sans':
+        specifier: ^5.2.5
+        version: 5.2.5
       '@fontsource/vollkorn':
         specifier: ^5.1.2
         version: 5.1.2
@@ -1112,11 +1115,14 @@ packages:
   '@floating-ui/utils@0.2.9':
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
 
+  '@fontsource/be-vietnam-pro@5.2.5':
+    resolution: {integrity: sha512-spcbpapmKlfKjNz2jW7y2Vkb3SE0N61b2duYm/lTZZk7bg9btJ3ZVFcyZrgHWUYf5bESspmPy2XEdDa8J+cs4Q==}
+
   '@fontsource/chivo-mono@5.1.1':
     resolution: {integrity: sha512-bCF7AsCIUnhhXkUqiMCmfa38cOY3myjjAuVosDoaYrSL5LSLnPA/VP6PfqTQOfTIlAZm+cAA08bkqgqizXT8gg==}
 
-  '@fontsource/rethink-sans@5.1.1':
-    resolution: {integrity: sha512-dkRAHf1S9KVfqYxEu0rU9/i/aUr9dkA9QF2BHEv7dW8hf7bm0bGXLUGxcWm34PMXktlNNmO/xJydTor03qtjkg==}
+  '@fontsource/instrument-sans@5.2.5':
+    resolution: {integrity: sha512-+u6WgD2gZfjEnMKwRZ0D/CizoF0n3sLIT+cQtqJrnmWh2xhcF35xl06vA2uCTBF/CiYKgNmm1AVWBqURY/aJ2w==}
 
   '@fontsource/vollkorn@5.1.2':
     resolution: {integrity: sha512-BEq/zSwf6eixErSxxyFgthWwwDiz/Jo1fSn3VD49Ieb9EKwOnAOQMh2TQDjOvkX9bXy7imaqTd+c59iSwootJQ==}
@@ -7172,9 +7178,11 @@ snapshots:
 
   '@floating-ui/utils@0.2.9': {}
 
+  '@fontsource/be-vietnam-pro@5.2.5': {}
+
   '@fontsource/chivo-mono@5.1.1': {}
 
-  '@fontsource/rethink-sans@5.1.1': {}
+  '@fontsource/instrument-sans@5.2.5': {}
 
   '@fontsource/vollkorn@5.1.2': {}
 

@@ -8,7 +8,7 @@ export default {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['Rethink Sans', 'sans-serif'],
+				sans: ['Instrument Sans', 'sans-serif'],
 				serif: ['Vollkorn', 'serif'],
 				code: ['Chivo Mono', 'sans-serif']
 			},
