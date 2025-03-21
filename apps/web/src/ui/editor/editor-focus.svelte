@@ -54,6 +54,14 @@
 			onBlur: onBlur,
 			onUpdate: onUpdate,
 			content: content?.content,
+			editorProps: {
+				attributes: {
+					spellcheck: 'false',
+					autocomplete: 'false',
+					autocorrect: 'false',
+					autocapitalize: 'false'
+				}
+			},
 			extensions: [
 				StarterKit.configure({
 					dropcursor: false,

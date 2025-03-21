@@ -95,6 +95,7 @@
 </script>
 
 <div
+	spellcheck="false"
 	class={twJoin(
 		'flex-1 overflow-y-auto',
 		transparent && '[&>div]:!bg-transparent [&>div]:!p-0 [&>div]:!pb-8'
