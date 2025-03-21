@@ -21,7 +21,13 @@
 	$effect(() => {
 		if (note.content) {
 			content = generateHTML(note.content, [
-				StarterKit,
+				StarterKit.configure({
+					bulletList: {
+						HTMLAttributes: {
+							class: 'editor--bullet-item'
+						}
+					}
+				}),
 				TaskList,
 				TaskItem.configure({
 					nested: true,
@@ -85,13 +91,13 @@
 			text-align: left;
 		}
 
-		:global(li) {
+		:global(.editor--bullet-item li) {
 			width: 100%;
 			position: relative;
 			padding-left: 12px;
 		}
 
-		:global(li::before) {
+		:global(.editor--bullet-item li::before) {
 			position: absolute;
 			left: 0;
 			top: 0.65rem;
@@ -109,6 +115,14 @@
 		:global(.editor--task-item) {
 			margin-top: 0.2rem;
 			pointer-events: none;
+		}
+
+		:global(code) {
+			@apply border border-zinc-800 bg-zinc-900 px-3 py-2;
+		}
+
+		:global(pre code) {
+			@apply block;
 		}
 	}
 </style>

@@ -10,10 +10,9 @@
 	import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
 	import { onDestroy, onMount } from 'svelte';
 	import { twJoin } from 'tailwind-merge';
-	import { createLowlight, all } from 'lowlight';
+	import { lowlight } from './editor.svelte';
 
 	let element = $state<Element | undefined>();
-	const lowlight = createLowlight(all);
 
 	type Props = {
 		content?: {
@@ -76,7 +75,10 @@
 					}
 				}),
 				CodeBlockLowlight.configure({
-					lowlight
+					lowlight,
+					HTMLAttributes: {
+						class: 'focusEditor--code-block'
+					}
 				})
 			],
 			onTransaction: () => {

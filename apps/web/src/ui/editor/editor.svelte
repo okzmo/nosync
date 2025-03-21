@@ -1,3 +1,7 @@
+<script lang="ts" module>
+	export const lowlight = createLowlight(all);
+</script>
+
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
@@ -13,7 +17,6 @@
 	import { createLowlight, all } from 'lowlight';
 
 	let element = $state<Element | undefined>();
-	const lowlight = createLowlight(all);
 
 	type Props = {
 		content?: JSONContent;
