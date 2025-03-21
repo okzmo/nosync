@@ -1,50 +1,50 @@
-name: Deploy to dev env
-
-on:
-  push:
-    paths:
-      - apps/web/**
-      - apps/backend/**
-    branches: []
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    env:
-      USER: deploy
-      HOST: ${{ secrets.SSH_HOST }}
-      DIR: /home/deploy/releases
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: pnpm/action-setup@v4
-
-      - name: Install dependencies step
-        run: |
-          pnpm i
-
-      - name: Build step
-        run: |
-          pnpm build-dev
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p 222 -H $HOST >> ~/.ssh/known_hosts
-          ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
-
-      - name: Send backend to VPS
-        run: |
-          rsync -avz -e 'ssh -p 222 -i ~/.ssh/id_rsa' --progress apps/backend/build/ $USER@$HOST:$DIR/back-$GITHUB_SHA/
-
-      - name: Send frontend to VPS
-        run: |
-          rsync -avz -e 'ssh -p 222 -i ~/.ssh/id_rsa' --progress apps/web/build/ $USER@$HOST:$DIR/front-$GITHUB_SHA/
-
-      - name: Deploy
-        run: |
-          ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./infra/scripts/deploy-dev.sh $GITHUB_SHA
+# name: Deploy to dev env
+#
+# on:
+#   push:
+#     paths:
+#       - apps/web/**
+#       - apps/backend/**
+#     branches: [dev]
+#
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     env:
+#       USER: deploy
+#       HOST: ${{ secrets.SSH_HOST }}
+#       DIR: /home/deploy/releases
+#       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#     steps:
+#       - uses: actions/checkout@v4
+#
+#       - name: Setup Node
+#         uses: pnpm/action-setup@v4
+#
+#       - name: Install dependencies step
+#         run: |
+#           pnpm i
+#
+#       - name: Build step
+#         run: |
+#           pnpm build-dev
+#
+#       - name: Setup SSH
+#         run: |
+#           mkdir -p ~/.ssh
+#           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+#           chmod 600 ~/.ssh/id_rsa
+#           ssh-keyscan -p 222 -H $HOST >> ~/.ssh/known_hosts
+#           ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST mkdir -p $DIR
+#
+#       - name: Send backend to VPS
+#         run: |
+#           rsync -avz -e 'ssh -p 222 -i ~/.ssh/id_rsa' --progress apps/backend/build/ $USER@$HOST:$DIR/back-$GITHUB_SHA/
+#
+#       - name: Send frontend to VPS
+#         run: |
+#           rsync -avz -e 'ssh -p 222 -i ~/.ssh/id_rsa' --progress apps/web/build/ $USER@$HOST:$DIR/front-$GITHUB_SHA/
+#
+#       - name: Deploy
+#         run: |
+#           ssh -p 222 -o KexAlgorithms=curve25519-sha256@libssh.org -i ~/.ssh/id_rsa $USER@$HOST 'bash -s' < ./infra/scripts/deploy-dev.sh $GITHUB_SHA
