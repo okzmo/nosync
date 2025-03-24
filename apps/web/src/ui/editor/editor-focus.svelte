@@ -2,7 +2,7 @@
 	import { cell } from '$lib/stores/cell.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import { debounce } from '$lib/utils/debounce';
-	import { Editor, type Content } from '@tiptap/core';
+	import { Editor, type JSONContent } from '@tiptap/core';
 	import Placeholder from '@tiptap/extension-placeholder';
 	import TaskItem from '@tiptap/extension-task-item';
 	import TaskList from '@tiptap/extension-task-list';
@@ -15,10 +15,7 @@
 	let element = $state<Element | undefined>();
 
 	type Props = {
-		content?: {
-			id: string;
-			content?: Content;
-		};
+		content?: JSONContent;
 		typing?: boolean;
 	};
 
@@ -44,14 +41,19 @@
 			sidebar.editorFocusmode.getJSON(),
 			sidebar.editorFocusmode.getText().replaceAll('\n', ' ')
 		);
+
+		if (cell.active?.content) cell.active.content = sidebar.editorFocusmode.getJSON();
 	}
 
 	onMount(() => {
 		sidebar.editorFocusmode = new Editor({
 			element: element,
+			onFocus: () => {
+				sidebar.editorFocusmode?.commands.setContent(content || null);
+			},
 			onBlur: onBlur,
 			onUpdate: onUpdate,
-			content: content?.content,
+			content: content,
 			editorProps: {
 				attributes: {
 					spellcheck: 'false',
@@ -63,7 +65,8 @@
 			extensions: [
 				StarterKit.configure({
 					dropcursor: false,
-					gapcursor: false
+					gapcursor: false,
+					codeBlock: false
 				}),
 				Placeholder.configure({ placeholder: 'Write something...' }),
 				TaskList,
@@ -90,10 +93,6 @@
 		if (sidebar.editorFocusmode) {
 			sidebar.editorFocusmode.destroy();
 		}
-	});
-
-	$effect(() => {
-		sidebar.editorFocusmode?.commands.setContent(content?.content || null);
 	});
 </script>
 

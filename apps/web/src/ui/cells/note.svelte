@@ -48,6 +48,7 @@
 				cell.activeIdx = i;
 				cell.active = note;
 				sidebar.open();
+				sidebar.editor?.commands.focus();
 			}}
 			class="group absolute flex flex-col items-start justify-start overflow-hidden bg-zinc-925 px-6 py-4 shadow-xl transition-colors after:absolute after:left-0 after:top-0 after:h-full after:w-full after:content-normal after:bg-gradient-to-t after:from-zinc-925 after:to-transparent hover:bg-zinc-900"
 			style="height: {note.height}px; width: {note.width}px; transform: translate({note.x}px, {note.y}px);"

@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
-	import type { Content } from '@tiptap/core';
 	import { expoInOut } from 'svelte/easing';
 	import { scale } from 'svelte/transition';
 	import { twJoin } from 'tailwind-merge';
@@ -9,8 +8,10 @@
 	import MaterialSymbolsArrowBackRounded from '~icons/material-symbols/arrow-back-rounded';
 
 	let title = $state('');
-	let content = $state<{ id: string; content?: Content } | undefined>();
 	let typing = $state(false);
+	let content = $derived.by(() => {
+		return cell.active?.content;
+	});
 
 	function handleBlur() {
 		cell.saveTitle(title);
@@ -19,7 +20,6 @@
 	$effect(() => {
 		if (cell.active) {
 			title = cell.active.title;
-			content = { id: cell.active.id, content: cell.active.content };
 		}
 	});
 </script>

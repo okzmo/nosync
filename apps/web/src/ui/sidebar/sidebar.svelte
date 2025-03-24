@@ -13,6 +13,9 @@
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();
 	let saving = $state('onhold');
+	let content = $derived.by(() => {
+		return cell.active?.content;
+	});
 
 	function deleteActiveCell() {
 		if (!cell.active) return;
@@ -104,7 +107,7 @@
 		<p class="select-none text-lg font-bold uppercase">Date:</p>
 		<date class="select-none">{cell.active?.createdAt}</date>
 	</div>
-	<Editor content={cell.active?.content} bind:saving />
+	<Editor {content} bind:saving />
 	<div class="flex w-full items-center justify-between gap-x-3">
 		<div class="flex h-[3rem] flex-1 items-center justify-center bg-zinc-925">
 			{#if saving === 'saving'}
@@ -118,6 +121,7 @@
 				editTitle = false;
 				sidebar.close();
 				sidebar.toggleFocusMode();
+				sidebar.editorFocusmode?.commands.focus();
 			}}
 			aria-label="Focus this cell"
 			class="flex h-[3rem] w-[3rem] items-center justify-center bg-zinc-925 text-zinc-50/50 transition-colors hover:text-zinc-50"

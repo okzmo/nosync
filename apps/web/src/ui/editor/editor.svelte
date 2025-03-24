@@ -41,7 +41,6 @@
 
 	async function saveOnUpdate() {
 		if (!sidebar.editor) return;
-		if (cell.active?.content) cell.active.content = sidebar.editor.getJSON();
 		await cell.saveContent(
 			sidebar.editor.getJSON(),
 			sidebar.editor.getText().replaceAll('\n', ' ')
@@ -50,17 +49,31 @@
 		setTimeout(() => {
 			saving = 'onhold';
 		}, 2000);
+
+		if (cell.active?.content) cell.active.content = sidebar.editor.getJSON();
 	}
 
 	onMount(() => {
 		sidebar.editor = new Editor({
 			element: element,
+			onFocus: () => {
+				sidebar.editor?.commands.setContent(content || null);
+			},
 			onBlur: onBlur,
 			onUpdate: onUpdate,
-			content: content?.content,
+			content: content,
+			editorProps: {
+				attributes: {
+					spellcheck: 'false',
+					autocomplete: 'false',
+					autocorrect: 'false',
+					autocapitalize: 'false'
+				}
+			},
 			extensions: [
 				StarterKit.configure({
 					dropcursor: false,
+					codeBlock: false,
 					gapcursor: false,
 					bulletList: {
 						HTMLAttributes: {
@@ -92,9 +105,9 @@
 		}
 	});
 
-	$effect(() => {
-		sidebar.editor?.commands.setContent(content?.content || null);
-	});
+	// 	$effect(() => {
+	// 		sidebar.editor?.commands.setContent(content || null);
+	// 	});
 </script>
 
 <div
