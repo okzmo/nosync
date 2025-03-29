@@ -3,7 +3,7 @@
 	import { space } from '$lib/stores/space.svelte';
 	import { onDestroy, onMount } from 'svelte';
 
-	onMount(async () => {
+	onMount(() => {
 		document.addEventListener('dragenter', dropzone.handleDragEnter);
 		document.addEventListener('dragover', dropzone.handleDragOver);
 		document.addEventListener('dragleave', dropzone.handleDragLeave);

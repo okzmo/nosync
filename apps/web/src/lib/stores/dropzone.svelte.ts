@@ -36,7 +36,7 @@ class DropZone {
 			e.dataTransfer?.getData('text/x-moz-url');
 		const sourceUrl = uri;
 
-		if (uri?.split('/').at(-1)?.lastIndexOf('.') === -1) {
+		if (uri !== '' && uri?.split('/').at(-1)?.lastIndexOf('.') === -1) {
 			const html = e.dataTransfer?.getData('text/html');
 			if (!html) return;
 			const parser = new DOMParser();
@@ -45,7 +45,7 @@ class DropZone {
 			uri = img.srcset.split(',').at(-1)?.trim().split(' ')?.[0] || img?.src;
 		}
 
-		if (uri) {
+		if (uri && sourceUrl) {
 			await uploadMediaFromExt(sourceUrl, uri);
 		} else {
 			await uploadMedia(e.dataTransfer?.items, e.dataTransfer?.files);
