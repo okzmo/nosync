@@ -1,6 +1,13 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@font-face {
+	font-family: 'Holimount';
+	font-weight: 400;
+	src: url('/fonts/Holimount.otf') format('opentype');
+}
+
 .progressive-blur {
 	@apply fixed h-[400px] w-full bg-zinc-950/75 backdrop-blur-3xl;
 }
