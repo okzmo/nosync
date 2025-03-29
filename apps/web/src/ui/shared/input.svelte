@@ -30,7 +30,7 @@
 
 <div class={twJoin('flex items-center gap-x-1', classes)}>
 	<Label
-		class={twJoin('pl-3 text-sm text-zinc-50/35 transition-colors', inputError && '!text-red-500')}
+		class={twJoin('pl-2 text-sm text-zinc-50/35 transition-colors', inputError && '!text-red-500')}
 	>
 		{label}
 	</Label>
@@ -41,7 +41,7 @@
 </div>
 <div
 	class={twJoin(
-		'relative mt-[0.35rem] overflow-hidden rounded-2xl border border-zinc-50/15 transition-colors',
+		'relative mt-[0.35rem] overflow-hidden border border-zinc-50/15 transition-colors',
 		Icon && 'pl-9'
 	)}
 >

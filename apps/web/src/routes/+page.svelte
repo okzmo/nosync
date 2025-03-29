@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { VERSION } from '$lib/constants/version';
 	import { Dialog } from 'bits-ui';
 	import SLink from 'ui/changelogs/section-link.svelte';
 	import Section from 'ui/changelogs/section.svelte';
@@ -51,7 +52,7 @@
 						<span class="mix-blend-soft-light">Presentation</span>
 					</h2>
 					<p class="mx-5 w-fit border border-accent bg-accent/20 px-2 py-1 text-sm text-accent">
-						v0.1.0
+						v{VERSION}
 					</p>
 					<Section title="What's nosync ?">
 						Nosync offers a comprehensive solution for managing a wide range of content, including
