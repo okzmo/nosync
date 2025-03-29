@@ -6,7 +6,10 @@ export const load = async ({ url }) => {
 	if (!browser) return;
 	await auth.check();
 
-	const [, spaceName, branchName] = url.pathname.split('/');
+	const splitUrl = url.pathname.split('/');
+	const spaceName = decodeURIComponent(splitUrl[1]);
+	const branchName = decodeURIComponent(splitUrl[2]);
+
 	const { s, b } = space.has(spaceName, branchName);
 
 	if (spaceName && branchName && s && b) {
