@@ -66,7 +66,12 @@
 				StarterKit.configure({
 					dropcursor: false,
 					gapcursor: false,
-					codeBlock: false
+					codeBlock: false,
+					bulletList: {
+						HTMLAttributes: {
+							class: 'editor--bullet-item'
+						}
+					}
 				}),
 				Placeholder.configure({ placeholder: 'Write something...' }),
 				TaskList,

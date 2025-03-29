@@ -105,8 +105,8 @@
 			content: '';
 			height: 5px;
 			width: 5px;
-			background-color: #ec5a5a;
 			border-radius: 50%;
+			@apply bg-accent;
 		}
 
 		:global([data-type='taskList']) {
