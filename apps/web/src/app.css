@@ -26,8 +26,8 @@ body {
 
 ::-moz-selection {
 	/* Code for Firefox */
-	color: #ec5a5a;
-	background: #ec5a5a1f;
+	color: #ee6930;
+	background: #ee69301f;
 }
 
 .custom-easing {
