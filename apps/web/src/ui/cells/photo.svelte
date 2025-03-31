@@ -24,12 +24,14 @@
 				cell.activeIdx = i;
 				cell.active = photo;
 				sidebar.open();
+				sidebar.editor?.commands.focus();
 			}}
 			onkeydown={(e) => {
 				if (e.key === 'Enter') {
 					cell.activeIdx = i;
 					cell.active = photo;
 					sidebar.open();
+					sidebar.editor?.commands.focus();
 				}
 			}}
 			class="group absolute overflow-hidden shadow-xl before:absolute before:inset-0 before:content-normal before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
