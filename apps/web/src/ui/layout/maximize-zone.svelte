@@ -6,6 +6,8 @@
 	import { expoOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 	import VideoPlayer from 'ui/video-player/video-player.svelte';
+	import * as pdfjsLib from 'pdfjs-dist';
+	import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 
 	let width = $state(0);
 
@@ -86,7 +88,7 @@
 				src={cell.maximized.originalUrl}
 				width={800}
 				height={1000}
-				class="fixed left-1/2 top-1/2 z-[998] -translate-x-1/2 -translate-y-1/2 overflow-hidden border border-black before:absolute before:left-0 before:top-0 before:z-[11] before:h-full before:w-full before:content-normal before:border before:border-zinc-50/15"
+				class="fixed left-1/2 top-1/2 z-[998] h-[85%] -translate-x-1/2 -translate-y-1/2 overflow-hidden border border-black before:absolute before:left-0 before:top-0 before:z-[11] before:h-full before:w-full before:content-normal before:border before:border-zinc-50/15"
 			/>
 		{/if}
 	</div>

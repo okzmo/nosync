@@ -67,7 +67,6 @@
 		"lowlight": "^3.3.0",
 		"pdfjs-dist": "^4.10.38",
 		"set-cookie-parser": "^2.7.1",
-		"svelte-bricks": "^0.2.1",
 		"sveltekit-superforms": "^2.23.1",
 		"tailwind-merge": "^2.6.0",
 		"vaul-svelte": "1.0.0-next.3",

@@ -29,7 +29,7 @@
 		if (!fileName || !originalUrl) return;
 
 		const a = document.createElement('a');
-		a.href = originalUrl;
+		a.href = `${originalUrl}?response-content-disposition=attachment`;
 		a.download = fileName;
 		document.body.appendChild(a);
 		a.click();
