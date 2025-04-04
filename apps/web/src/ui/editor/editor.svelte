@@ -28,9 +28,10 @@
 	let { content, transparent, saving = $bindable(), typing = $bindable() }: Props = $props();
 
 	function onBlur() {
-		if (!sidebar.editor) return;
+		if (!sidebar.editor || saving === 'onhold') return;
 		cell.saveContent(sidebar.editor.getJSON(), sidebar.editor.getText().replaceAll('\n', ' '));
 		typing = false;
+		if (cell.active?.content) cell.active.content = sidebar.editor.getJSON();
 	}
 
 	function onUpdate() {
@@ -49,19 +50,14 @@
 		setTimeout(() => {
 			saving = 'onhold';
 		}, 2000);
-
-		if (cell.active?.content) cell.active.content = sidebar.editor.getJSON();
 	}
 
 	onMount(() => {
 		sidebar.editor = new Editor({
 			element: element,
-			onFocus: () => {
-				sidebar.editor?.commands.setContent(content || null);
-			},
 			onBlur: onBlur,
 			onUpdate: onUpdate,
-			content: content,
+			content: null,
 			editorProps: {
 				attributes: {
 					spellcheck: 'false',
@@ -105,9 +101,11 @@
 		}
 	});
 
-	// 	$effect(() => {
-	// 		sidebar.editor?.commands.setContent(content || null);
-	// 	});
+	$effect(() => {
+		if (cell.active?.id) {
+			sidebar.editor?.commands.setContent(content || null);
+		}
+	});
 </script>
 
 <div

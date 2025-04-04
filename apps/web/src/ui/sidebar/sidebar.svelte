@@ -8,14 +8,13 @@
 	import { cell } from '$lib/stores/cell.svelte';
 	import { twJoin } from 'tailwind-merge';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
+	import type { JSONContent } from '@tiptap/core';
 
-	let title = $state('');
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();
 	let saving = $state('onhold');
-	let content = $derived.by(() => {
-		return cell.active?.content;
-	});
+	let title = $state('');
+	let content = $state<JSONContent | undefined>();
 
 	function deleteActiveCell() {
 		if (!cell.active) return;
@@ -29,6 +28,7 @@
 	$effect(() => {
 		if (cell.active) {
 			title = cell.active.title;
+			content = cell.active.content;
 		}
 	});
 
