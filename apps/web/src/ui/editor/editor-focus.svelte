@@ -17,20 +17,23 @@
 	type Props = {
 		content?: JSONContent;
 		typing?: boolean;
+		saving?: string;
 	};
 
-	let { content, typing = $bindable() }: Props = $props();
+	let { content, saving, typing = $bindable() }: Props = $props();
 
 	function onBlur() {
-		if (!sidebar.editorFocusmode) return;
+		if (!sidebar.editorFocusmode || saving === 'onhold') return;
 		cell.saveContent(
 			sidebar.editorFocusmode.getJSON(),
 			sidebar.editorFocusmode.getText().replaceAll('\n', ' ')
 		);
 		typing = false;
+		if (cell.active?.content) cell.active.content = sidebar.editorFocusmode.getJSON();
 	}
 
 	function onUpdate() {
+		saving = 'saving';
 		typing = true;
 		debounce(saveOnUpdate, 1000);
 	}
@@ -41,16 +44,15 @@
 			sidebar.editorFocusmode.getJSON(),
 			sidebar.editorFocusmode.getText().replaceAll('\n', ' ')
 		);
-
-		if (cell.active?.content) cell.active.content = sidebar.editorFocusmode.getJSON();
+		saving = 'saved';
+		setTimeout(() => {
+			saving = 'onhold';
+		}, 1000);
 	}
 
 	onMount(() => {
 		sidebar.editorFocusmode = new Editor({
 			element: element,
-			onFocus: () => {
-				sidebar.editorFocusmode?.commands.setContent(content || null);
-			},
 			onBlur: onBlur,
 			onUpdate: onUpdate,
 			content: content,
@@ -97,6 +99,12 @@
 	onDestroy(() => {
 		if (sidebar.editorFocusmode) {
 			sidebar.editorFocusmode.destroy();
+		}
+	});
+
+	$effect(() => {
+		if (cell.active?.id) {
+			sidebar.editorFocusmode?.commands.setContent(content || null);
 		}
 	});
 </script>

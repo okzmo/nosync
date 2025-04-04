@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
+	import type { JSONContent } from '@tiptap/core';
 	import { expoInOut } from 'svelte/easing';
 	import { scale } from 'svelte/transition';
 	import { twJoin } from 'tailwind-merge';
@@ -9,9 +10,7 @@
 
 	let title = $state('');
 	let typing = $state(false);
-	let content = $derived.by(() => {
-		return cell.active?.content;
-	});
+	let content = $state<JSONContent | undefined>();
 
 	function handleBlur() {
 		cell.saveTitle(title);
@@ -20,6 +19,7 @@
 	$effect(() => {
 		if (cell.active) {
 			title = cell.active.title;
+			content = cell.active.content;
 		}
 	});
 </script>
