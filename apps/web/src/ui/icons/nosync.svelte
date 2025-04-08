@@ -43,7 +43,7 @@
 		/>
 	</svg>
 	<h2
-		class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[10deg] font-signature text-9xl"
+		class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[10deg] font-signature text-7xl lg:text-9xl"
 	>
 		Okzmo
 	</h2>

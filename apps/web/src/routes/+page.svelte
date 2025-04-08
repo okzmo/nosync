@@ -9,9 +9,11 @@
 
 <main class="h-screen w-screen bg-accent">
 	<h1 class="sr-only">Nosync</h1>
-	<div class="fixed left-1/2 top-1/2 mt-6 -translate-x-1/2 -translate-y-1/2">
-		<Nosync class="not-sr-only" width={940} />
-		<p class="relative mt-6 font-medium text-hometext md:max-w-[44rem]">
+	<div
+		class="fixed mx-3 mt-2 lg:left-1/2 lg:top-1/2 lg:mx-0 lg:mt-6 lg:-translate-x-1/2 lg:-translate-y-1/2"
+	>
+		<Nosync class="not-sr-only w-full lg:w-[940px]" />
+		<p class="relative mt-4 font-medium text-hometext md:max-w-[44rem] lg:mt-6">
 			My work, my life, my notes, my memories, nosync exist simply because I wanted to keep all that
 			close by in a simple app with a gorgeous interface that I can expand as much as I want.
 			Keeping that to myself felt like a waste, so here it is. No marketing, no ads, no bullshit.
@@ -21,7 +23,7 @@
 
 	<Noise animation={false} />
 
-	<div class="hidden md:block">
+	<div class="hidden lg:block">
 		<span class="fixed left-2 top-2 h-2 w-8 bg-hometext"></span>
 		<span class="fixed -left-1 top-5 h-2 w-8 rotate-90 bg-hometext"></span>
 		<span class="fixed right-2 top-2 h-2 w-8 bg-hometext"></span>
