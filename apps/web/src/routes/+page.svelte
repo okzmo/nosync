@@ -13,7 +13,9 @@
 		class="fixed mx-3 mt-2 lg:left-1/2 lg:top-1/2 lg:mx-0 lg:mt-6 lg:-translate-x-1/2 lg:-translate-y-1/2"
 	>
 		<Nosync class="not-sr-only w-full lg:w-[940px]" />
-		<p class="relative mt-4 font-medium text-hometext md:max-w-[44rem] lg:mt-6">
+		<p
+			class="relative mt-4 font-medium text-hometext selection:bg-hometext selection:text-accent md:max-w-[44rem] lg:mt-6"
+		>
 			My work, my life, my notes, my memories, nosync exist simply because I wanted to keep all that
 			close by in a simple app with a gorgeous interface that I can expand as much as I want.
 			Keeping that to myself felt like a waste, so here it is. No marketing, no ads, no bullshit.
