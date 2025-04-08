@@ -39,7 +39,7 @@
 
 	<a
 		href="/signin"
-		class="group fixed bottom-4 left-1/2 -translate-x-1/2 font-home text-4xl uppercase text-hometext/50 transition-colors duration-75 hover:text-hometext"
+		class="group fixed bottom-4 left-1/2 -translate-x-1/2 select-none font-home text-4xl uppercase text-hometext/50 transition-colors duration-75 hover:text-hometext"
 	>
 		Join
 		<div
