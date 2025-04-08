@@ -41,7 +41,7 @@
 </div>
 <div
 	class={twJoin(
-		'relative mt-[0.35rem] overflow-hidden border border-zinc-50/15 transition-colors',
+		'relative mt-[0.35rem] overflow-hidden border border-zinc-50/15 transition-colors focus-within:border-accent',
 		Icon && 'pl-9'
 	)}
 >

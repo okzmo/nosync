@@ -11,10 +11,12 @@ export default {
 				sans: ['Instrument Sans', 'sans-serif'],
 				serif: ['Vollkorn', 'serif'],
 				code: ['Chivo Mono', 'sans-serif'],
-				signature: ['Holimount', 'sans-serif']
+				signature: ['Holimount', 'sans-serif'],
+				home: ['BebasNeue', 'sans-serif']
 			},
 			colors: {
-				accent: '#EE6930',
+				hometext: '#171718',
+				accent: '#C23314',
 				zinc: {
 					950: '#0A0A0A',
 					925: '#131314',

@@ -8,7 +8,7 @@ function onClickExtensionSavePage(tab) {
 
 browser.contextMenus.onClicked.addListener(genericOnClick);
 
-const SPECIAL_CASES = ["cosmos.so"];
+const SPECIAL_CASES = ["cosmos.so", "pinimg.com"];
 
 async function genericOnClick(info) {
   const [space, branch] = info.menuItemId.split(":");
@@ -20,28 +20,49 @@ async function genericOnClick(info) {
     fromUrl: info.linkUrl || info.pageUrl,
   };
 
-  // SPECIAL_CASES.forEach((website) => {
-  //   if (info.pageUrl.includes(website) || info.linkUrl.includes(website)) {
-  //     const url = specialCase(website);
-  //     body.mediaUrl = url;
-  //   }
-  // });
-
-  await fetch("https://api.nosync.app/v1/branch/extension/add", {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
+  SPECIAL_CASES.forEach(async (website) => {
+    if (info.srcUrl.includes(website)) {
+      switch (website) {
+        case "pinimg.com":
+          const split = info.srcUrl.slice(8).split("/");
+          split[1] = "originals";
+          const file = split[split.length - 1].split(".");
+          split[split.length - 1] = `${file[0]}.jpg`;
+          body.mediaUrl = `https://${split.join("/")}`;
+          const error = await upload(body);
+          if (error) {
+            split[split.length - 1] = `${file[0]}.png`;
+            body.mediaUrl = `https://${split.join("/")}`;
+            upload(body);
+          }
+          break;
+        default:
+          console.log("Not handled yet");
+      }
+    }
   });
 }
 
-// function specialCase(website) {
-//   switch (website) {
-//     case "cosmos.so":
-//       break;
-//   }
-// }
+async function upload(body) {
+  if (body.mediaUrl === "") return;
+
+  const response = await fetch(
+    "https://api.nosync.app/v1/branch/extension/add",
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    },
+  );
+
+  if (!response.ok && response.status === 500) {
+    return true;
+  }
+
+  return false;
+}
 
 browser.runtime.onInstalled.addListener(async () => {
   const res = await fetch("https://api.nosync.app/v1/auth/valid");
@@ -51,7 +72,7 @@ browser.runtime.onInstalled.addListener(async () => {
 
   browser.contextMenus.create({
     title: "Save to Nosync",
-    contexts: ["link", "image", "selection"],
+    contexts: ["image"],
     id: `${firstSpace.id}:${firstBranch.id}`,
   });
 
