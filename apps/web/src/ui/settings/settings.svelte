@@ -7,10 +7,9 @@
 	import ChangePassword from './changePassword.svelte';
 	import MaterialSymbolsCloseRounded from '~icons/material-symbols/close-rounded';
 
-	let tab = $state('profile');
+	let tab = $state('account');
 
 	const LINKS = [
-		{ title: 'Profile', tab: 'profile' },
 		{ title: 'Account', tab: 'account' },
 		{ title: 'Password', tab: 'password' }
 	];

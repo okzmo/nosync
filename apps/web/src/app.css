@@ -8,6 +8,12 @@
 	src: url('/fonts/Holimount.otf') format('opentype');
 }
 
+@font-face {
+	font-family: 'BebasNeue';
+	font-weight: 400;
+	src: url('/fonts/BebasNeue-Regular.ttf');
+}
+
 .progressive-blur {
 	@apply fixed h-[400px] w-full bg-zinc-950/75 backdrop-blur-3xl;
 }
