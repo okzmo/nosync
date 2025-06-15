@@ -107,9 +107,9 @@ class Branch {
 			(branch) => branch.name.toLowerCase() === branchName.toLowerCase()
 		);
 		if (existingBranch) {
+			this.cells = undefined;
 			await space.goto(space.currentSpace!, existingBranch);
 			this.changingBranch = false;
-			this.cells = undefined;
 
 			return;
 		}
