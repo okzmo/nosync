@@ -3,7 +3,7 @@
 </script>
 
 <div
-	class="noise pointer-events-none fixed left-0 top-0 z-[1000] h-screen w-screen"
+	class="noise pointer-events-none fixed left-0 top-0 z-[1000] h-screen w-screen opacity-0"
 	style="opacity: {opacity};"
 	class:noise-animate={animation}
 ></div>
@@ -11,7 +11,6 @@
 <style>
 	.noise {
 		background: transparent url('../../assets/noise.png');
-		opacity: 1;
 		filter: contrast(2);
 		visibility: visible;
 	}

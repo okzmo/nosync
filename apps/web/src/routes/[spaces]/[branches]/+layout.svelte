@@ -29,7 +29,7 @@
 <Search />
 
 <Backdrop />
-<Noise />
+<Noise animation={false} opacity={0.15} />
 
 {#if page.state.showSettings}
 	<Settings />
