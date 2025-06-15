@@ -21,19 +21,17 @@
 	const shownCells = $derived.by(async () => {
 		if (!mainStore.ready) return [];
 
-		console.time('getting cells');
-		const { data, error } = await tuyau.v1.branch
-			.cells({ branchId: '' + space.currentBranch?.id })
-			.$get();
+		if (!branch.cells) {
+			const { data, error } = await tuyau.v1.branch
+				.cells({ branchId: '' + space.currentBranch?.id })
+				.$get();
 
-		if (error) {
-			console.error(error);
+			if (error) {
+				console.error(error);
+			}
+
+			branch.cells = data as ApiCell[];
 		}
-		console.timeEnd('getting cells');
-
-		console.time('processing cells');
-		branch.cells = data as ApiCell[];
-		console.timeEnd('processing cells');
 
 		return branch.processCells(branch.cells);
 	});
