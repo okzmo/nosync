@@ -6,8 +6,6 @@
 	import { expoOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 	import VideoPlayer from 'ui/video-player/video-player.svelte';
-	import * as pdfjsLib from 'pdfjs-dist';
-	import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 
 	let width = $state(0);
 

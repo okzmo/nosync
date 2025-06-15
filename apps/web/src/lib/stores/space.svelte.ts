@@ -107,11 +107,11 @@ class Space {
 		if (!branch) {
 			const first_branch = space.branches[0];
 			this.currentBranch = first_branch;
-			await goto(`/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
-			await mainStore.subscribeTo(space.id, first_branch.id);
+			goto(`/${space.name.toLowerCase()}/${first_branch.name.toLowerCase()}`);
+			mainStore.subscribeTo(space.id, first_branch.id);
 		} else {
-			await goto(`/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
-			await mainStore.subscribeTo(space.id, branch.id);
+			goto(`/${space.name.toLowerCase()}/${branch.name.toLowerCase()}`);
+			mainStore.subscribeTo(space.id, branch.id);
 		}
 	}
 
