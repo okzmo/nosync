@@ -23,8 +23,6 @@
 		</p>
 	</div>
 
-	<Noise animation={false} />
-
 	<div class="hidden lg:block">
 		<span class="fixed left-2 top-2 h-2 w-8 bg-hometext"></span>
 		<span class="fixed -left-1 top-5 h-2 w-8 rotate-90 bg-hometext"></span>
