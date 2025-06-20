@@ -46,10 +46,10 @@
 </script>
 
 <svelte:head>
-	<title
-		>{cell.active?.title ? `${cell.active?.title} | ` : ''}
-		{space.currentSpace?.name} / {space.currentBranch?.name}</title
-	>
+	<title>
+		{cell.active?.title ? `${cell.active?.title} | ` : ''}
+		{space.currentSpace?.name} / {space.currentBranch?.name}
+	</title>
 </svelte:head>
 
 <Dropzone />
