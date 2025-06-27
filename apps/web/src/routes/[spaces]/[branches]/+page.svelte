@@ -22,6 +22,8 @@
 
 	const shownCells = $derived.by(async () => {
 		if (!mainStore.ready) return [];
+		if (search.activeCommand) return branch.processCells(branch.cells);
+
 		let filteredCells: ApiCell[] = [];
 
 		filteredCells =
