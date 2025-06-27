@@ -17,23 +17,43 @@
 	import Video from 'ui/cells/video.svelte';
 	import Sidebar from 'ui/sidebar/sidebar.svelte';
 	import { twJoin } from 'tailwind-merge';
+	import { search } from '$lib/stores/search.svelte';
+	import { debounce } from '$lib/utils/debounce';
 
 	const shownCells = $derived.by(async () => {
 		if (!mainStore.ready) return [];
+		let filteredCells: ApiCell[] = [];
 
-		if (!branch.cells) {
-			const { data, error } = await tuyau.v1.branch
-				.cells({ branchId: '' + space.currentBranch?.id })
-				.$get();
+		filteredCells =
+			branch.cells?.filter((cell) =>
+				cell.tags.toLowerCase().includes(search.value.trim().toLowerCase())
+			) ||
+			branch.cells ||
+			[];
 
-			if (error) {
-				console.error(error);
-			}
-
-			branch.cells = data as ApiCell[];
+		if (filteredCells.length === 0 && search.value.length > 0) {
+			filteredCells = debounce(() => search.cells(), 150) as unknown as ApiCell[];
 		}
 
-		return branch.processCells(branch.cells);
+		return branch.processCells(filteredCells);
+	});
+
+	async function getCells() {
+		const { data, error } = await tuyau.v1.branch
+			.cells({ branchId: '' + space.currentBranch?.id })
+			.$get();
+
+		if (error) {
+			console.error(error);
+		}
+
+		branch.cells = data as ApiCell[];
+	}
+
+	$effect(() => {
+		if (space.currentBranch) {
+			getCells();
+		}
 	});
 
 	onMount(async () => {
@@ -71,23 +91,19 @@
 		)}
 	>
 		{#await shownCells then cells}
-			{#if cells.length > 0}
-				{#each cells as cell, i}
-					{#if cell.type === 'photo'}
-						<Photo photo={cell} i={i - 1} />
-					{:else if cell.type === 'video'}
-						<Video video={cell} i={i - 1} />
-					{:else if cell.type === 'note'}
-						<Note note={cell} i={i - 1} />
-					{:else if cell.type === 'pdf'}
-						<Pdf pdf={cell} i={i - 1} />
-					{:else if cell.type === 'default'}
-						<MainButton main={cell} />
-					{/if}
-				{/each}
-			{:else}
-				<p>You didn't add anything yet!</p>
-			{/if}
+			{#each cells as cell, i}
+				{#if cell.type === 'photo'}
+					<Photo photo={cell} i={i - 1} />
+				{:else if cell.type === 'video'}
+					<Video video={cell} i={i - 1} />
+				{:else if cell.type === 'note'}
+					<Note note={cell} i={i - 1} />
+				{:else if cell.type === 'pdf'}
+					<Pdf pdf={cell} i={i - 1} />
+				{:else if cell.type === 'default'}
+					<MainButton main={cell} />
+				{/if}
+			{/each}
 		{/await}
 	</div>
 </div>

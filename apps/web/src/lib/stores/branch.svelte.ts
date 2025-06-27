@@ -60,7 +60,6 @@ class Branch {
   }
 
   processCells(cells: ApiCell[] | undefined): Array<TPhoto | TNote | TVideo | TPDF | TDefault> {
-    if (!cells) return [];
     mainStore.columnHeights.fill(0);
     const processedCells = [];
 
@@ -74,6 +73,8 @@ class Branch {
     };
     processedCells.push(mainCell);
     mainStore.columnHeights[0] += mainCell.height + GUTTER;
+
+    if (!cells) return processedCells;
 
     for (const cell of cells) {
       if (cell.type.startsWith('image')) {

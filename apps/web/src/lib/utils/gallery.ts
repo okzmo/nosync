@@ -3,7 +3,8 @@ import { space } from '$lib/stores/space.svelte';
 import type { ApiCell } from '$lib/types/api';
 import type { TNote, TPDF, TPhoto, TVideo } from '$lib/types/space';
 import { formatDate } from './date';
-import { generateMaximizedSize, getPDFFirstPage, uniqueId, type FileMetadata } from './media';
+import { cuid } from './id';
+import { generateMaximizedSize, getPDFFirstPage, type FileMetadata } from './media';
 
 export function calculateCellPosition(cell: TPhoto | TVideo | TNote | TPDF) {
 	const columns = mainStore.nbColumns;
@@ -206,10 +207,12 @@ export async function generateFakeCell(file: File, metadata: FileMetadata) {
 		type: metadata.mime,
 		content: {},
 		tags: '',
+    searchContent: null,
+    sourceUrl: '',
 		createdAt: '',
 		updatedAt: '',
 		media: {
-			id: uniqueId(),
+			id: cuid(),
 			cellId: metadata.id,
 			width: metadata.width,
 			height: metadata.height,
