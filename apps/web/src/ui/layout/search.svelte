@@ -1,36 +1,17 @@
 <script lang="ts">
-	import { tuyau } from '$lib/api';
-	import { branch } from '$lib/stores/branch.svelte';
 	import { menu } from '$lib/stores/menu.svelte';
-	import { space } from '$lib/stores/space.svelte';
 	import { fade } from 'svelte/transition';
 	import { fly } from 'svelte/transition';
 	import { search } from '$lib/stores/search.svelte';
 	import { debounce } from '$lib/utils/debounce';
 
 	let input = $state<HTMLInputElement | null>(null);
-	let inputValue = $state('');
-
-	async function handleInput() {
-		if (search.activeCommand) return;
-
-		const { data, error } = await tuyau.v1.branch.search_cells.$post({
-			branchId: space.currentBranch!.id,
-			query: inputValue
-		});
-
-		if (error) {
-			console.error(error);
-		}
-
-		branch.cells = data;
-	}
 
 	async function handleKeydown(e: KeyboardEvent) {
 		if (!input || input !== document.activeElement) return;
 
 		if (e.key === 'Backspace') {
-			if (inputValue === '' && search.activeCommand) {
+			if (search.value === '' && search.activeCommand) {
 				e.preventDefault();
 				search.resetCommand();
 			}
@@ -39,31 +20,20 @@
 		if (e.key === 'Tab') {
 			e.preventDefault();
 
-			if (search.isCommand(inputValue.toLowerCase())) {
+			if (search.isCommand(search.value.toLowerCase())) {
 				search.launchEffect();
-				inputValue = '';
+				search.value = '';
 			}
-
-			// const { data, error } = await tuyau.v1.branch.search_cells.$post({
-			// 	branchId: space.currentBranch!.id,
-			// 	query: ''
-			// });
-			//
-			// if (error) {
-			// 	console.error(error);
-			// }
-			//
-			// branch.cells = data;
 		}
 
 		if (e.key === 'Enter') {
 			e.preventDefault();
 
 			if (search.activeCommand) {
-				search.executeCommand(inputValue);
+				search.executeCommand(search.value);
 				search.resetCommand();
 				menu.closeMenu();
-				inputValue = '';
+				search.value = '';
 			}
 		}
 	}
@@ -92,8 +62,7 @@
 			{/if}
 			<input
 				bind:this={input}
-				bind:value={inputValue}
-				oninput={() => debounce(handleInput, 150)}
+				bind:value={search.value}
 				onkeydown={handleKeydown}
 				autocomplete="off"
 				spellcheck="false"

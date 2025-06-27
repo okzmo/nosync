@@ -70,7 +70,7 @@ export default class ProcessImageJob extends Job {
     await media.save()
 
     const result = await generateText({
-      model: openai('gpt-4o-mini'),
+      model: openai('gpt-4.1-nano'),
       maxTokens: 100,
       messages: [
         {
@@ -78,7 +78,19 @@ export default class ProcessImageJob extends Job {
           content: [
             {
               type: 'text',
-              text: "Create a comma-separated list of single-word tags for this image, starting with the most salient elements, specifically including the artwork's title and artist's name where known (e.g., 'Starry Night,', 'Vincent VanGogh,', 'The Tower of Babel,', 'Pieter Bruegel'). Treat these proper nouns as single, complete tags. Ensure no tag is repeated, and provide between 16 and 32 tags.",
+              text: `
+                Analyze this image and return ONLY a comma-separated list of single-word tags. Format: lowercase words separated by commas, no periods, no numbering, no explanatory text.
+
+                Requirements:
+                - Start with the most visually prominent elements
+                - Include artwork title and artist name as single tags when identifiable (e.g., starrynight, vangogh)
+                - Use lowercase only, except for proper nouns which should be written as single words without spaces
+                - Provide exactly 16-32 unique tags
+                - No repeated tags
+                - If you cannot identify the image content, respond with: "unidentifiable"
+
+                Example format: tag1, tag2, tag3, tag4
+              `,
             },
             {
               type: 'image',
