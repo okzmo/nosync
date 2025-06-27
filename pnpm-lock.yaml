@@ -167,6 +167,9 @@ importers:
       '@fontsource/vollkorn':
         specifier: ^5.1.2
         version: 5.1.2
+      '@paralleldrive/cuid2':
+        specifier: ^2.2.2
+        version: 2.2.2
       '@tailwindcss/forms':
         specifier: ^0.5.10
         version: 0.5.10(tailwindcss@3.4.17)

@@ -4,6 +4,7 @@ import { tuyau } from '$lib/api';
 import { space } from '$lib/stores/space.svelte';
 import * as pdfjsLib from 'pdfjs-dist';
 import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
+import { cuid } from './id';
 
 export type FileMetadata = {
 	id: string;
@@ -16,18 +17,9 @@ export type FileMetadata = {
 	firstFrame?: Blob;
 };
 
-export function uniqueId(length = 16) {
-	return parseInt(
-		Math.ceil(Math.random() * Date.now())
-			.toPrecision(length)
-			.toString()
-			.replace('.', '')
-	);
-}
-
 export async function getMediaMetadata(file: File): Promise<FileMetadata> {
 	const metadata: FileMetadata = {
-		id: '' + uniqueId(),
+		id: cuid(),
 		name: file.name,
 		mime: file.type,
 		size: file.size,

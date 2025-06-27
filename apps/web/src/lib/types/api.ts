@@ -15,7 +15,7 @@ export interface ApiCell {
 }
 
 export interface ApiMedia {
-  id: number;
+  id: string;
   cellId: string;
   width: number;
   height: number;
