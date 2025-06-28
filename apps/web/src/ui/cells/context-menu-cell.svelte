@@ -69,6 +69,20 @@
 		}
 	}
 
+	async function copyOriginalLinkToClipboard() {
+		if (!originalUrl) return;
+
+		try {
+			navigator.clipboard.write([
+				new ClipboardItem({
+					'text/plain': originalUrl
+				})
+			]);
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
 	function handleGotoSource() {
 		if (!sourceUrl) return;
 		window.open(sourceUrl, '_blank');
@@ -79,6 +93,13 @@
 	class="blurred-bg z-50 w-full min-w-[185px] border border-zinc-50/10  p-1 outline-none"
 >
 	{#if originalUrl}
+		<ContextMenu.Item
+			class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
+			onclick={copyOriginalLinkToClipboard}
+		>
+			<SolarCopyBoldDuotone height={16} width={16} />
+			<div class="flex items-center">Copy URL</div>
+		</ContextMenu.Item>
 		{#if type === 'photo'}
 			<ContextMenu.Item
 				class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"

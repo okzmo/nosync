@@ -26,7 +26,7 @@ export default class UploadMediaController {
       const defaultFileName = part.file.clientName
         .toLowerCase()
         .trim()
-        .replace(/[^a-zA-Z0-9_]/g, '')
+        .replace(/[^a-zA-Z0-9_\.]/g, '')
       const fileKey = isCuid(defaultFileName) ? defaultFileName : `${cuid()}_${defaultFileName}`
       const upload = new Upload({
         client: client,
