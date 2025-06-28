@@ -1,23 +1,24 @@
 import Space from '#space/models/space'
+import { cuid } from '@adonisjs/core/helpers'
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 
 export default class extends BaseSeeder {
   async run() {
     await Space.createMany([
       {
-        userId: 1,
+        userId: cuid(),
         name: 'life',
       },
       {
-        userId: 1,
+        userId: cuid(),
         name: 'work',
       },
       {
-        userId: 2,
+        userId: cuid(),
         name: 'personal',
       },
       {
-        userId: 3,
+        userId: cuid(),
         name: 'core',
       },
     ])

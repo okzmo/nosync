@@ -20,7 +20,7 @@
 
 	let { type, elementId, originalUrl, sourceUrl, idx }: ContextMenuProps = $props();
 
-	function handleMoveTo(branchId: number) {
+	function handleMoveTo(branchId: string) {
 		cell.moveTo(elementId, idx, branchId);
 	}
 

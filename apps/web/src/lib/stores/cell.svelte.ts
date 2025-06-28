@@ -110,7 +110,7 @@ class Cell {
 		}
 	}
 
-	async moveTo(cellId: string, cellIdx: number, branchId: number) {
+	async moveTo(cellId: string, cellIdx: number, branchId: string) {
 		const moved = branch.cells!.splice(cellIdx, 1);
 
 		const { error } = await tuyau.v1.cell.move_cell.$post({

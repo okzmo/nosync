@@ -5,6 +5,7 @@ import Token from '#user/models/token'
 import mail from '@adonisjs/mail/services/main'
 import VerifyENotification from '#mails/verify_e_notification'
 import env from '#start/env'
+import { cuid } from '@adonisjs/core/helpers'
 
 export default class RegisterController {
   async handle({ response, request }: HttpContext) {
@@ -14,7 +15,10 @@ export default class RegisterController {
       return response.forbidden({ cause: 'email', message: 'Email already in use.' })
     }
 
-    const user = await User.create(data)
+    const user = await User.create({
+      id: cuid(),
+      ...data,
+    })
     const token = await Token.generateToken({
       user,
       relation: 'verifyEmailTokens',

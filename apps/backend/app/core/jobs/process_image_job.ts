@@ -9,7 +9,7 @@ import sharp from 'sharp'
 import env from '#start/env'
 
 interface ProcessImageJobPayload {
-  userId: number
+  userId: string
   spaceId: string
   branchId: string
   originKey: string
@@ -19,6 +19,7 @@ interface ProcessImageJobPayload {
   cellId: string
 }
 
+const BLUR_RESIZED_SIZE = 400
 const RESIZED_SIZE = 600
 
 export default class ProcessImageJob extends Job {
@@ -44,11 +45,15 @@ export default class ProcessImageJob extends Job {
       pages: isAnimated ? -1 : undefined,
     })
       .resize(RESIZED_SIZE)
-      .webp({ quality: 75, force: true, effort: 4 })
+      .webp({ quality: 75, force: true })
       .toBuffer()
 
     if (!ignoreBlur) {
-      const blurredPic = await sharp(file).webp({ quality: 50 }).blur(24).toBuffer()
+      const blurredPic = await sharp(file)
+        .resize(BLUR_RESIZED_SIZE)
+        .webp({ quality: 35 })
+        .blur(24)
+        .toBuffer()
       await drive.use('s3').put(blurKey, blurredPic)
       transmit.broadcast(`user/${userId}/space/${spaceId}/branch/${branchId}`, {
         type: 'branch:finishBlurredImageUpload',

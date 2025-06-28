@@ -8,7 +8,7 @@ export default class Cell extends BaseModel {
   declare id: string
 
   @column()
-  declare branchId: number
+  declare branchId: string
 
   @column()
   declare title: string

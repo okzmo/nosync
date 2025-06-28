@@ -11,7 +11,7 @@ import env from '#start/env'
 import transmit from '@adonisjs/transmit/services/main'
 
 export class AddMediaFromExtensionService {
-  async execute(data: InferInput<typeof addMediaFromExtensionValidator>, userId: number) {
+  async execute(data: InferInput<typeof addMediaFromExtensionValidator>, userId: string) {
     const { spaceId, branchId, fromUrl, mediaUrl } = data
 
     const res = await fetch(mediaUrl)
@@ -28,7 +28,7 @@ export class AddMediaFromExtensionService {
 
     const cell = new Cell()
     cell.id = cuid()
-    cell.branchId = Number.parseInt(branchId)
+    cell.branchId = branchId
     cell.tags = ''
     cell.sourceUrl = fromUrl
     cell.type = `image/${metadata.format}` || ''
