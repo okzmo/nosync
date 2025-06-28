@@ -2,7 +2,7 @@ import Cell from '#cell/models/cell'
 import { cuid } from '@adonisjs/core/helpers'
 
 export class CreateNoteService {
-  async execute(data: { branchId: number; title?: string }) {
+  async execute(data: { branchId: string; title?: string }) {
     const cell = new Cell()
     cell.id = cuid()
     cell.title = data.title || ''

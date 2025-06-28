@@ -14,7 +14,7 @@ interface ProcessVideoJobPayload {
   thumbnailKey: string
   blurKey: string
   cellId: string
-  userId: number
+  userId: string
 }
 
 export default class ProcessVideoJob extends Job {

@@ -5,10 +5,10 @@ import Branch from '#branch/models/branch'
 
 export default class Space extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
 
   @column({ columnName: 'owner_id' })
-  declare userId: number
+  declare userId: string
 
   @column()
   declare name: string

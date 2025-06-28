@@ -5,7 +5,7 @@ import { createSpaceValidator } from './validator.js'
 
 @inject()
 export default class CreateSpaceController {
-  constructor(private createSpace: CreateSpaceService) {}
+  constructor(private createSpace: CreateSpaceService) { }
 
   async handle({ request, response, auth }: HttpContext) {
     const data = await request.validateUsing(createSpaceValidator)

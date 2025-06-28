@@ -3,7 +3,6 @@
 	import { fade } from 'svelte/transition';
 	import { fly } from 'svelte/transition';
 	import { search } from '$lib/stores/search.svelte';
-	import { debounce } from '$lib/utils/debounce';
 
 	let input = $state<HTMLInputElement | null>(null);
 
@@ -52,7 +51,7 @@
 				{@const Icon = search.activeCommand.icon}
 				<div
 					transition:fly={{ x: -5, duration: 45 }}
-					class="z-10 flex flex-shrink-0 items-center gap-x-2 rounded-[0.95rem] py-[0.4rem] pl-2 pr-3"
+					class="z-10 flex flex-shrink-0 items-center gap-x-2 rounded-[0.65rem] py-[0.4rem] pl-2 pr-3"
 					style="background-color: {search.activeCommand.bgColor}; color: {search.activeCommand
 						.textColor}; box-shadow: {search.activeCommand.boxShadow}"
 				>

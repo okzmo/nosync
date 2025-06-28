@@ -172,7 +172,7 @@ export function loadImage(url: string): Promise<HTMLImageElement> {
 }
 
 /**
- * Create a fake cell to give the user an instant feedback while we upload's data etc
+ * Create a fake cell to give the user an instant feedback while we upload's data
  **/
 export async function generateFakeCell(file: File, metadata: FileMetadata) {
 	let blurredPic = '';

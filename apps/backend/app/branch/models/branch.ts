@@ -5,10 +5,10 @@ import Cell from '#cell/models/cell'
 
 export default class Branch extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
 
   @column()
-  declare spaceId: number
+  declare spaceId: string
 
   @column()
   declare name: string

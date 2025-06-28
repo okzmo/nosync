@@ -25,7 +25,7 @@ interface ImageProps {
     mime: string
     duration: number
   }
-  userId: number
+  userId: string
 }
 
 interface VideoProps {
@@ -43,7 +43,7 @@ interface VideoProps {
     duration: number
   }
   thumbnail: MultipartFile
-  userId: number
+  userId: string
 }
 
 interface FileProps {
@@ -57,14 +57,14 @@ interface FileProps {
     name: string
     mime: string
   }
-  userId: number
+  userId: string
 }
 
 export class UploadMediaService {
   async execute(
     data: InferInput<typeof uploadMediaValidator>,
     files: MultipartFile[],
-    userId: number,
+    userId: string,
     thumbnails?: MultipartFile[]
   ) {
     const { spaceId, branchId, title, filesMetadata } = data
@@ -128,11 +128,6 @@ export class UploadMediaService {
     return medias
   }
 
-  #removeExtension(fileName: string) {
-    const dotIndex = fileName.lastIndexOf('.')
-    return dotIndex === -1 ? fileName : fileName.substring(0, dotIndex)
-  }
-
   async #uploadImage({ file, metadata, title, branchId, spaceId, userId }: ImageProps) {
     const originalKey = file.meta.fileKey
     const keyNoExt = this.#removeExtension(file.meta.fileKey)
@@ -142,7 +137,7 @@ export class UploadMediaService {
     const cell = new Cell()
     cell.id = metadata.id
     if (title) cell.title = title
-    cell.branchId = Number.parseInt(branchId)
+    cell.branchId = branchId
     cell.type = metadata.mime
     cell.tags = ''
     const savedCell = await cell.save()
@@ -182,7 +177,7 @@ export class UploadMediaService {
     const cell = new Cell()
     cell.id = metadata.id
     if (title) cell.title = title
-    cell.branchId = Number.parseInt(branchId)
+    cell.branchId = branchId
     cell.type = metadata.mime
     cell.tags = ''
     const savedCell = await cell.save()
@@ -218,7 +213,7 @@ export class UploadMediaService {
     const cell = new Cell()
     cell.id = metadata.id
     if (title) cell.title = title
-    cell.branchId = Number.parseInt(branchId)
+    cell.branchId = branchId
     cell.type = metadata.mime
     cell.tags = ''
     const savedCell = await cell.save()
@@ -240,5 +235,10 @@ export class UploadMediaService {
     })
 
     return [savedCell.toJSON(), media.toJSON()]
+  }
+
+  #removeExtension(fileName: string) {
+    const dotIndex = fileName.lastIndexOf('.')
+    return dotIndex === -1 ? fileName : fileName.substring(0, dotIndex)
   }
 }
