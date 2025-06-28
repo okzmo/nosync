@@ -12,7 +12,7 @@ import { MultipartFile } from '@adonisjs/core/bodyparser'
 
 @inject()
 export default class UploadMediaController {
-  constructor(private uploadMedia: UploadMediaService) { }
+  constructor(private uploadMedia: UploadMediaService) {}
 
   async handle({ bouncer, request, response, auth }: HttpContext) {
     // stream files to s3
@@ -23,7 +23,10 @@ export default class UploadMediaController {
         console.log('ERROR:', err)
       })
 
-      const defaultFileName = part.file.clientName.toLowerCase().trim().replaceAll(' ', '-')
+      const defaultFileName = part.file.clientName
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-zA-Z0-9_]/g, '')
       const fileKey = isCuid(defaultFileName) ? defaultFileName : `${cuid()}_${defaultFileName}`
       const upload = new Upload({
         client: client,
