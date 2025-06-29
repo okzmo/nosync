@@ -74,6 +74,10 @@ type V1BranchSearchcellsPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/SearchCells/validator.ts')['searchCellsValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/SearchCells/controller.ts').default['handle'], true>
 }
+type V1BranchGlobalsearchcellsPost = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/GlobalSearchCells/validator.ts')['globalSearchCellsValidator']>>
+  response: MakeTuyauResponse<import('../app/branch/usecases/GlobalSearchCells/controller.ts').default['handle'], true>
+}
 type V1BranchUploadPost = {
   request: MakeTuyauRequest<InferInput<typeof import('../app/branch/usecases/UploadMedia/validators.ts')['uploadMediaValidator']>>
   response: MakeTuyauResponse<import('../app/branch/usecases/UploadMedia/controller.ts').default['handle'], true>
@@ -211,6 +215,11 @@ export interface ApiDefinition {
         '$url': {
         };
         '$post': V1BranchSearchcellsPost;
+      };
+      'global_search_cells': {
+        '$url': {
+        };
+        '$post': V1BranchGlobalsearchcellsPost;
       };
       'upload': {
         '$url': {
@@ -378,6 +387,13 @@ const routes = [
     path: '/v1/branch/search_cells',
     method: ["POST"],
     types: {} as V1BranchSearchcellsPost,
+  },
+  {
+    params: [],
+    name: 'branch.globalSearchCells',
+    path: '/v1/branch/global_search_cells',
+    method: ["POST"],
+    types: {} as V1BranchGlobalsearchcellsPost,
   },
   {
     params: [],

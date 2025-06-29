@@ -17,7 +17,7 @@ import { formatDate } from '$lib/utils/date';
 import { sidebar } from './sidebar.svelte';
 import { backdrop } from './backdrop.svelte';
 import { uploadMedia } from '$lib/utils/media';
-import { debounce } from '$lib/utils/debounce';
+import { debounce, debounceAsync } from '$lib/utils/debounce';
 import { search } from './search.svelte';
 
 class Branch {
@@ -263,23 +263,33 @@ class Branch {
     document.body.removeChild(el);
   }
 
-  filterCells(query: string) {
+
+  async filterCells(query: string) {
     if (!branch.cells) return [];
     if (query === "") return branch.cells;
 
     let filteredCells: ApiCell[] = [];
 
+    // global search
+    if (search.activeCommand?.type === 'global' && query.length > 0) {
+      filteredCells = await this.#debouncedGlobalSearch();
+      return filteredCells
+    }
+
     // local search
     filteredCells = branch.cells.filter(cell => this.#filterByTags(cell, query) || this.#filterByContent(cell, query) || this.#filterByTitle(cell, query));
 
     // remote search
-    if (filteredCells.length === 0) {
-      filteredCells = debounce(() => search.cells(), 250) as unknown as ApiCell[];
+    if (filteredCells.length === 0 && query.length > 0) {
+      filteredCells = await this.#debouncedSearch();
     }
 
     return filteredCells
   }
 
+  #debouncedGlobalSearch = debounceAsync(() => search.global(), 200);
+
+  #debouncedSearch = debounceAsync(() => search.cells(), 200);
 
   #filterByTags(cell: ApiCell, query: string) {
     return cell.tags.toLowerCase().includes(query.toLowerCase().trim());

@@ -20,13 +20,12 @@
 
 	const shownCells = $derived.by(async () => {
 		if (!mainStore.ready) return [];
-		if (search.activeCommand) return branch.processCells(branch.cells);
 
-		let filteredCells: ApiCell[] = [];
+		let filteredCells: Promise<ApiCell[]> = [];
 
 		filteredCells = branch.filterCells(search.value);
 
-		return branch.processCells(filteredCells);
+		return filteredCells;
 	});
 
 	$effect(() => {
@@ -69,8 +68,10 @@
 			sidebar.isFocused ? 'scale-95' : 'scale-100'
 		)}
 	>
+		<MainButton />
 		{#await shownCells then cells}
-			{#each cells as cell, i}
+			{@const processedCells = branch.processCells(cells)}
+			{#each processedCells as cell, i}
 				{#if cell.type === 'photo'}
 					<Photo photo={cell} i={i - 1} />
 				{:else if cell.type === 'video'}
@@ -79,8 +80,6 @@
 					<Note note={cell} i={i - 1} />
 				{:else if cell.type === 'pdf'}
 					<Pdf pdf={cell} i={i - 1} />
-				{:else if cell.type === 'default'}
-					<MainButton main={cell} />
 				{/if}
 			{/each}
 		{/await}

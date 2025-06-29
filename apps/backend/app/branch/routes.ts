@@ -1,5 +1,6 @@
 import { middleware } from '#start/kernel'
 import router from '@adonisjs/core/services/router'
+const GlobalSearchCellsController = () => import('#branch/usecases/GlobalSearchCells/controller')
 const RenameBranchController = () => import('#branch/usecases/RenameBranch/controller')
 const DeleteBranchController = () => import('#branch/usecases/DeleteBranch/controller')
 const AddMediaFromExtensionController = () =>
@@ -14,6 +15,9 @@ export const registerBranchRoutes = () => {
     .group(() => {
       router.get('/cells/:branchId', [GetCellsController, 'handle']).as('branch.getCells')
       router.post('/search_cells', [SearchCellsController, 'handle']).as('branch.searchCells')
+      router
+        .post('/global_search_cells', [GlobalSearchCellsController, 'handle'])
+        .as('branch.globalSearchCells')
       router.post('/upload', [UploadMediaController, 'handle']).as('branch.uploadMedia')
       router.post('/create', [CreateBranchController, 'handle']).as('branch.create')
       router.post('/rename', [RenameBranchController, 'handle']).as('branch.rename')
