@@ -267,7 +267,6 @@ class Branch {
   async filterCells(query: string) {
     if (!branch.cells) return [];
     if (query === "") return branch.cells;
-    if (search.activeCommand && search.activeCommand.type !== 'global') return branch.cells;
 
     let filteredCells: ApiCell[] = [];
 
