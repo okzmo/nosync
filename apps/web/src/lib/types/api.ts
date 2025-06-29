@@ -3,9 +3,9 @@ import type { JSONContent } from '@tiptap/core';
 export interface ApiCell {
   id: string;
   branchId: string;
-  title: string;
+  title?: string;
   type: string;
-  content: JSONContent;
+  content?: JSONContent;
   searchContent: string | null;
   tags: string;
   media: ApiMedia;
