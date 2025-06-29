@@ -48,11 +48,11 @@ export const COMMANDS = [
   {
     type: 'global',
     label: 'Global',
-    bgColor: '#2B7A9F',
-    textColor: '#4DACD8',
+    bgColor: '#BF4DB9',
+    textColor: '#E66BE0',
     placeholder: 'Search',
     boxShadow:
-      '0px 4px 9px rgba(18, 18, 22, 0.2), inset 0px 1px 0px #24A4DF, inset 0px 0px 0px 1px #2186B5',
+      '0px 4px 9px rgba(18, 18, 22, 0.2), inset 0px 1px 0px #E66BE0, inset 0px 0px 0px 1px #C860C2',
     icon: SolarGlobalBoldDuotone
   }
   // 	{
