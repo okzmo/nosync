@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { tuyau } from '$lib/api';
 	import { branch } from '$lib/stores/branch.svelte';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { mainStore } from '$lib/stores/mainStore.svelte';
@@ -18,7 +17,6 @@
 	import Sidebar from 'ui/sidebar/sidebar.svelte';
 	import { twJoin } from 'tailwind-merge';
 	import { search } from '$lib/stores/search.svelte';
-	import { debounce } from '$lib/utils/debounce';
 
 	const shownCells = $derived.by(async () => {
 		if (!mainStore.ready) return [];
@@ -26,35 +24,14 @@
 
 		let filteredCells: ApiCell[] = [];
 
-		filteredCells =
-			branch.cells?.filter((cell) =>
-				cell.tags.toLowerCase().includes(search.value.trim().toLowerCase())
-			) ||
-			branch.cells ||
-			[];
-
-		if (filteredCells.length === 0 && search.value.length > 0) {
-			filteredCells = debounce(() => search.cells(), 150) as unknown as ApiCell[];
-		}
+		filteredCells = branch.filterCells(search.value);
 
 		return branch.processCells(filteredCells);
 	});
 
-	async function getCells() {
-		const { data, error } = await tuyau.v1.branch
-			.cells({ branchId: '' + space.currentBranch?.id })
-			.$get();
-
-		if (error) {
-			console.error(error);
-		}
-
-		branch.cells = data as ApiCell[];
-	}
-
 	$effect(() => {
 		if (space.currentBranch) {
-			getCells();
+			branch.getCells();
 		}
 	});
 

@@ -17,6 +17,8 @@ import { formatDate } from '$lib/utils/date';
 import { sidebar } from './sidebar.svelte';
 import { backdrop } from './backdrop.svelte';
 import { uploadMedia } from '$lib/utils/media';
+import { debounce } from '$lib/utils/debounce';
+import { search } from './search.svelte';
 
 class Branch {
   cells = $state<ApiCell[] | undefined>();
@@ -25,6 +27,18 @@ class Branch {
   stopListeningToBranch = $state();
   changingBranch = $state(false);
   latestNbOfAddedCells = $state(0);
+
+  async getCells() {
+    const { data, error } = await tuyau.v1.branch
+      .cells({ branchId: '' + space.currentBranch?.id })
+      .$get();
+
+    if (error) {
+      console.error(error);
+    }
+
+    branch.cells = data as ApiCell[];
+  }
 
   addCells(cells: ApiCell[]) {
     if (!this.cells) return;
@@ -247,6 +261,36 @@ class Branch {
     };
 
     document.body.removeChild(el);
+  }
+
+  filterCells(query: string) {
+    if (!branch.cells) return [];
+    if (query === "") return branch.cells;
+
+    let filteredCells: ApiCell[] = [];
+
+    // local search
+    filteredCells = branch.cells.filter(cell => this.#filterByTags(cell, query) || this.#filterByContent(cell, query) || this.#filterByTitle(cell, query));
+
+    // remote search
+    if (filteredCells.length === 0) {
+      filteredCells = debounce(() => search.cells(), 250) as unknown as ApiCell[];
+    }
+
+    return filteredCells
+  }
+
+
+  #filterByTags(cell: ApiCell, query: string) {
+    return cell.tags.toLowerCase().includes(query.toLowerCase());
+  }
+
+  #filterByTitle(cell: ApiCell, query: string) {
+    return cell.title.toLowerCase().includes(query.toLowerCase());
+  }
+
+  #filterByContent(cell: ApiCell, query: string) {
+    return cell.searchContent?.toLowerCase().includes(query.toLowerCase());
   }
 }
 
