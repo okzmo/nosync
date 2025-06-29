@@ -4,7 +4,6 @@
 	import { mainStore } from '$lib/stores/mainStore.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import { space } from '$lib/stores/space.svelte';
-	import type { ApiCell } from '$lib/types/api';
 	import { onDestroy, onMount } from 'svelte';
 	import Dropzone from 'ui/branch/dropzone.svelte';
 	import MaximizeZone from 'ui/layout/maximize-zone.svelte';
@@ -20,12 +19,10 @@
 
 	const shownCells = $derived.by(async () => {
 		if (!mainStore.ready) return [];
+		if (!branch.cells) return [];
+		if (search.activeCommand && search.activeCommand.type !== 'global') return branch.cells;
 
-		let filteredCells: Promise<ApiCell[]> = [];
-
-		filteredCells = branch.filterCells(search.value);
-
-		return filteredCells;
+		return branch.filterCells(search.value);
 	});
 
 	$effect(() => {
