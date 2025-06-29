@@ -297,7 +297,7 @@ class Branch {
   }
 
   #filterByTitle(cell: ApiCell, query: string) {
-    return cell.title.toLowerCase().includes(query.toLowerCase().trim());
+    return cell.title?.toLowerCase().includes(query.toLowerCase().trim());
   }
 
   #filterByContent(cell: ApiCell, query: string) {
