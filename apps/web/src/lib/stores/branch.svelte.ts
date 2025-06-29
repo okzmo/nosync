@@ -282,15 +282,15 @@ class Branch {
 
 
   #filterByTags(cell: ApiCell, query: string) {
-    return cell.tags.toLowerCase().includes(query.toLowerCase());
+    return cell.tags.toLowerCase().includes(query.toLowerCase().trim());
   }
 
   #filterByTitle(cell: ApiCell, query: string) {
-    return cell.title.toLowerCase().includes(query.toLowerCase());
+    return cell.title.toLowerCase().includes(query.toLowerCase().trim());
   }
 
   #filterByContent(cell: ApiCell, query: string) {
-    return cell.searchContent?.toLowerCase().includes(query.toLowerCase());
+    return cell.searchContent?.toLowerCase().includes(query.toLowerCase().trim());
   }
 }
 
