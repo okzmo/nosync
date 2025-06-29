@@ -23,6 +23,20 @@ class Search {
     return data as ApiCell[];
   }
 
+  async global() {
+    if (search.value.trim() === "") return [];
+
+    const { data, error } = await tuyau.v1.branch.global_search_cells.$post({
+      query: search.value.trim()
+    });
+
+    if (error) {
+      console.error(error);
+    }
+
+    return data as ApiCell[];
+  }
+
   isCommand(query: string) {
     const command = COMMANDS.find((c) => c.type.startsWith(query));
     if (command) {
