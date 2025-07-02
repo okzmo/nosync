@@ -35,15 +35,16 @@
 				}
 			}}
 			class="group absolute overflow-hidden shadow-xl before:absolute before:inset-0 before:content-normal before:bg-gradient-to-t before:from-zinc-950/50 before:to-transparent before:opacity-0 before:transition-opacity before:duration-75 hover:before:opacity-100 active:before:opacity-80"
-			style="height: {photo.height}px; width: {photo.width}px; transform: translate({photo.x}px, {photo.y}px);"
+			style="height: {photo.height}px; width: {photo.width}px; transform: translate({photo.x}px, {photo.y}px); background-image: url({photo.blurUrl}); background-size: cover;"
 		>
-			<img
-				src={photo.resizedUrl}
-				alt=""
-				class="h-full w-full select-none border-[0px] object-cover transition-opacity duration-500"
-				style="background-image: url({photo.blurUrl}); background-size: cover;"
-				loading="lazy"
-			/>
+			{#if photo.resizedUrl}
+				<img
+					src={photo.resizedUrl}
+					alt=""
+					class="h-full w-full select-none border-[0px] object-cover transition-opacity duration-500"
+					loading="lazy"
+				/>
+			{/if}
 			{#if photo.title}
 				<h3
 					class="absolute bottom-3 left-5 font-serif text-xl italic opacity-0 transition-opacity group-hover:opacity-100"
