@@ -8,18 +8,9 @@ function onClickExtensionSavePage(tab) {
 
 browser.contextMenus.onClicked.addListener(genericOnClick);
 
-const SPECIAL_CASES = ["cosmos.so", "pinimg.com"];
+const SPECIAL_CASES = ["pinimg.com"];
 
-async function genericOnClick(info) {
-  const [space, branch] = info.menuItemId.split(":");
-
-  const body = {
-    spaceId: space,
-    branchId: branch,
-    mediaUrl: info.srcUrl || "",
-    fromUrl: info.linkUrl || info.pageUrl,
-  };
-
+async function handleSpecialCases(body, info) {
   SPECIAL_CASES.forEach(async (website) => {
     if (info.srcUrl.includes(website)) {
       switch (website) {
@@ -41,6 +32,40 @@ async function genericOnClick(info) {
       }
     }
   });
+}
+
+async function genericOnClick(info) {
+  const [space, branch] = info.menuItemId.split(":");
+
+  if (info.srcUrl) {
+    const body = {
+      spaceId: space,
+      branchId: branch,
+      mediaUrl: info.srcUrl || "",
+      fromUrl: info.linkUrl || info.pageUrl,
+    };
+
+    await handleSpecialCases(body, info);
+    return
+  }
+
+  let mediaUrl;
+  try {
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+    mediaUrl = await browser.tabs.sendMessage(tab.id, 'GET_IMAGE');
+  } catch (e) {
+    console.log('No image found');
+    return;
+  }
+
+  const body = {
+    spaceId: space,
+    branchId: branch,
+    mediaUrl: mediaUrl,
+    fromUrl: info.pageUrl,
+  };
+
+  await handleSpecialCases(body, { srcUrl: mediaUrl })
 }
 
 async function upload(body) {
@@ -72,7 +97,7 @@ browser.runtime.onInstalled.addListener(async () => {
 
   browser.contextMenus.create({
     title: "Save to Nosync",
-    contexts: ["image"],
+    contexts: ["image", "page", "frame", "link"],
     id: `${firstSpace.id}:${firstBranch.id}`,
   });
 

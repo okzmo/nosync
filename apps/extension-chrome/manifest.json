@@ -4,11 +4,27 @@
   "version": "0.0.1",
   "description": "Nosync's companion app",
   "background": {
-    "service_worker": "service-worker.js",
-    "type": "module"
+    "service_worker": "service-worker.js"
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "all_frames": true
+    }
+  ],
   "action": {},
-  "permissions": ["scripting", "contextMenus", "cookies"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "cookies"
+  ],
   "host_permissions": [
     "http://localhost:3333/*",
     "http://localhost/*",
