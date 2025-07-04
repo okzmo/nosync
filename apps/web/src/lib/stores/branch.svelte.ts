@@ -17,8 +17,11 @@ import { formatDate } from '$lib/utils/date';
 import { sidebar } from './sidebar.svelte';
 import { backdrop } from './backdrop.svelte';
 import { uploadMedia } from '$lib/utils/media';
-import { debounce, debounceAsync } from '$lib/utils/debounce';
+import { debounceAsync } from '$lib/utils/debounce';
 import { search } from './search.svelte';
+import { branchValidation } from '$lib/schemas/branch';
+import { noteValidation } from '$lib/schemas/note';
+import { fileValidation } from '$lib/schemas/file';
 
 class Branch {
   cells = $state<ApiCell[] | undefined>();
@@ -118,8 +121,10 @@ class Branch {
   }
 
   async create(branchName: string) {
+    const validBranch = branchValidation.parse({ name: branchName })
+
     const existingBranch = space.currentSpace!.branches.find(
-      (branch) => branch.name.toLowerCase() === branchName.toLowerCase()
+      (branch) => branch.name.toLowerCase() === validBranch.name.toLowerCase()
     );
 
     if (existingBranch) {
@@ -130,7 +135,7 @@ class Branch {
     }
 
     const { data, error } = await tuyau.v1.branch.create.$post({
-      branchName: branchName,
+      branchName: validBranch.name,
       spaceId: space.currentSpace!.id
     });
 
@@ -150,9 +155,10 @@ class Branch {
 
   async rename(branchName: string) {
     if (!space.currentSpace || !space.currentBranch) return;
+    const validBranch = branchValidation.parse({ name: branchName })
 
     const existingBranch = space.currentSpace!.branches.find(
-      (branch) => branch.name.toLowerCase() === branchName.toLowerCase()
+      (branch) => branch.name.toLowerCase() === validBranch.name.toLowerCase()
     );
     if (existingBranch) {
       //TODO: toast error: can't use the name of an existing branch
@@ -160,19 +166,19 @@ class Branch {
       return;
     }
 
-    const oldName = space.currentBranch!.name;
+    const oldName = space.currentBranch.name;
     const spaceIdx = auth.user!.spaces.findIndex((s) => s.id === space.currentSpace!.id);
     const branchIdx = auth.user!.spaces[spaceIdx].branches.findIndex(
       (b) => b.id === space.currentBranch!.id
     );
 
     if (spaceIdx > -1 && branchIdx > -1) {
-      auth.user!.spaces[spaceIdx].branches[branchIdx].name = branchName;
+      auth.user!.spaces[spaceIdx].branches[branchIdx].name = validBranch.name;
     }
 
     const { error } = await tuyau.v1.branch.rename.$post({
       branchId: space.currentBranch!.id,
-      name: branchName
+      name: validBranch.name
     });
 
     if (error) {
@@ -206,9 +212,11 @@ class Branch {
   }
 
   async createNote(title?: string) {
+    const validNote = noteValidation.parse({ title: title || '' })
+
     cell.active = {
       type: 'note',
-      title: title || '',
+      title: validNote.title,
       content: undefined,
       createdAt: formatDate(new Date().toString())
     } as TNote;
@@ -217,7 +225,7 @@ class Branch {
     sidebar.focusEditor();
 
     const { data, error } = await tuyau.v1.cell.create_note.$post({
-      title: title,
+      title: validNote.title,
       branchId: space.currentBranch?.id
     });
 
@@ -243,11 +251,13 @@ class Branch {
   }
 
   async uploadFile(title?: string) {
+    const validFile = fileValidation.parse({ title: title || '' })
+
     const el = document.createElement('input');
     el.style.display = 'none';
     el.type = 'file';
 
-    if (!title) {
+    if (!validFile.title) {
       el.multiple = true;
     }
 
@@ -257,7 +267,7 @@ class Branch {
     el.onchange = async (e) => {
       const target = e.target as HTMLInputElement;
 
-      await uploadMedia(undefined, target.files, title);
+      await uploadMedia(undefined, target.files, validFile.title);
     };
 
     document.body.removeChild(el);

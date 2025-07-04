@@ -5,9 +5,19 @@
 	import { ContextMenu } from 'bits-ui';
 	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 	import SolarTextFieldFocusBoldDuotone from '~icons/solar/text-field-focus-bold-duotone';
+	import { sanitize } from '$lib/utils/string';
 
 	let branchInput = $state<HTMLInputElement | undefined>();
+	let inputValue = $state('');
+	let processedValue = $derived(sanitize(inputValue, 20));
 	let action = $state<'create' | 'rename'>('create');
+
+	function handleInput() {
+		if (!branchInput) return;
+
+		inputValue = branchInput.value;
+		branchInput.value = processedValue;
+	}
 
 	async function handleCreateBranch(e: SubmitEvent) {
 		if (!branchInput) return;
@@ -49,11 +59,13 @@
 							placeholder={space.currentBranch?.name}
 							class="w-fit border-none bg-transparent p-0 text-lg italic text-zinc-50 placeholder:text-zinc-50/50 focus:outline-none focus:ring-0"
 							bind:this={branchInput}
+							value={processedValue}
+							oninput={handleInput}
 						/>
 					</form>
 				{:else}
 					<button
-						class="absolute top-0 italic text-zinc-50"
+						class="absolute top-0 w-max italic text-zinc-50"
 						onclick={() => activateBranchChange('create')}
 						transition:fade={{ duration: 75 }}
 					>
