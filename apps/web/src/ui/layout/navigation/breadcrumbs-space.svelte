@@ -1,12 +1,22 @@
 <script lang="ts">
 	import { branch } from '$lib/stores/branch.svelte';
 	import { space } from '$lib/stores/space.svelte';
+	import { sanitize } from '$lib/utils/string';
 	import { ContextMenu } from 'bits-ui';
 	import SolarTextFieldFocusBoldDuotone from '~icons/solar/text-field-focus-bold-duotone';
 	import SolarTrashBinMinimalistic2BoldDuotone from '~icons/solar/trash-bin-minimalistic-2-bold-duotone';
 
 	let spaceInput = $state<HTMLInputElement | undefined>();
+	let inputValue = $state('');
+	let processedValue = $derived(sanitize(inputValue, 20));
 	let action = $state<'create' | 'rename'>('create');
+
+	function handleInput() {
+		if (!spaceInput) return;
+
+		inputValue = spaceInput.value;
+		spaceInput.value = processedValue;
+	}
 
 	async function handleCreateSpace(e: SubmitEvent) {
 		if (!spaceInput) return;
@@ -43,6 +53,8 @@
 						placeholder={space.currentSpace?.name}
 						class="w-fit border-none bg-transparent p-0 text-lg italic text-zinc-50 placeholder:text-zinc-50/50 focus:outline-none focus:ring-0"
 						bind:this={spaceInput}
+						value={processedValue}
+						oninput={handleInput}
 					/>
 				</form>
 			{:else}

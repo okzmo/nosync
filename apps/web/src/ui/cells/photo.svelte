@@ -47,7 +47,7 @@
 			{/if}
 			{#if photo.title}
 				<h3
-					class="absolute bottom-3 left-5 font-serif text-xl italic opacity-0 transition-opacity group-hover:opacity-100"
+					class="absolute bottom-3 left-5 max-w-[10rem] overflow-hidden truncate font-serif text-xl italic opacity-0 transition-opacity group-hover:opacity-100"
 				>
 					{photo.title}
 				</h3>

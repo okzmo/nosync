@@ -4,6 +4,7 @@ import { auth } from './auth.svelte';
 import { goto } from '$app/navigation';
 import { branch } from './branch.svelte';
 import { mainStore } from './mainStore.svelte';
+import { spaceCreation } from '$lib/schemas/space';
 
 class Space {
   changingSpace = $state(false);
@@ -11,8 +12,10 @@ class Space {
   currentBranch = $state<TBranch | undefined>();
 
   async create(spaceName: string) {
+    const validSpace = spaceCreation.parse({ name: spaceName })
+
     const existingSpace = auth.user?.spaces.find(
-      (space) => space.name.toLowerCase() === spaceName.toLowerCase()
+      (space) => space.name.toLowerCase() === validSpace.name.toLowerCase()
     );
     if (existingSpace) {
       await space.goto(existingSpace);
@@ -22,7 +25,7 @@ class Space {
       return;
     }
 
-    const { data, error } = await tuyau.v1.space.create.$post({ name: spaceName });
+    const { data, error } = await tuyau.v1.space.create.$post({ name: validSpace.name });
 
     // TODO: Add toast error if creation impossible
     if (error) {
@@ -38,9 +41,10 @@ class Space {
 
   async rename(spaceName: string) {
     if (!this.currentSpace) return;
+    const validSpace = spaceCreation.parse({ name: spaceName })
 
     const existingSpace = auth.user?.spaces.find(
-      (space) => space.name.toLowerCase() === spaceName.toLowerCase()
+      (space) => space.name.toLowerCase() === validSpace.name.toLowerCase()
     );
     if (existingSpace) {
       //TODO: Add toast error for already existing space with the same name
@@ -54,12 +58,12 @@ class Space {
     );
 
     if (spaceToChange > -1) {
-      auth.user!.spaces[spaceToChange].name = spaceName;
+      auth.user!.spaces[spaceToChange].name = validSpace.name;
     }
 
     const { error } = await tuyau.v1.space.rename.$post({
       spaceId: this.currentSpace.id,
-      name: spaceName
+      name: validSpace.name
     });
 
     if (error) {

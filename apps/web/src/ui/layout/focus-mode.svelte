@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { cell } from '$lib/stores/cell.svelte';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
+	import { sanitize } from '$lib/utils/string';
 	import type { JSONContent } from '@tiptap/core';
 	import { expoInOut } from 'svelte/easing';
 	import { scale } from 'svelte/transition';
@@ -8,9 +9,18 @@
 	import EditorFocus from 'ui/editor/editor-focus.svelte';
 	import MaterialSymbolsArrowBackRounded from '~icons/material-symbols/arrow-back-rounded';
 
+	let titleInput = $state<HTMLInputElement | null>();
 	let title = $state('');
+	let processedTitle = $derived(sanitize(title, 32));
 	let typing = $state(false);
 	let content = $state<JSONContent | undefined>();
+
+	function handleInput() {
+		if (!titleInput) return;
+
+		title = titleInput.value;
+		titleInput.value = processedTitle;
+	}
 
 	function handleBlur() {
 		cell.saveTitle(title);
@@ -70,8 +80,10 @@
 				type="text"
 				class="mt-16 border-none bg-transparent p-0 font-serif text-5xl italic placeholder:text-zinc-50/20 focus-visible:outline-none focus-visible:ring-0"
 				placeholder="Title"
-				bind:value={title}
+				bind:this={titleInput}
+				value={processedTitle}
 				onblur={handleBlur}
+				oninput={handleInput}
 			/>
 			<EditorFocus {content} bind:typing />
 		</div>

@@ -9,12 +9,21 @@
 	import { twJoin } from 'tailwind-merge';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import type { JSONContent } from '@tiptap/core';
+	import { sanitize } from '$lib/utils/string';
 
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();
 	let saving = $state('onhold');
 	let title = $state('');
+	let processedTitle = $derived(sanitize(title, 32));
 	let content = $state<JSONContent | undefined>();
+
+	function handleInput() {
+		if (!titleInput) return;
+
+		title = titleInput.value;
+		titleInput.value = processedTitle;
+	}
 
 	function deleteActiveCell() {
 		if (!cell.active) return;
@@ -26,13 +35,15 @@
 	}
 
 	$effect(() => {
+		if (!sidebar.isOpen) {
+			editTitle = false;
+		}
+
 		if (cell.active) {
 			title = cell.active.title;
 			content = cell.active.content;
 		}
-	});
 
-	$effect(() => {
 		if (editTitle && titleInput) {
 			titleInput.focus();
 		}
@@ -81,7 +92,8 @@
 		{:else}
 			<input
 				bind:this={titleInput}
-				bind:value={title}
+				value={processedTitle}
+				oninput={handleInput}
 				onkeydown={(e) => {
 					if (e.key === 'Enter') {
 						e.stopPropagation();
