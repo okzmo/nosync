@@ -30,8 +30,12 @@ body {
 	scrollbar-width: none;
 }
 
+::selection {
+	color: #ee6930;
+	background: #ee69301f;
+}
+
 ::-moz-selection {
-	/* Code for Firefox */
 	color: #ee6930;
 	background: #ee69301f;
 }
