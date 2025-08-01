@@ -18,8 +18,10 @@
 
 		if (e.key === 'Tab') {
 			e.preventDefault();
+			const query = search.value.toLowerCase();
 
-			if (search.isCommand(search.value.toLowerCase())) {
+			if (query === '') return;
+			if (search.isCommand(query)) {
 				search.launchEffect();
 				search.value = '';
 			}
