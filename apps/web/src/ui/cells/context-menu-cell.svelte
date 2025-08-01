@@ -7,6 +7,7 @@
 	import SolarAltArrowRightLineDuotone from '~icons/solar/alt-arrow-right-line-duotone';
 	import SolarGlobalBoldDuotone from '~icons/solar/global-bold-duotone';
 	import SolarCopyBoldDuotone from '~icons/solar/copy-bold-duotone';
+	import SolarGalleryMinimalisticBoldDuotone from '~icons/solar/gallery-minimalistic-bold-duotone';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { space } from '$lib/stores/space.svelte';
 
@@ -105,7 +106,7 @@
 				class="flex h-10 max-h-[35px] select-none items-center gap-x-2  pl-2 pr-3 font-medium text-zinc-50/50 transition-colors duration-75 hover:cursor-pointer hover:text-zinc-50 data-[highlighted]:bg-zinc-50/15"
 				onclick={copyImageToClipboard}
 			>
-				<SolarCopyBoldDuotone height={16} width={16} />
+				<SolarGalleryMinimalisticBoldDuotone height={16} width={16} />
 				<div class="flex items-center">Copy image</div>
 			</ContextMenu.Item>
 		{/if}
