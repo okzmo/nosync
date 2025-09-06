@@ -80,27 +80,28 @@ async function genericOnClick(info) {
 }
 
 async function handleSpecialCases(body, info) {
-  SPECIAL_CASES.forEach(async (website) => {
-    if (info.srcUrl.includes(website)) {
-      switch (website) {
-        case "pinimg.com":
-          const split = info.srcUrl.slice(8).split("/");
-          split[1] = "originals";
-          const file = split[split.length - 1].split(".");
-          split[split.length - 1] = `${file[0]}.jpg`;
+
+  if (SPECIAL_CASES.some(special_case => info.srcUrl.includes(special_case))) {
+    switch (website) {
+      case "pinimg.com":
+        const split = info.srcUrl.slice(8).split("/");
+        split[1] = "originals";
+        const file = split[split.length - 1].split(".");
+        split[split.length - 1] = `${file[0]}.jpg`;
+        body.mediaUrl = `https://${split.join("/")}`;
+        const error = await upload(body);
+        if (error) {
+          split[split.length - 1] = `${file[0]}.png`;
           body.mediaUrl = `https://${split.join("/")}`;
-          const error = await upload(body);
-          if (error) {
-            split[split.length - 1] = `${file[0]}.png`;
-            body.mediaUrl = `https://${split.join("/")}`;
-            upload(body);
-          }
-          break;
-        default:
-          console.log("Not handled yet");
-      }
+        }
+        upload(body);
+        break;
+      default:
+        console.log("not handled yet")
     }
-  });
+  } else {
+    upload(body);
+  }
 }
 
 async function upload(body) {

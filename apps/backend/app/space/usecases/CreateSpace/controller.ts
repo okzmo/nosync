@@ -2,6 +2,7 @@ import type { HttpContext } from '@adonisjs/core/http'
 import { inject } from '@adonisjs/core'
 import { CreateSpaceService } from './service.js'
 import { createSpaceValidator } from './validator.js'
+import db from '@adonisjs/lucid/services/db'
 
 @inject()
 export default class CreateSpaceController {
@@ -15,7 +16,8 @@ export default class CreateSpaceController {
       return response.forbidden('You are not logged in')
     }
 
-    const space = await this.createSpace.execute(user.id, data.name)
+    const spaces = await db.from('spaces').where('owner_id', user.id).count('* as total')
+    const space = await this.createSpace.execute(user.id, data.name, spaces[0].total === '0')
 
     return space
   }

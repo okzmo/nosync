@@ -74,7 +74,7 @@ body {
 	}
 
 	code {
-		@apply border border-zinc-800 bg-zinc-900 px-3 py-2;
+		@apply border border-zinc-700/60 bg-zinc-800/60 text-orange-400 p-1 text-sm;
 	}
 
 	pre code {
