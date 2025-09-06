@@ -3,13 +3,14 @@
 	import SolarTrashBin2BoldDuotone from '~icons/solar/trash-bin-2-bold-duotone';
 	import MaterialSymbolsCloseRounded from '~icons/material-symbols/close-rounded';
 	import MaterialSymbolsCheckRounded from '~icons/material-symbols/check-rounded';
-	import EosIconsThreeDotsLoading from '~icons/eos-icons/three-dots-loading';
 	import SolarEyeBoldDuotone from '~icons/solar/eye-bold-duotone';
+	import SolarCloudCheckBoldDuotone from '~icons/solar/cloud-check-bold-duotone';
 	import { cell } from '$lib/stores/cell.svelte';
 	import { twJoin } from 'tailwind-merge';
 	import { sidebar } from '$lib/stores/sidebar.svelte';
 	import type { JSONContent } from '@tiptap/core';
 	import { sanitize } from '$lib/utils/string';
+	import { fade } from 'svelte/transition';
 
 	let editTitle = $state(false);
 	let titleInput = $state<HTMLInputElement | null>();
@@ -122,10 +123,10 @@
 	<Editor {content} bind:saving />
 	<div class="flex w-full items-center justify-between gap-x-3">
 		<div class="flex h-[3rem] flex-1 items-center justify-center bg-zinc-925">
-			{#if saving === 'saving'}
-				<EosIconsThreeDotsLoading height={42} width={42} class="text-zinc-50/50" />
-			{:else if saving === 'saved'}
-				<p class="font-medium">Saved!</p>
+			{#if saving === 'saved'}
+				<div transition:fade={{ duration: 50 }}>
+					<SolarCloudCheckBoldDuotone class="text-zinc-50/50" />
+				</div>
 			{/if}
 		</div>
 		<button
